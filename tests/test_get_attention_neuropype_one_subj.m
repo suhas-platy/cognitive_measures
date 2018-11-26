@@ -14,4 +14,4 @@ ALGO.TRACE = 0;
 ALGO.SAVE = 1;
 %%%}}}
 
-[OUT] = test_attention_neuropype( IN, ALGO );
+[OUT] = get_attention_neuropype_one_subj( IN, ALGO );

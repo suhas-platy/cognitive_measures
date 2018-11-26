@@ -1,0 +1,18 @@
+function [marker, time] = read_neopype_markers( filename, varargin )
+ 
+  f = fopen( filename, 'r' );
+  
+  
+  tline = fgetl(f);
+  while ischar(tline)
+     disp(tline)
+     tline = fgetl(f);
+     [marker{i}, time{i}] = textscan( tline, '%s, %f' );
+  end  
+  fclose( f );
+  
+  %marker = data{1};
+  %time = data{2};
+  
+   
+   

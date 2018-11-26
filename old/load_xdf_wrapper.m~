@@ -1,7 +1,5 @@
 function [EEG, EEG_orig, MARKERS_orig] = load_xdf_wrapper( filename, varargin )
 % @brief load XDF file and put it in EEGLab format
-%
-% vararagin can be used to set HANDLE_CLOCK_SYNCHRONIZATION, SRATE, etc.
 
 % Cognionics info
 COGNIONICS_SRATE = 500;
@@ -77,9 +75,7 @@ EEG.icaact = [];
 EEG.filepath = filename;
 EEG.filename = 'xdf.set'
 
-% drop non-EEG channels and set their labels
-EEG.data = EEG.data( KEEP_IDX(1):KEEP_IDX(end), : );
-EEG.nbcan = size( EEG.data, 1 );
+% set channel labels
 for i = KEEP_IDX(1):KEEP_IDX(end)
   % if ( i == KEEP_IDX(1) )
   %    disp( 'first' );
@@ -92,7 +88,7 @@ for i = KEEP_IDX(1):KEEP_IDX(end)
 end
 
 % events
-MARKERS_remap = MARKERS_orig.time_stamps*EEG.srate;
+MARKERS_remap = MARKERS_orig.time_stamps./EEG.srate;
 
 eventStructure = struct('type', [], 'latency', []);
 latencyValues  = num2cell(MARKERS_remap*EEG.srate);
@@ -100,8 +96,5 @@ latencyValues  = num2cell(MARKERS_remap*EEG.srate);
 eventTypes     = MARKERS_orig.time_series;
 [eventStructure(1:length(MARKERS_remap)).type] = eventTypes{:};
 EEG.event = eventStructure;
-% this will remove events
-%EEG = eeg_checkset(EEG, 'eventconsistency');
-%EEG = eeg_checkset(EEG, 'makeur');
-
-EEG.saved = 'justloaded'
+EEG = eeg_checkset(EEG, 'eventconsistency');
+EEG = eeg_checkset(EEG, 'makeur');

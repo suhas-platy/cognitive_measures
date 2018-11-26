@@ -1,0 +1,3 @@
+load_xdf_wrapper.m - load XDF file and put it in EEGLab format
+
+read_neuropype_freq_output.m - read Neuropype frequency output

@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <scheme description="This pipeline can be used to show the spectrum of the EEG data.&#10; &#10;Nodes Description:&#10; &#10;- LSL Input: is used to input the streamed data into the pipeline.&#10; &#10;- Dejitter Timestamps: is used to correct timestamps of the data stream, this prevents unwanted behavior in the proceeding nodes.&#10; &#10;- IIR Filter: is used to highpass filter data to remove the DC component.&#10; &#10;- Moving Window Multitaper Spectrum: is used to calculate the spectrum of the signal using Multitaper method.&#10; &#10;Spectrum plot: is used to plot the spectral content of the signal. This node has an option to compensate for the 1/f fall off inherent in natural signals. This option has been activated for this example." title="Frequency Domain Plotting" version="2.0">
 	<nodes>
-		<node id="0" name="IIR Filter" position="(-300, 100)" project_name="NeuroPype" qualified_name="widgets.signal_processing.owiirfilter.OWIIRFilter" title="IIR Filter" uuid="b5ea2f53-b8ad-4b4f-aa75-f2fd64011f8b" version="1.1.0" />
-		<node id="1" name="Dejitter Timestamps" position="(-400, 100)" project_name="NeuroPype" qualified_name="widgets.utilities.owdejittertimestamps.OWDejitterTimestamps" title="Dejitter Timestamps" uuid="d85e6b9c-5a09-4c88-930a-769391552770" version="1.0.0" />
-		<node id="2" name="Moving Window" position="(-200, 100)" project_name="NeuroPype" qualified_name="widgets.signal_processing.owmovingwindow.OWMovingWindow" title="Moving Window" uuid="cf901930-516e-41f9-a0f2-34e226b24efb" version="1.0.0" />
-		<node id="3" name="Power Spectrum (Multitaper)" position="(-100, 100)" project_name="NeuroPype" qualified_name="widgets.spectral.owmultitaperspectrum.OWMultitaperSpectrum" title="Power Spectrum (Multitaper)" uuid="f4caa1bc-ee20-49f2-aab5-01c027dd4788" version="1.0.0" />
-		<node id="4" name="Record to CSV" position="(-15.0, 180.0)" project_name="NeuroPype" qualified_name="widgets.file_system.owrecordtocsv.OWRecordToCSV" title="Record to CSV" uuid="6b1923c8-a52a-4920-a82f-9a5434cfae1c" version="1.0.0" />
-		<node id="5" name="Select Range" position="(-293.0, 197.0)" project_name="NeuroPype" qualified_name="widgets.tensor_math.owselectrange.OWSelectRange" title="Select Range" uuid="76b6beae-beee-473e-8661-0e5f675d2745" version="1.0.0" />
-		<node id="6" name="Select Range" position="(-280.0, 351.0)" project_name="NeuroPype" qualified_name="widgets.tensor_math.owselectrange.OWSelectRange" title="Select Range (1)" uuid="04d6ca41-a41f-4916-834a-9844a82e73b6" version="1.0.0" />
-		<node id="7" name="Import XDF" position="(-475.0, 351.0)" project_name="NeuroPype" qualified_name="widgets.file_system.owimportxdf.OWImportXDF" title="Import XDF" uuid="8f0ed4a5-ef71-47e9-9725-5aadb8340aa7" version="1.0.0" />
-		<node id="8" name="Stream Data" position="(-377.0, 351.0)" project_name="NeuroPype" qualified_name="widgets.formatting.owstreamdata.OWStreamData" title="Stream Data" uuid="a6ab5e51-e905-49e9-a334-072b7c747630" version="1.1.0" />
-		<node id="9" name="Export Markers to CSV" position="(-18.0, 448.0)" project_name="NeuroPype" qualified_name="widgets.file_system.owexportmarkers.OWExportMarkers" title="Export Markers to CSV" uuid="da716635-a571-4052-b147-2abba4c5dfee" version="1.0.0" />
+		<node id="0" name="IIR Filter" position="(-300, 100)" project_name="NeuroPype" qualified_name="widgets.signal_processing.owiirfilter.OWIIRFilter" title="IIR Filter" uuid="c2bccd65-e4cf-4361-8b34-feccf0bf32bc" version="1.1.0" />
+		<node id="1" name="Dejitter Timestamps" position="(-400, 100)" project_name="NeuroPype" qualified_name="widgets.utilities.owdejittertimestamps.OWDejitterTimestamps" title="Dejitter Timestamps" uuid="4e219123-2093-42b2-b561-a17d4692a7e9" version="1.0.0" />
+		<node id="2" name="Moving Window" position="(-200, 100)" project_name="NeuroPype" qualified_name="widgets.signal_processing.owmovingwindow.OWMovingWindow" title="Moving Window" uuid="b59cdbfe-5029-43c4-b45c-816c2b6fba3b" version="1.0.0" />
+		<node id="3" name="Power Spectrum (Multitaper)" position="(-100, 100)" project_name="NeuroPype" qualified_name="widgets.spectral.owmultitaperspectrum.OWMultitaperSpectrum" title="Power Spectrum (Multitaper)" uuid="1c9fd7aa-fea1-4b23-9cc3-24f62c7be51a" version="1.0.0" />
+		<node id="4" name="Record to CSV" position="(-15.0, 180.0)" project_name="NeuroPype" qualified_name="widgets.file_system.owrecordtocsv.OWRecordToCSV" title="Record to CSV" uuid="ef199697-d230-4ad0-b9ee-dafe5e50b9f7" version="1.0.0" />
+		<node id="5" name="Select Range" position="(-293.0, 197.0)" project_name="NeuroPype" qualified_name="widgets.tensor_math.owselectrange.OWSelectRange" title="Select Range" uuid="7e5b3624-0645-4a11-8d74-f5ff7cdc40d3" version="1.0.0" />
+		<node id="6" name="Select Range" position="(-280.0, 350.0)" project_name="NeuroPype" qualified_name="widgets.tensor_math.owselectrange.OWSelectRange" title="Select Range (1)" uuid="bd3e1019-c860-4d6c-be3d-e8055011e781" version="1.0.0" />
+		<node id="7" name="Import XDF" position="(-475.0, 351.0)" project_name="NeuroPype" qualified_name="widgets.file_system.owimportxdf.OWImportXDF" title="Import XDF" uuid="1210ae66-f11b-46df-8a9c-1ab824f6525f" version="1.0.0" />
+		<node id="8" name="Stream Data" position="(-377.0, 351.0)" project_name="NeuroPype" qualified_name="widgets.formatting.owstreamdata.OWStreamData" title="Stream Data" uuid="8f896459-8814-4ef2-96be-e515713f4958" version="1.1.0" />
+		<node id="9" name="Export Markers to CSV" position="(-18.0, 448.0)" project_name="NeuroPype" qualified_name="widgets.file_system.owexportmarkers.OWExportMarkers" title="Export Markers to CSV" uuid="4291b388-cb63-4854-b776-e3ba9aa8da1b" version="1.0.0" />
 	</nodes>
 	<links>
 		<link enabled="true" id="0" sink_channel="Data" sink_node_id="2" source_channel="Data" source_node_id="0" />
@@ -60,14 +60,14 @@ ZV9zdGFtcHNxFohYDwAAAHRpbWVzdGFtcF9sYWJlbHEXWAkAAAB0aW1lc3RhbXBxGHUu
 		<properties format="pickle" node_id="5">gAN9cQAoWBMAAABhcHBseV9tdWx0aXBsZV9heGVzcQGJWAQAAABheGlzcQJYBAAAAGF4aXNxA1gT
 AAAAc2F2ZWRXaWRnZXRHZW9tZXRyeXEEY3NpcApfdW5waWNrbGVfdHlwZQpxBVgMAAAAUHlRdDQu
 UXRDb3JlcQZYCgAAAFFCeXRlQXJyYXlxB0MuAdnQywABAAAAAAMDAAABggAABHwAAAJmAAADDAAA
-AagAAARzAAACXQAAAAAAAHEIhXEJh3EKUnELWAkAAABzZWxlY3Rpb25xDFgDAAAAMTozcQ1YBAAA
-AHVuaXRxDlgHAAAAaW5kaWNlc3EPdS4=
+AagAAARzAAACXQAAAAAAAHEIhXEJh3EKUnELWAkAAABzZWxlY3Rpb25xDFgEAAAAMDoyMHENWAQA
+AAB1bml0cQ5YBwAAAGluZGljZXNxD3Uu
 </properties>
 		<properties format="pickle" node_id="6">gAN9cQAoWBMAAABhcHBseV9tdWx0aXBsZV9heGVzcQGJWAQAAABheGlzcQJYBQAAAHNwYWNlcQNY
 EwAAAHNhdmVkV2lkZ2V0R2VvbWV0cnlxBGNzaXAKX3VucGlja2xlX3R5cGUKcQVYDAAAAFB5UXQ0
 LlF0Q29yZXEGWAoAAABRQnl0ZUFycmF5cQdDLgHZ0MsAAQAAAAADAwAAAYIAAAR8AAACZgAAAwwA
-AAGoAAAEcwAAAl0AAAAAAABxCIVxCYdxClJxC1gJAAAAc2VsZWN0aW9ucQxYAwAAADE6M3ENWAQA
-AAB1bml0cQ5YBwAAAGluZGljZXNxD3Uu
+AAGoAAAEcwAAAl0AAAAAAABxCIVxCYdxClJxC1gJAAAAc2VsZWN0aW9ucQxYBAAAADA6MjBxDVgE
+AAAAdW5pdHEOWAcAAABpbmRpY2VzcQ91Lg==
 </properties>
 		<properties format="pickle" node_id="7">gAN9cQAoWA0AAABjbG91ZF9hY2NvdW50cQFYAAAAAHECWAwAAABjbG91ZF9idWNrZXRxA2gCWBEA
 AABjbG91ZF9jcmVkZW50aWFsc3EEaAJYCgAAAGNsb3VkX2hvc3RxBVgHAAAARGVmYXVsdHEGWAgA
@@ -206,7 +206,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": 40.0
                 }
             },
-            "uuid": "b5ea2f53-b8ad-4b4f-aa75-f2fd64011f8b"
+            "uuid": "c2bccd65-e4cf-4361-8b34-feccf0bf32bc"
         },
         "node10": {
             "class": "ExportMarkers",
@@ -228,7 +228,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": ""
                 }
             },
-            "uuid": "da716635-a571-4052-b147-2abba4c5dfee"
+            "uuid": "4291b388-cb63-4854-b776-e3ba9aa8da1b"
         },
         "node2": {
             "class": "DejitterTimestamps",
@@ -255,7 +255,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": -1
                 }
             },
-            "uuid": "d85e6b9c-5a09-4c88-930a-769391552770"
+            "uuid": "4e219123-2093-42b2-b561-a17d4692a7e9"
         },
         "node3": {
             "class": "MovingWindow",
@@ -277,7 +277,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": 3
                 }
             },
-            "uuid": "cf901930-516e-41f9-a0f2-34e226b24efb"
+            "uuid": "b59cdbfe-5029-43c4-b45c-816c2b6fba3b"
         },
         "node4": {
             "class": "MultitaperSpectrum",
@@ -309,7 +309,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": true
                 }
             },
-            "uuid": "f4caa1bc-ee20-49f2-aab5-01c027dd4788"
+            "uuid": "1c9fd7aa-fea1-4b23-9cc3-24f62c7be51a"
         },
         "node5": {
             "class": "RecordToCSV",
@@ -376,7 +376,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": "timestamp"
                 }
             },
-            "uuid": "6b1923c8-a52a-4920-a82f-9a5434cfae1c"
+            "uuid": "ef199697-d230-4ad0-b9ee-dafe5e50b9f7"
         },
         "node6": {
             "class": "SelectRange",
@@ -395,7 +395,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                 "selection": {
                     "customized": true,
                     "type": "Port",
-                    "value": "1:3"
+                    "value": "0:20"
                 },
                 "unit": {
                     "customized": false,
@@ -403,7 +403,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": "indices"
                 }
             },
-            "uuid": "76b6beae-beee-473e-8661-0e5f675d2745"
+            "uuid": "7e5b3624-0645-4a11-8d74-f5ff7cdc40d3"
         },
         "node7": {
             "class": "SelectRange",
@@ -422,7 +422,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                 "selection": {
                     "customized": true,
                     "type": "Port",
-                    "value": "1:3"
+                    "value": "0:20"
                 },
                 "unit": {
                     "customized": false,
@@ -430,7 +430,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": "indices"
                 }
             },
-            "uuid": "04d6ca41-a41f-4916-834a-9844a82e73b6"
+            "uuid": "bd3e1019-c860-4d6c-be3d-e8055011e781"
         },
         "node8": {
             "class": "ImportXDF",
@@ -487,7 +487,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": false
                 }
             },
-            "uuid": "8f0ed4a5-ef71-47e9-9725-5aadb8340aa7"
+            "uuid": "1210ae66-f11b-46df-8a9c-1ab824f6525f"
         },
         "node9": {
             "class": "StreamData",
@@ -534,7 +534,7 @@ AAJaAAADDAAAAbQAAARzAAACUQAAAAAAAHEJhXEKh3ELUnEMWAYAAABzdHJlYW1xDWgEdS4=
                     "value": 1
                 }
             },
-            "uuid": "a6ab5e51-e905-49e9-a334-072b7c747630"
+            "uuid": "8f896459-8814-4ef2-96be-e515713f4958"
         }
     },
     "version": 1.1

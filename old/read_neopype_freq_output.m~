@@ -1,0 +1,6 @@
+function [freq] = read_neopye_freq_output( filename, varargin )
+
+   tempfilename = tempname;
+   CYGWIN_PATH = "C:\cygwin64\bin\";
+   cmd = sprintf( '%stail -n +2 %s > %s',...
+                  CYGWIN_PATH, filename, temp_filename ); % print the file without the header

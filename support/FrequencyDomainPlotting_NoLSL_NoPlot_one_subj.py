@@ -2,21 +2,64 @@
 
 import sys
 sys.path.append( 'C:\\Program Files\\Intheon\\NeuroPype Enterprise Suite (64-bit)\\NeuroPype Enterprise\\' )
+import argparse
+#import getopt
 
 from neuropype.nodes import *
 from neuropype.engine import Graph, CPE
 
+################################################################################
+# params
+INPUT_XDF_FILENAME = None
+OUTPUT_FREQ_OUT_FILENAME = None
+OUTPUT_MARKERS_FILENAME = None
+START_CHNL = None
+END_CHNL = None
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--i', type=str, default=None,
+                    help='input_xdf_filename.xdf')
+parser.add_argument('--f', type=str, default=None,
+                    help='output_freq_out.csv')
+parser.add_argument('--m', type=str, default=None,
+                    help='output_markers.csv')
+parser.add_argument('--s', type=int, default=0,
+                    help='start_chnl')
+parser.add_argument('--e', type=int, default=1,
+                    help='end_chnl')
+args = parser.parse_args()
+INPUT_XDF_FILENAME = args.i
+OUTPUT_FREQ_OUT_FILENAME = args.f
+OUTPUT_MARKERS_FILENAME = args.m
+START_CHNL = args.s
+END_CHNL = args.e
+
+if ( INPUT_XDF_FILENAME == None or OUTPUT_FREQ_OUT_FILENAME == None or OUTPUT_MARKERS_FILENAME == None):
+    print( "usage: %s -i <input_xdf_filename.xdf> -f <output_freq_out.csv> -m <output_markers.csv> -s <start_chnl> -e <end_chnl>" % sys.argv[0] )
+    sys.exit(2)
+print( "INPUT_XDF_FILENAME " + INPUT_XDF_FILENAME ); 
+print( "OUTPUT_FREQ_OUT_FILENAME " + OUTPUT_FREQ_OUT_FILENAME ); 
+print( "OUTPUT_MARKERS_FILENAME " + OUTPUT_MARKERS_FILENAME ); 
+print( "START_CHNL %d" % START_CHNL ); 
+print( "END_CHNL %d" % END_CHNL ); 
+
+################################################################################
+# calculate
+
+print( "START" )
+
 # create nodes
-node1 = ImportXDF(filename='C:/Data/fujitsu_flanker_data/09052018/09050118/09050118Wtsou_flanker_arrows_2018-09-05_10-40-20_1.xdf')
+node1 = ImportXDF(filename=INPUT_XDF_FILENAME)
 node2 = StreamData(timing='deterministic', looping=False, update_interval=1, jitter_percent=0)
-node3 = ExportMarkers(filename='C:/Users/suhas/Desktop/prjs/golf_processing/src/untitled2_makers.csv')
-node4 = SelectRange(axis='space', selection='1:3')
+node3 = ExportMarkers(filename=OUTPUT_MARKERS_FILENAME)
+select_str = '%d:%d' % (START_CHNL, END_CHNL)
+node4 = SelectRange(axis='space', selection=select_str)
 node5 = DejitterTimestamps()
-node6 = SelectRange(axis='axis', selection='1:3')
+node6 = SelectRange(axis='axis', selection=select_str)
 node7 = IIRFilter(order=0, frequencies=[1, 2], mode='highpass', stop_atten=40.0)
 node8 = MovingWindow(window_length=3)
 node9 = MultitaperSpectrum()
-node10 = RecordToCSV(filename='C:/Users/suhas/Desktop/prjs/golf_processing/src/untitled2.csv')
+node10 = RecordToCSV(filename=OUTPUT_FREQ_OUT_FILENAME)
 
 # create flow graph
 patch = Graph()
@@ -34,3 +77,4 @@ patch.connect((node9, 'data'), (node10, 'data'))
 cpe = CPE(graph=patch)
 cpe.loop_run()
 
+print( "END" )
