@@ -9,7 +9,15 @@ Extracting attention and other cognitive measures in Fujitsu data.
 1. Process CSV files  
   * Run get_attention_neuropype_all_subjs.m.  This will create .mat files where the original data files are.  
 1. Process MAT files
-  * Run get_attention_neuropype_all_subjs_plus1.m.  
+  * Run get_attention_neuropype_all_subjs_plus1.m.
+
+Eyes open/eyes closed data
+
+1. many_subj2.m
+
+Misc.
+
+somehow eeglab is owned by s.c@yahoo.com; hence read-oly tag has no effect for him
 
 ## File listing
 ````
