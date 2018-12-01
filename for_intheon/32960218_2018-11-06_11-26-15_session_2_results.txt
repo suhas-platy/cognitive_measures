@@ -1,0 +1,23 @@
+
+- Session: 
+  - subject_id: '32960218'
+  - recording_dir: C:\Recordings
+  - session_id: '2'
+  - session_notes: '
+      post eval, repeated srt task'
+- Eyes Open, Eyes Closed: 
+  - completed: true
+  - correct_%: n/a
+  - avg_RT: n/a
+- Flanker Task (practice): 
+  - completed: true
+  - correct_%: 73.33
+  - avg_RT: 406.33
+- Flanker Task: 
+  - completed: true
+  - correct_%: 87.86
+  - avg_RT: 458.81
+- DANA Tasks: 
+  - completed: true
+  - correct_%: n/a
+  - avg_RT: n/a
