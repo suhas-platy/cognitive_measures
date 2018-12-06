@@ -1,12 +1,28 @@
 % @brief get RT's
 
-IN.FNAME = 'test.csv';
+IN.IN_FNAME = 'test.csv';
+IN.MARKERS_FROM_EEGLAB = 1;
 
-data = readtable( IN.FNAME ); % header is dropped
+IN.IN_FNAME = '32960218_flanker_arrows_2018-11-06_10-41-17_2_markers.csv';
+IN.MARKERS_FROM_EEGLAB = 0;
+
+if ( IN.MARKERS_FROM_EEGLAB == 1 )
+   data = readtable( IN.IN_FNAME, 'HeaderLines', 1 );
+else
+   data = readtable( IN.IN_FNAME, 'HeaderLines', 0 );
+end
+
 trial_ctr = 1;
 for r = 1:size( data,1 )
-   event_label = data{r,2}{1};
-   event_latency = data{r,3};
+   if ( IN.MARKERS_FROM_EEGLAB == 1 )
+      event_label = data{r,2}{1};
+      event_latency = data{r,3};
+   else
+      event_label = data.Var1(r);
+      event_label = strtrim( event_label{1} );
+      event_latency = data.Var2(r) * 1000.;
+   end
+   
    
    if ( strcmp( event_label, 'congruent-stimulus' ) ||...
         strcmp( event_label, 'incongruent-stimulus' ) )

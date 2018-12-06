@@ -15,6 +15,12 @@ Eyes open/eyes closed data
 
 1. many_subj2.m
 
+Flanker
+
+1. get_flanker_info.m and get_flanker_info2.m
+
+2. 
+
 Misc.
 
 somehow eeglab is owned by s.c@yahoo.com; hence read-oly tag has no effect for him

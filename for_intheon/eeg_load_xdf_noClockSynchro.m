@@ -1,4 +1,4 @@
-function raw = eeg_load_xdf(filename, varargin)
+function raw = eeg_load_xdf_noClockSynchro(filename, varargin)
 % Import an XDF file from disk
 % EEG = eeg_load_xdf(Filename, Options...)
 %

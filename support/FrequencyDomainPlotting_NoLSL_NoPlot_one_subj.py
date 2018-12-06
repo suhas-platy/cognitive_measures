@@ -41,7 +41,8 @@ print( "INPUT_XDF_FILENAME " + INPUT_XDF_FILENAME );
 print( "OUTPUT_FREQ_OUT_FILENAME " + OUTPUT_FREQ_OUT_FILENAME ); 
 print( "OUTPUT_MARKERS_FILENAME " + OUTPUT_MARKERS_FILENAME ); 
 print( "START_CHNL %d" % START_CHNL ); 
-print( "END_CHNL %d" % END_CHNL ); 
+print( "END_CHNL %d" % END_CHNL );
+print( "" );
 
 ################################################################################
 # calculate
