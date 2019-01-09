@@ -1,0 +1,25 @@
+[
+    {"IN":
+      {"IN_PATH": "C:\\Data\\Fujitsu Study Data\\",
+       "IN_FILEZ": 
+       ["09062018\\32960218\\32960218_flanker_arrows_2018-09-06_10-42-51_1_markers.csv",
+        "09072018\\31970318\\31970318_flanker_arrows_2018-09-07_15-08-22_1_markers.csv",
+        "09052018\\32950518\\32950518_flanker_arrows_2018-09-05_16-46-25_1_markers.csv",
+        "09052018\\32950318\\32950318_flanker_arrows_2018-09-05_14-01-41_1_markers.csv",
+        "09062018\\31960118\\31960118_flanker_arrows_2018-09-06_09-20-25_1_markers.csv",
+        "09072018\\31970218\\31970218_flanker_arrows_2018-09-07_13-53-24_1_markers.csv",
+        "09102018\\319100118\\319100118_flanker_arrows_2018-09-10_10-59-46_1_markers.csv",
+        "09112018\\319110218\\319110218_flanker_arrows_2018-09-11_14-12-54_1_markers.csv",
+        "09062018\\32960418\\32960418_flanker_arrows_2018-09-06_15-12-22_1_markers.csv",
+        "09112018\\319110118\\319110118_flanker_arrows_2018-09-11_12-23-37_1_markers.csv"
+       ],
+       "SAVE_PATH": ".\\data\\flanker\\",
+       "SAVE_FILENAME": "flanker_before_tier1.mat"
+      }
+    },
+    {"ALGO":
+     {
+      "SAVE": 1
+     }
+    }
+]

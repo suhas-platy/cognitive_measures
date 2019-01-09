@@ -1,0 +1,703 @@
+﻿{
+  "channels": {
+    "channels_spectra": {
+      "chunks": {
+        "eeg": {
+          "props": {
+            "is_signal": true,
+            "is_event_stream": false,
+            "is_streaming": false,
+            "stream_name": "eeg",
+            "source_id": "",
+            "modality": "EEG",
+            "source_url": "file://d:/data/tpi/fujitsu/dana/tier1/fujitsu_DANAAfter_tier1_data/11052018/319110118/319110118_dana_tasks_2018-11-05_12-35-05_2.xdf",
+            "has_markers": false
+          },
+          "block": {
+            "axes": [ "*** first axes"
+              {
+                "frequencies": [ "***[1:0.5:40]"
+                ],
+                "type": "frequency",
+                "label": "None"
+              },
+              { "*** second axes"
+                "naming_system": "",
+                "units": [ "*** all 0's, 1x10"
+                ],
+                "names": [
+                  "F7 ",
+                  "Fp1",
+                  "Fp2",
+                  "F8 ",
+                  "F3 ",
+                  "Fz ",
+                  "F4 ",
+                  "C3 ",
+                  "Cz ",
+                  "P8 ",
+                  "P7 ",
+                  "Pz ",
+                  "P4 ",
+                  "T3 ",
+                  "P3 ",
+                  "O1 ",
+                  "O2 ",
+                  "C4 ",
+                  "T4 "
+                ],
+                "coordinate_system": "",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3 double probably from a standard model"
+                ]
+              },
+              { "*** third axes"
+                "type": "instance",
+                "label": "timewindow",
+                "times": [
+                  144279.19893884432,
+                  430273.0440279215,
+                  201023.96946342743,
+                  395988.33540980803
+                ],
+                "data": [ "*** if you read these as columns, you get nan, True, After and tier1, then nan, True, Before and tier 1, then nan, True, After and tier 2 and then nan, True, Before and Tier 2; 4x5x6 char"
+                ]
+              },
+              { "*** fourth axes"
+                "types": [
+                  1500000000,
+                  1600000000
+                ],
+                "type": "statistic",
+                "label": "conditional-mean"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "channels_bands_statstable": {
+      "chunks": {
+        "eeg": {
+          "props": {
+            "has_targets": false
+          },
+          "block": {
+            "axes": [
+              {
+                "names": [
+                  "delta           ",
+                  "theta           ",
+                  "alpha           ",
+                  "beta            ",
+                  "gamma           ",
+                  "theta/alpha     ",
+                  "beta/theta+alpha",
+                  "theta/beta      "
+                ],
+                "type": "feature",
+                "label": "None",
+                "units": ""
+              },
+              {
+                "naming_system": "",
+                "units": [ "*** all 0's, 1x10"
+                ],
+                "names": [ "*** F7, Fp1, etc.; see above"
+                ],
+                "coordinate_system": "",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3 double probably from a standard model"
+                ]
+              },
+              {
+                "names": [
+                  "Group     ",
+                  "Task      ",
+                  "Group:Task",
+                  "Residual  "
+                ],
+                "type": "feature",
+                "label": "explanatory-variables",
+                "units": ""
+              },
+              {
+                "names": [
+                  "df     ",
+                  "sum_sq ",
+                  "mean_sq",
+                  "F      ",
+                  "PR(>F) "
+                ],
+                "type": "feature",
+                "label": "statistic-types",
+                "units": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "channels_bands_power": {
+      "chunks": {
+        "eeg": {
+          "props": {
+            "is_signal": true,
+            "is_event_stream": false,
+            "is_streaming": false,
+            "stream_name": "eeg",
+            "source_id": "",
+            "modality": "EEG",
+            "source_url": "file://d:/data/tpi/fujitsu/dana/tier1/fujitsu_DANAAfter_tier1_data/11052018/319110118/319110118_dana_tasks_2018-11-05_12-35-05_2.xdf",
+            "has_markers": false
+          },
+          "block": {
+            "axes": [
+              {
+                "names": [
+                  "delta           ",
+                  "theta           ",
+                  "alpha           ",
+                  "beta            ",
+                  "gamma           ",
+                  "theta/alpha     ",
+                  "beta/theta+alpha",
+                  "theta/beta      "
+                ],
+                "type": "feature",
+                "label": "None",
+                "units": ""
+              },
+              {
+                "naming_system": "",
+                "units": [ "*** all 0's, 1x10"
+                ],
+                "names": [ "*** F7, Fp1, etc.; see above"
+                ],
+                "coordinate_system": "",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3 double probably from a standard model"
+                ]
+              },
+              {
+                "type": "instance",
+                "label": "timewindow",
+                "times": [
+                  144279.19893884432,
+                  430273.0440279215,
+                  201023.96946342743,
+                  395988.33540980803
+                ],
+                "data": [ "*** if you read these as columns, you get nan, True, After and tier1, etc.; 4x5x6 char"
+                ]
+              },
+              {
+                "types": [
+                  1500000000,
+                  1600000000
+                ],
+                "type": "statistic",
+                "label": "conditional-mean"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "None": {
+      "chunks": {
+        "eeg": {
+          "props": false,
+          "block": {
+            "axes": [
+              {
+                "frequencies": [ "***[1:0.5:40]"
+                ],
+                "type": "frequency",
+                "label": "None"
+              },
+              {
+                "naming_system": "",
+                "units": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "names": [
+                  "Fz ",
+                  "Fp1",
+                  "Fp2",
+                  "F3 ",
+                  "F4 ",
+                  "Pz ",
+                  "O1 ",
+                  "O2 ",
+                  "P3 ",
+                  "P4 "
+                ],
+                "coordinate_system": "",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3 double probably from a standard model"
+                ]
+              },
+              {
+                "names": [
+                  "Group     ",
+                  "Task      ",
+                  "Group:Task",
+                  "Residual  "
+                ],
+                "type": "feature",
+                "label": "explanatory-variables",
+                "units": ""
+              },
+              {
+                "names": [
+                  "df     ",
+                  "sum_sq ",
+                  "mean_sq",
+                  "F      ",
+                  "PR(>F) "
+                ],
+                "type": "feature",
+                "label": "statistic-types",
+                "units": ""
+              }
+            ],
+            "data": [
+              [
+                [
+                ]
+              ]
+            ]
+          }
+        }
+      }
+    }
+  },
+  "sources": {
+    "sources_spectra": {
+      "chunks": {
+        "eeg": {
+          "props": {
+            "is_signal": true,
+            "source_id": "",
+            "is_streaming": false,
+            "stream_name": "eeg",
+            "is_event_stream": false,
+            "modality": "EEG",
+            "has_markers": false,
+            "source_url": "file://d:/data/tpi/fujitsu/dana/tier1/fujitsu_DANAAfter_tier1_data/11052018/319110118/319110118_dana_tasks_2018-11-05_12-35-05_2.xdf",
+            "headmodel": "Colin-339ch-4495v-scalar-4shell-1.1.hm"
+          },
+          "block": {
+            "axes": [
+              {
+                "frequencies": [
+                  1,
+                  1.5,
+                  2,
+                  2.5,
+                  3,
+                  3.5,
+                  4,
+                  4.5,
+                  5,
+                  5.5,
+                  6,
+                  6.5,
+                  7,
+                  7.5,
+                  8,
+                  8.5,
+                  9,
+                  9.5,
+                  10,
+                  10.5,
+                  11,
+                  11.5,
+                  12,
+                  12.5,
+                  13,
+                  13.5,
+                  14,
+                  14.5,
+                  15,
+                  15.5,
+                  16,
+                  16.5,
+                  17,
+                  17.5,
+                  18,
+                  18.5,
+                  19,
+                  19.5,
+                  20,
+                  20.5,
+                  21,
+                  21.5,
+                  22,
+                  22.5,
+                  23,
+                  23.5,
+                  24,
+                  24.5,
+                  25,
+                  25.5,
+                  26,
+                  26.5,
+                  27,
+                  27.5,
+                  28,
+                  28.5,
+                  29,
+                  29.5,
+                  30,
+                  30.5,
+                  31,
+                  31.5,
+                  32,
+                  32.5,
+                  33,
+                  33.5,
+                  34,
+                  34.5,
+                  35,
+                  35.5,
+                  36,
+                  36.5,
+                  37,
+                  37.5,
+                  38,
+                  38.5,
+                  39,
+                  39.5,
+                  40
+                ],
+                "type": "frequency",
+                "label": "None"
+              },
+              {
+                "naming_system": "",
+                "units": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "names": [
+                  "ANT_CIN_L  ",
+                  "ANT_CIN_R  ",
+                  "DORLAT_PF_L",
+                  "DORLAT_PF_R",
+                  "INF_PAR_L  ",
+                  "INF_PAR_R  ",
+                  "LAT_OCP_L  ",
+                  "LAT_OCP_R  ",
+                  "ORB_PF_L   ",
+                  "ORB_PF_R   ",
+                  "PRE_CENT_L ",
+                  "PRE_CENT_R "
+                ],
+                "coordinate_system": "internal",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3..."
+                ]
+              },
+              {
+                "type": "instance",
+                "label": "timewindow",
+                "times": [
+                  144279.19893884432,
+                  430273.0440279215,
+                  201023.96946342743,
+                  395988.33540980803
+                ],
+                "data": [ "if you read these as columns..."
+                ]
+              },
+              {
+                "types": [
+                  1500000000,
+                  1600000000
+                ],
+                "type": "statistic",
+                "label": "conditional-mean"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "sources_bands_power": {
+      "chunks": {
+        "eeg": {
+          "props": {
+            "is_signal": true,
+            "source_id": "",
+            "is_streaming": false,
+            "stream_name": "eeg",
+            "is_event_stream": false,
+            "modality": "EEG",
+            "has_markers": false,
+            "source_url": "file://d:/data/tpi/fujitsu/dana/tier1/fujitsu_DANAAfter_tier1_data/11052018/319110118/319110118_dana_tasks_2018-11-05_12-35-05_2.xdf",
+            "headmodel": "Colin-339ch-4495v-scalar-4shell-1.1.hm"
+          },
+          "block": {
+            "axes": [
+              {
+                "names": [
+                  "delta           ",
+                  "theta           ",
+                  "alpha           ",
+                  "beta            ",
+                  "gamma           ",
+                  "theta/alpha     ",
+                  "beta/theta+alpha",
+                  "theta/beta      "
+                ],
+                "type": "feature",
+                "label": "None",
+                "units": ""
+              },
+              {
+                "naming_system": "",
+                "units": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "names": [
+                  "ANT_CIN_L  ",
+                  "ANT_CIN_R  ",
+                  "DORLAT_PF_L",
+                  "DORLAT_PF_R",
+                  "INF_PAR_L  ",
+                  "INF_PAR_R  ",
+                  "LAT_OCP_L  ",
+                  "LAT_OCP_R  ",
+                  "ORB_PF_L   ",
+                  "ORB_PF_R   ",
+                  "PRE_CENT_L ",
+                  "PRE_CENT_R "
+                ],
+                "coordinate_system": "internal",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3"
+                ]
+              },
+              {
+                "type": "instance",
+                "label": "timewindow",
+                "times": [
+                  144279.19893884432,
+                  430273.0440279215,
+                  201023.96946342743,
+                  395988.33540980803
+                ],
+                "data": [ "if you read these as columns"
+x                ]
+              },
+              {
+                "types": [
+                  1500000000,
+                  1600000000
+                ],
+                "type": "statistic",
+                "label": "conditional-mean"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "sources_spectra_statstable": {
+      "chunks": {
+        "eeg": {
+          "props": {
+            "has_targets": false
+          },
+          "block": {
+            "axes": [
+              {
+                "frequencies": [ "*** [1:0.5:40]"
+                ],
+                "type": "frequency",
+                "label": "None"
+              },
+              {
+                "naming_system": "",
+                "units": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "names": [
+                  "ANT_CIN_L  ",
+                  "ANT_CIN_R  ",
+                  "DORLAT_PF_L",
+                  "DORLAT_PF_R",
+                  "INF_PAR_L  ",
+                  "INF_PAR_R  ",
+                  "LAT_OCP_L  ",
+                  "LAT_OCP_R  ",
+                  "ORB_PF_L   ",
+                  "ORB_PF_R   ",
+                  "PRE_CENT_L ",
+                  "PRE_CENT_R "
+                ],
+                "coordinate_system": "internal",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3 double (probably from a standard model)"
+                ]
+              },
+              {
+                "names": [
+                  "Group     ",
+                  "Task      ",
+                  "Group:Task",
+                  "Residual  "
+                ],
+                "type": "feature",
+                "label": "explanatory-variables",
+                "units": ""
+              },
+              {
+                "names": [
+                  "df     ",
+                  "sum_sq ",
+                  "mean_sq",
+                  "F      ",
+                  "PR(>F) "
+                ],
+                "type": "feature",
+                "label": "statistic-types",
+                "units": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "sources_bands_statstable": {
+      "chunks": {
+        "eeg": {
+          "props": {
+            "is_signal": true,
+            "source_id": "",
+            "stream_name": "eeg",
+            "is_streaming": false,
+            "is_event_stream": false,
+            "modality": "EEG",
+            "has_markers": false,
+            "source_url": "file://d:/data/tpi/fujitsu/dana/tier1/fujitsu_DANAAfter_tier1_data/11052018/319110118/319110118_dana_tasks_2018-11-05_12-35-05_2.xdf",
+            "headmodel": "Colin-339ch-4495v-scalar-4shell-1.1.hm"
+          },
+          "block": {
+            "axes": [
+              {
+                "names": [
+                  "delta           ",
+                  "theta           ",
+                  "alpha           ",
+                  "beta            ",
+                  "gamma           ",
+                  "theta/alpha     ",
+                  "beta/theta+alpha",
+                  "theta/beta      "
+                ],
+                "type": "feature",
+                "label": "None",
+                "units": ""
+              },
+              {
+                "naming_system": "",
+                "units": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "names": [
+                  "ANT_CIN_L  ",
+                  "ANT_CIN_R  ",
+                  "DORLAT_PF_L",
+                  "DORLAT_PF_R",
+                  "INF_PAR_L  ",
+                  "INF_PAR_R  ",
+                  "LAT_OCP_L  ",
+                  "LAT_OCP_R  ",
+                  "ORB_PF_L   ",
+                  "ORB_PF_R   ",
+                  "PRE_CENT_L ",
+                  "PRE_CENT_R "
+                ],
+                "coordinate_system": "internal",
+                "type": "space",
+                "label": "None",
+                "positions": [ "*** 19x3"
+                ]
+              },
+              {
+                "type": "instance",
+                "label": "timewindow",
+                "times": [ "*** ??x??"
+                ],
+                "data": [ "*** if you read these as columns"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
