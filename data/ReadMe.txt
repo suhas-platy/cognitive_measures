@@ -10,4 +10,15 @@ Posit/Brain HQ up to Oct. 22: Go Platypus Dropbox\Science And Research\Data Aqui
 
 DANA after: AFAIK, it's in XDF format: C:\Users\suhas\Go Platypus Dropbox\Science And Research\Data Aquisition\Fujitsu Data Post-Testing
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+DANA tasks and ratios
 
+reaction time (SRT1)
+memory search (MS)
+attention (CS, aka CSL, CSS)
+decision making (GNG)
+resting baseline (eyes closed-eyes open)
+
+Workload - Higher Beta/(Theta+Alpha) correlates with higher workload
+Memory - Higher Theta/Alpha correlates with better memory
+Attention - Lower Theta/Beta correlates with more attention

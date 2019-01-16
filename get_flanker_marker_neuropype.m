@@ -1,4 +1,7 @@
-% @brief make CMD file which gets freq out and markers from Neuropype; run make_csv_files.cmd when done; uses support\FrequencyDomainPlotting_NoLSL_NoPlot_one_subj.py
+% @brief make CMD file which gets freq out. and markers from Neuropype (frequencies usu. not used but markers are); run make_csv_files.cmd when done; uses support\FrequencyDomainPlotting_NoLSL_NoPlot_one_subj.py
+
+% first run with "before" in params, then with "after"
+% marker files are saved in the same place the XDF files are saved but as <filename>_markers.csv
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
@@ -8,14 +11,27 @@ addpath( './support/Enhanced_rdir' );
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ params (IN & ALGO)
-IN.PATH = 'C:\Data\Fujitsu Data Post-Testing';
-IN.FILE_FILTER = '\**\*_flanker_arrows_2018-11*.xdf';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% before
+IN.PATH = 'C:\Data\Fujitsu Study Data';
+IN.FILE_FILTER = '\**\*_flanker_arrows_2018-09*.xdf';
 
 IN.SAVE_PATH = './';
 IN.SAVE_FNAME = 'make_csv_files.cmd';
 
 IN.START_CHNL = 1;
 IN.END_CHNL = 1;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% after
+% IN.PATH = 'C:\Data\Fujitsu Data Post-Testing';
+% IN.FILE_FILTER = '\**\*_flanker_arrows_2018-11*.xdf';
+
+% IN.SAVE_PATH = './';
+% IN.SAVE_FNAME = 'make_csv_files.cmd';
+
+% IN.START_CHNL = 1;
+% IN.END_CHNL = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ trace param's
@@ -35,10 +51,6 @@ files = rdir( [IN.PATH, IN.FILE_FILTER] );
 
 % create CSV files
 for f = 1:size( files )
-   % if ( f > 20 )
-   %    break;
-   % end
-   
    curr_fname = files(f).name;
    [filepath,filename,fileext] = fileparts( curr_fname );
    disp( sprintf( 'filepath = %s', filepath ) );
@@ -50,8 +62,7 @@ for f = 1:size( files )
    freq_out_filename = [filepath filesep filename '.csv'];
    fprintf( fo, '%s\n', sprintf( '--s "%d" ^', IN.START_CHNL ) );
    fprintf( fo, '%s\n', sprintf( '--e "%d" ^', IN.END_CHNL ) );
-   fprintf( fo, '%s\n\n', sprintf( '--f "%s"', freq_out_filename ) );
-   
+   fprintf( fo, '%s\n\n', sprintf( '--f "%s"', freq_out_filename ) );   
 end
 
 fclose( fo );

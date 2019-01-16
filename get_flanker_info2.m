@@ -1,8 +1,9 @@
 % @brief check # correct and RT for flanker data across groups
 
+% first run with "before" in params, then with "after"
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
-addpath( 'C:\Program Files\eeglab_current\eeglab15rc1\plugins\xdfimport1.13' );
 addpath( './support' );
 %%%}}} eo-handle include paths
 
@@ -10,9 +11,17 @@ addpath( './support' );
 %%%{{{ params (IN & ALGO)
 disp( 'params' );
 
-IN.IN_PATH = '.\';
-IN.TIER1_FNAME = '1after.mat';
-IN.TIER2_FNAME = '2after.mat';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% before
+IN.IN_PATH = '.\data\flanker\';
+IN.TIER1_FNAME = 'flanker_after_tier1.mat';
+IN.TIER2_FNAME = 'flanker_after_tier2.mat';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% after
+IN.IN_PATH = '.\data\flanker\';
+IN.TIER1_FNAME = 'flanker_before_tier1.mat';
+IN.TIER2_FNAME = 'flanker_before_tier2.mat';
 
 IN.TIER1_CLR = [68 114 196]./255;
 IN.TIER2_CLR = [237 125 49]./255;
@@ -31,6 +40,7 @@ ALGO
 disp( 'load data' );
 tier1 = load( [IN.IN_PATH IN.TIER1_FNAME] );
 tier2 = load( [IN.IN_PATH IN.TIER2_FNAME] );
+keyboard; % examine
 
 % these are all 1 x number of subjects
 tier1_corr = tier1.corr;
@@ -45,8 +55,8 @@ tier2_missed = tier2.missed;
 tier1_num_trial = tier1.num_trial;
 tier2_num_trial = tier2.num_trial;
 
-tier1_rt = tier1.rt_avg;
-tier2_rt = tier2.rt_avg;
+%tier1_rt = tier1.rt_avg;
+%tier2_rt = tier2.rt_avg;
 %%%}}} eo-load data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -168,7 +178,7 @@ set( gca, 'XTickLabel', [""] );
 xlabel( 'Group' );
 ylabel( 'Reaction time' );
 
-keyboard;
+%keyboard;
 %%%}}} eo-display
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

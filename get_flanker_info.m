@@ -1,39 +1,7 @@
-% @brief get # correct and RT for flanker data
+% @brief get # correct and RT for flanker data -- @warn this uses markers from the XDF files which are wrong
 
-% example events
-    % [  6599]    'trial-begin'            [3.7341e+05]    [       1]
-    % [  6600]    'response-window-b¡­'    [3.7341e+05]    [       1]
-    % [  6601]    'left-flanker'           [3.7341e+05]    [       1]
-    % [  6602]    'picture-begin'          [3.7341e+05]    [       1]
-    % [  6603]    'picture-end'            [3.7347e+05]    [       1]
-    % [  6604]    'incongruent-stimu¡­'    [3.7347e+05]    [       1]
-    % [  6605]    'picture-begin'          [3.7347e+05]    [       1]
-    % [  6606]    'picture-end'            [3.7354e+05]    [       1]
-    % [  6607]    'fixation-cross'         [3.7354e+05]    [       1]
-    % [  6608]    'crosshair-begin'        [3.7354e+05]    [       1]
-    % [  6609]    'arrow_right pressed'    [3.7365e+05]    [       1]
-    % [  6610]    'response-received¡­'    [3.7366e+05]    [       1]
-    % [  6611]    'crosshair-end'          [3.7423e+05]    [       1]
-    % [  6612]    'response-window-end'    [3.7423e+05]    [       1]
-    % [  6613]    'response-was-corr¡­'    [3.7423e+05]    [       1]
-    % [  6614]    'trial-end'              [3.7423e+05]    [       1]
-
-% example with missed
-% 668	trial-begin	21188.621561	1
-% 669	response-window-begin	21188.634083	1
-% 670	right-flanker	21188.636865	1
-% 671	picture-begin	21188.671765	1
-% 672	picture-end	21226.767164	1
-% 673	congruent-stimulus	21226.781077	1
-% 674	picture-begin	21226.816556	1
-% 675	picture-end	21266.698305	1
-% 676	fixation-cross	21266.712566	1
-% 677	crosshair-begin	21266.769263	1
-% 678	crosshair-end	21599.994002	1
-% 679	response-window-end	21600.016148	1
-% 680	response-was-missed	21600.019278	1
-% 681	trial-end	21600.02322	1
-
+% get_flanker_info( "./conf/flanker_before_tier1.json" );
+function [OUT, varargout] = get_flanker_info( CONFIG_FILENAME, varargin )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
@@ -49,7 +17,7 @@ disp( 'params' );
 % tier 1 after
 IN.SETTING1 = '1before';
 IN.IN_PATH = 'C:\Data\Fujitsu Study Data\';
-IN.FZ = [...
+IN.IN_FILEZ = [...
    "11062018\32960218\32960218_flanker_arrows_2018-11-06_10-41-17_2.xdf",...
    "11052018\31970318\31970318_flanker_arrows_2018-11-05_15-28-55_2.xdf",...
    "11062018\32950518\32950518_flanker_arrows_2018-11-06_12-17-43_2.xdf",...
@@ -66,7 +34,7 @@ IN.SAVE_FILENAME = './1after.mat';
 % tier 1 after
 IN.SETTING1 = '1after';
 IN.IN_PATH = 'C:\Data\Fujitsu Data Post-Testing\';
-IN.FZ = [...
+IN.IN_FILEZ = [...
    "11062018\32960218\32960218_flanker_arrows_2018-11-06_10-41-17_2.xdf",...
    "11052018\31970318\31970318_flanker_arrows_2018-11-05_15-28-55_2.xdf",...
    "11062018\32950518\32950518_flanker_arrows_2018-11-06_12-17-43_2.xdf",...
@@ -83,7 +51,7 @@ IN.SAVE_FILENAME = './1after.mat';
 % tier 2 after
 IN.SETTING = '2after';
 IN.IN_PATH = 'C:\Data\Fujitsu Data Post-Testing\';
-IN.FZ = [...
+IN.IN_FILEZ = [...
    "11142018\31950418\31950418_flanker_arrows_2018-11-14_13-41-22_2.xdf",...
    "11132018\310910318\310910318_flanker_arrows_2018-11-13_12-19-24_2.xdf",...
    "11022018\32960318\32960318_flanker_arrows_2018-11-02_14-56-03_2.xdf",...
@@ -99,18 +67,18 @@ IN.SAVE_FILENAME = './2after.mat';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % test
-IN.SETTING = 'test';
-IN.IN_PATH = '.\data\';
-IN.FZ = ["Testdata_flanker_arrows_2018-07-05_07-32-07_1.xdf"];
-IN.SAVE_FILENAME = './test.mat'; % rt is 165 ms
-
 IN.SETTING = 'test_1after';
 IN.IN_PATH = 'C:\Data\Fujitsu Data Post-Testing\';
-IN.FZ = ["11062018\32960218\32960218_flanker_arrows_2018-11-06_10-41-17_2.xdf"];
+IN.IN_FILEZ = ["11062018\32960218\32960218_flanker_arrows_2018-11-06_10-41-17_2.xdf"];
 IN.SAVE_FILENAME = './test.mat'; % rt is 165 ms
 
 ALGO.SAVE_EVENT_FILE = 1;
 ALGO.SAVE = 0
+
+params = jsondecode( fileread( CONFIG_FILENAME ) );
+IN = params{1}.IN;
+ALGO = params{2}.ALGO;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ trace param's
 IN
@@ -131,13 +99,13 @@ disp( 'calculate data' );
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 
 % load
-corr = zeros(1,size(IN.FZ,2));
-incorr = zeros(1,size(IN.FZ,2));
-missed = zeros(1,size(IN.FZ,2));
+corr = zeros(1,size(IN.IN_FILEZ,2));
+incorr = zeros(1,size(IN.IN_FILEZ,2));
+missed = zeros(1,size(IN.IN_FILEZ,2));
 
-for f = 1:size(IN.FZ,2)
+for f = 1:size(IN.IN_FILEZ,2)
   % load
-  fname = strcat( IN.IN_PATH, IN.FZ(f) )
+  fname = strcat( IN.IN_PATH, IN.IN_FILEZ{f} )
   if (~isfile( fname ))
       disp( 'check filename' ); keyboard;
   end

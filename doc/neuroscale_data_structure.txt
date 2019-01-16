@@ -1,0 +1,123 @@
+data
+  channels
+    channels_spectra
+	  chunks
+	    eeg
+		  props
+		    is_signal 1
+			is_event_stream 0
+			is_streaming 0
+			stream_name 'eeg'
+			source_id ''
+			modality 'EEG'
+			source_url file://d:/data/tpi/fujitsu/dana/tier1/fujitsu_DANAAfter_tier1_data/11052018/319110118/319110118_dana_tasks_2018-11-05_12-35-05_2.xdf
+			has_markers
+		  block
+		    axes 1x4 cell array
+			  {1}
+			  frequencies 1x79 ([1:0.5:40])
+			  type 'frequency'
+			  label 'None'
+			  
+			  {2}
+			  naming system ''
+			  units 1x10 (all 0's)
+			  names 19x3 char ('F7', 'Fp1', etc.)
+			  coordinate_system ''
+			  type 'space'
+			  label 'None'
+			  positions 19x3 double (probably from a standard model)
+			  
+			  {3}
+			  type 'instance'
+			  label 'timewindow'
+			  times 4 values here
+			  data 4x5x6 char (if you read these as columns, you get nan, True, After and tier1, then nan, True, Before, Tier 1, etc.; nTAt, nTBt,..., arfi, arei,..., nute, nute,... eer, eoor)
+			  
+			  {4}
+			  types (1500000000, 1600000000)
+			  type 'statistic'
+			  label 'conditional-mean'
+			data 4D matrix
+	channels_bands_statstable
+	  chunks
+	    eeg
+		  props
+		    has_targets 0
+		  block
+		    axes 1x4 cell array
+	channels_bands_power
+	  chunks
+	    eeg
+		  props	  
+		    is_signal 1
+			is_event_stream 0
+			is_streaming 0
+			stream_name 'eeg'
+			source_id ''
+			modality 'EEG'
+			source_url file://d:/data/tpi/fujitsu/dana/tier1/fujitsu_DANAAfter_tier1_data/11052018/319110118/319110118_dana_tasks_2018-11-05_12-35-05_2.xdf
+			has_markers	
+		  block
+		    axes 1x4 cell array
+			  {1}
+              names 8x16 char (delta, theta, alpha, beta, gamma, theta/alpha, beta/theta+alpha, theta/beta)
+              type 'feature'
+              label 'None'
+              units ''	
+
+              {2}
+			  naming system ''
+			  units 1x19 (all 0's)
+			  names 19x3 char ('F7', 'Fp1', etc.); see ELECTRODE LABELS below
+			  coordinate_system ''
+			  type 'space'
+			  label 'None'
+			  positions 19x3 double (probably from a standard model)	
+
+			  {3}
+			  type 'instance'
+			  label 'timewindow'
+			  times
+			  data 4x5x6 char (nTAt, nTBt,..., arfi, arei,..., nute, nute,... eer, eoor)
+
+			  {4}
+			  types (1500000000, 1600000000)
+			  type 'statistic'
+			  label 'conditional-mean'	
+			data 4D matrix (8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and then SEM)			  
+	None
+	  chunks
+	    eeg
+		  props 0
+		  block
+		    axes 1x4 cell array
+			data
+  sources
+    sources_spectra
+	sources_band_power
+	sources_spectra_statstable
+	sources_bands_statstable
+	
+ELECTRODE LABELS
+1     'F7 '
+2     'Fp1'
+3     'Fp2'
+4     'F8 '
+5     'F3 '
+6     'Fz '
+7     'F4 '
+8     'C3 '
+9     'Cz '
+10    'P8 '
+11    'P7 '
+12    'Pz '
+13    'P4 '
+14    'T3 '
+15    'P3 '
+16    'O1 '
+17    'O2 '
+18    'C4 '
+19    'T4 '
+	
+	T7 and T8 are called T3 and T4 resp.

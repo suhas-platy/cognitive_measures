@@ -1,4 +1,4 @@
-% @brief check data quality
+% @brief check data quality w/ EEGLAB
 
 % 1	F7	20.84
 % 2	Fp1	-0.86

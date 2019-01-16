@@ -1,6 +1,6 @@
 # What this is
 
-Extracting attention and other cognitive measures in Fujitsu data.  
+## Extracting attention and other cognitive measures in Fujitsu data.  
 
 1. Get CSV files from XDF files  
   * Run get_attention_neuropype_all_subjs_minus1.m.  This will create ./make_csv_files.cmd.
@@ -11,15 +11,20 @@ Extracting attention and other cognitive measures in Fujitsu data.
 1. Process MAT files
   * Run get_attention_neuropype_all_subjs_plus1.m.
 
-Eyes open/eyes closed data
+## Eyes open/eyes closed data
 
 1. many_subj2.m
 
-Flanker
+## Flanker
 
-1. get_flanker_info.m and get_flanker_info2.m
+1. get_flanker_marker_neuropype.m - this reads in XDF files and makes CSV marker files
+1. get_flanker_info_neuropype.m - this reads in CSV marker files and extracts stat's
+1. get_flanker_info2.m - this compares across conditions
 
-2. 
+## Viewing Intheon Reports
+
+1. view_neuroscale_datastructure.m; data/codebeautify*.json files explain how to index into the .MAT files.
+View the JSON files in Notepad++, that will let you fold portions
 
 Misc.
 

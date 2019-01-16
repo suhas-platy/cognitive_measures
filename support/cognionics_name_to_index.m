@@ -1,5 +1,6 @@
 function idx = cognionics_name_to_index( name, varargin )
-   lut_fname = '../conf/cognionics.json';
+% @brief given a name (e.g., FP1) return its index
+   lut_fname = '../conf/cognionics_q20.json';
    
    lut = jsondecode( fileread( lut_fname ) ); % could make lut_fname a param. e.g., for q30
    

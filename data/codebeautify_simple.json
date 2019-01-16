@@ -14,8 +14,8 @@
             "has_markers": false
           },
           "block": {
-            "axes": [ "*** first axes"
-              {
+            "axes": [ 
+              { "*** first axes"
                 "frequencies": [ "***[1:0.5:40]"
                 ],
                 "type": "frequency",
@@ -84,8 +84,8 @@
             "has_targets": false
           },
           "block": {
-            "axes": [
-              {
+            "axes": [  
+              { "*** first axes"
                 "names": [
                   "delta           ",
                   "theta           ",
@@ -100,7 +100,7 @@
                 "label": "None",
                 "units": ""
               },
-              {
+              { "*** second axes"
                 "naming_system": "",
                 "units": [ "*** all 0's, 1x10"
                 ],
@@ -112,7 +112,7 @@
                 "positions": [ "*** 19x3 double probably from a standard model"
                 ]
               },
-              {
+              { "*** third axes"
                 "names": [
                   "Group     ",
                   "Task      ",
@@ -123,7 +123,7 @@
                 "label": "explanatory-variables",
                 "units": ""
               },
-              {
+              { "*** fourth axes"
                 "names": [
                   "df     ",
                   "sum_sq ",
@@ -207,7 +207,7 @@
         }
       }
     },
-    "None": {
+    "None": { "*** channels_spectra_statstable; not complete; only certain electrodes"
       "chunks": {
         "eeg": {
           "props": false,
@@ -304,87 +304,7 @@
           "block": {
             "axes": [
               {
-                "frequencies": [
-                  1,
-                  1.5,
-                  2,
-                  2.5,
-                  3,
-                  3.5,
-                  4,
-                  4.5,
-                  5,
-                  5.5,
-                  6,
-                  6.5,
-                  7,
-                  7.5,
-                  8,
-                  8.5,
-                  9,
-                  9.5,
-                  10,
-                  10.5,
-                  11,
-                  11.5,
-                  12,
-                  12.5,
-                  13,
-                  13.5,
-                  14,
-                  14.5,
-                  15,
-                  15.5,
-                  16,
-                  16.5,
-                  17,
-                  17.5,
-                  18,
-                  18.5,
-                  19,
-                  19.5,
-                  20,
-                  20.5,
-                  21,
-                  21.5,
-                  22,
-                  22.5,
-                  23,
-                  23.5,
-                  24,
-                  24.5,
-                  25,
-                  25.5,
-                  26,
-                  26.5,
-                  27,
-                  27.5,
-                  28,
-                  28.5,
-                  29,
-                  29.5,
-                  30,
-                  30.5,
-                  31,
-                  31.5,
-                  32,
-                  32.5,
-                  33,
-                  33.5,
-                  34,
-                  34.5,
-                  35,
-                  35.5,
-                  36,
-                  36.5,
-                  37,
-                  37.5,
-                  38,
-                  38.5,
-                  39,
-                  39.5,
-                  40
-                ],
+                  "frequencies": [ 1:.5:40                ],
                 "type": "frequency",
                 "label": "None"
               },
