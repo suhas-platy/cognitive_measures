@@ -20,8 +20,10 @@ disp( 'params' );
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ IN: input files, model parameters, etc.
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\flanker_v2\Select Individual Flanker Reports-20181224T225312Z-001\';
-IN.IN_FILENAME = 'tpi_fuj_flanker_indiv_multisession_report__32950518.mat'
+
+% don't think this ever worked (data.channels.channels_spectra field DNE; this was probably an adapataiton of view_neuroscale_datastructure.m)
+%IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\flanker_v2\Select Individual Flanker Reports-20181224T225312Z-001\';
+%IN.IN_FILENAME = 'tpi_fuj_flanker_indiv_multisession_report__32950518.mat'
 
 IN.SAVE_PATH = './data/';
 IN.SAVE_FILENAME = './data/flanker.csv';
