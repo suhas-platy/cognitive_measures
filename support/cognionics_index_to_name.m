@@ -1,6 +1,10 @@
 function name = cognionics_index_to_name( idx, varargin )
 % @brief given an index (e.g., 2) return its name
    lut_fname = './conf/cognionics_q20.json'; % filenames are relative to where the main script is called
+
+   % assumes q20.json file is in ../conf
+   curr_fname = mfilename( 'fullpath' );
+   lut_fname = strrep( curr_fname, 'support\cognionics_index_to_name', 'conf\cognionics_q20.json' );
    
    persistent lut;
    if ( isempty( lut ) )

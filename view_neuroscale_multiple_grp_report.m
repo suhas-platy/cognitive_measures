@@ -44,6 +44,7 @@ IN.ELECTRODE_OF_INTEREST = 17; % @todo tie to NEUROSCALE constants
 % {"index": "20", "name": "A2"}
 
 IN.PLOT_ORDER = [2 1 4 3];
+IN.NUM_ELECTRODES = 19;
 
 IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v8\';
 IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis__1-30_db_ttest.mat";
@@ -54,9 +55,11 @@ IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis__1-30_db_ttest.mat";
     "tpi_fuj_MTS_group_analysis__1-30_db_ttest.mat";
     "tpi_fuj_MS_group_analysis__1-30_db_ttest.mat";
     "tpi_fuj_SRT2_group_analysis__1-30_db_ttest.mat"];
+IN.COL_HDR = {'Tier 1 After', 'Tier 1 Before', 'Tier 2 After', 'Tier 2 Before'};
+IN.COL_HDR = strrep( IN.COL_HDR, ' ', '_' );
 
-IN.SAVE_PATH = './data/';
-IN.SAVE_FILENAME = './data/vnd.csv';
+IN.SAVE_PATH = [IN.IN_PATH 'csv\'];
+% IN.SAVE_FILEZ will be .csv
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -88,6 +91,7 @@ NEUROSCALE_BEFORE_TIER2_IDX = 4;
 NEUROSCALE_DELTA_IDX = 1;
 NEUROSCALE_THETA_ALPHA_RATIO_IDX = 6;
 NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX = 7; % beta/(theta+alpha)
+NEUROSCALE_THETA_BETA_RATIO_IDX = 8;
 
 NEUROSCALE_FP1_IDX = 2;
 NEUROSCALE_C3_IDX = 8;
@@ -125,12 +129,15 @@ end
 %%%{{{ calculate
 disp( 'calculate' );
 
+for i = 1:IN.NUM_ELECTRODES
+   electrode_label{i} = cognionics_index_to_name( i );
+end
+
 for f = 1:size(IN.IN_FILEZ,1) % for each task
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract band power
    % 4D matrix (8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM)
    % bands & ratios, space, instance/condition, statistic
-   
    channels_band_power_data{f} = data{f}.channels.bands_power_db.chunks.eeg.block.data
 
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,14 +147,34 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    workload_mean{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_MEAN_IDX) );
    workload_sem{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_SEM_IDX) );
 
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   % extract attention
+   % 19 electrodes x 4 conditions
+   tmp = channels_band_power_data{f};
+   attn_mean{f} = squeeze( tmp(NEUROSCALE_THETA_BETA_RATIO_IDX,:,:,NEUROSCALE_MEAN_IDX) );
+   attn_sem{f} = squeeze( tmp(NEUROSCALE_THETA_BETA_RATIO_IDX,:,:,NEUROSCALE_SEM_IDX) );   
+   
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   % save
+   fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );
+   save_fname = strrep( fname, '.mat', '_workload_mean.csv' );
+   intheon_to_csv( save_fname, workload_mean{f}, IN.COL_HDR, electrode_label );
+   
+   save_fname = strrep( fname, '.mat', '_workload_sem.csv' );   
+   intheon_to_csv( save_fname, workload_sem{f}, IN.COL_HDR, electrode_label );
+
+   fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );
+   save_fname = strrep( fname, '.mat', '_attention_mean.csv' );
+   intheon_to_csv( save_fname, attn_mean{f}, IN.COL_HDR, electrode_label );
+   
+   save_fname = strrep( fname, '.mat', '_attention_sem.csv' );   
+   intheon_to_csv( save_fname, attn_sem{f}, IN.COL_HDR, electrode_label );   
+   
 end
 %keyboard;
 
 
-electrodes = size(workload_mean{1},1);
-for i = 1:electrodes
-   electrode_label{i} = cognionics_index_to_name( i );
-end
+
 
 %%%}}} eo-calculate
 
@@ -159,13 +186,14 @@ disp( 'display' );
 
 disp( 'for excel: sum of workload across all 4 conditions, all electrodes)' );
 for f = 1:size(IN.IN_FILEZ,1) % for each task
-  x = sum( workload_mean{f}, 2 )';
+  x = sum( workload_mean{f}, 2 )'; % sum over cond's, so you get by electrode
   sprintf( '%.3g\t', x )
   disp( 'sum across all electrodes' );
   sum_x(f) = sum( x )
 end
 
-figure; plot( sum_x );
+figure(fig_num); fig_num = fig_num + 1;
+plot( sum_x );
 xticklabels( {'SRT', 'PRT', 'GNG', 'CSL', 'SP', 'MTS', 'MS', 'SRT2'} );
 
 % @todo for loop; also use barweb
