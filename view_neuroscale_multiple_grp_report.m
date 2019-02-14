@@ -46,19 +46,21 @@ IN.ELECTRODE_OF_INTEREST = 17; % @todo tie to NEUROSCALE constants
 IN.PLOT_ORDER = [2 1 4 3];
 IN.NUM_ELECTRODES = 19;
 
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v8\';
-IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis__1-30_db_ttest.mat";
-    "tpi_fuj_PRT_group_analysis__1-30_db_ttest.mat";
-    "tpi_fuj_GNG_group_analysis__1-30_db_ttest.mat";
-    "tpi_fuj_CSS_group_analysis__1-30_db_ttest.mat";
-    "tpi_fuj_SP_group_analysis__1-30_db_ttest.mat";
-    "tpi_fuj_MTS_group_analysis__1-30_db_ttest.mat";
-    "tpi_fuj_MS_group_analysis__1-30_db_ttest.mat";
-    "tpi_fuj_SRT2_group_analysis__1-30_db_ttest.mat"];
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v9\';
+IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis__2-5_db_ttest.mat";
+    "tpi_fuj_PRT_group_analysis__2-5_db_ttest.mat";
+    "tpi_fuj_GNG_group_analysis__2-5_db_ttest.mat";
+    "tpi_fuj_CSS_group_analysis__2-5_db_ttest.mat";
+    "tpi_fuj_SP_group_analysis__2-5_db_ttest.mat";
+    "tpi_fuj_MTS_group_analysis__2-5_db_ttest.mat";
+    "tpi_fuj_MS_group_analysis__2-5_db_ttest.mat";
+    "tpi_fuj_SRT2_group_analysis__2-5_db_ttest.mat"];
 IN.COL_HDR = {'Tier 1 After', 'Tier 1 Before', 'Tier 2 After', 'Tier 2 Before'};
 IN.COL_HDR = strrep( IN.COL_HDR, ' ', '_' );
+IN.COL_HDR2 = {'_delta', '_theta', '_alpha', '_beta', '_gamma',...
+               '_attention', '_workload', '_memory'};
 
-IN.SAVE_PATH = [IN.IN_PATH 'csv\'];
+IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
 % IN.SAVE_FILEZ will be .csv
 %%%}}}
 
@@ -129,6 +131,15 @@ end
 %%%{{{ calculate
 disp( 'calculate' );
 
+combined_col_hdr = {};
+ctr = 1;
+for j = 1:8
+   for i = 1:4
+      combined_col_hdr{ctr} = strcat( IN.COL_HDR{i}, IN.COL_HDR2{j} );
+      ctr = ctr+1;
+   end
+end
+
 for i = 1:IN.NUM_ELECTRODES
    electrode_label{i} = cognionics_index_to_name( i );
 end
@@ -138,7 +149,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    % extract band power
    % 4D matrix (8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM)
    % bands & ratios, space, instance/condition, statistic
-   channels_band_power_data{f} = data{f}.channels.bands_power_db.chunks.eeg.block.data
+   channels_band_power_data{f} = data{f}.channels.bands_power_db.chunks.eeg.block.data;
 
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract workload
@@ -156,22 +167,29 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % save
-   fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );
-   save_fname = strrep( fname, '.mat', '_workload_mean.csv' );
-   intheon_to_csv( save_fname, workload_mean{f}, IN.COL_HDR, electrode_label );
+   % fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );
+   % save_fname = strrep( fname, '.mat', '_workload_mean.csv' );
+   % intheon_to_csv( save_fname, workload_mean{f}, IN.COL_HDR, electrode_label );
    
-   save_fname = strrep( fname, '.mat', '_workload_sem.csv' );   
-   intheon_to_csv( save_fname, workload_sem{f}, IN.COL_HDR, electrode_label );
+   % save_fname = strrep( fname, '.mat', '_workload_sem.csv' );   
+   % intheon_to_csv( save_fname, workload_sem{f}, IN.COL_HDR, electrode_label );
 
-   fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );
-   save_fname = strrep( fname, '.mat', '_attention_mean.csv' );
-   intheon_to_csv( save_fname, attn_mean{f}, IN.COL_HDR, electrode_label );
+   % fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );
+   % save_fname = strrep( fname, '.mat', '_attention_mean.csv' );
+   % intheon_to_csv( save_fname, attn_mean{f}, IN.COL_HDR, electrode_label );
    
-   save_fname = strrep( fname, '.mat', '_attention_sem.csv' );   
-   intheon_to_csv( save_fname, attn_sem{f}, IN.COL_HDR, electrode_label );   
+   % save_fname = strrep( fname, '.mat', '_attention_sem.csv' );   
+   % intheon_to_csv( save_fname, attn_sem{f}, IN.COL_HDR, electrode_label );
+
+   fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );   
+   save_fname = strrep( fname, 'v8\', 'v8\csv\' );
+   save_fname = strrep( fname, '.mat', '_bandsAndRatios_mean.xlsx' )
+   mat = channels_band_power_data{f};
+   mat = squeeze( mat(:,:,:,1) );
+   T = intheon_to_xlsx( save_fname, mat, combined_col_hdr, electrode_label );
    
 end
-%keyboard;
+keyboard;
 
 
 

@@ -8,6 +8,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
+addpath( './support' );
 %%%}}} eo-handle include paths
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -21,9 +22,36 @@ disp( 'params' );
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ IN: input files, model parameters, etc.
 
+%%%%%%%%%%%%%%%%%%%%
+% shared
+IN.ELECTRODE_OF_INTEREST = 17; % @todo tie to NEUROSCALE constants
+
+% {"index": "1", "name": "F7"},
+% {"index": "2", "name": "Fp1"},
+% {"index": "3", "name": "Fp2"},
+% {"index": "4", "name": "F8"},
+% {"index": "5", "name": "F3"},
+% {"index": "6", "name": "Fz"},
+% {"index": "7", "name": "F4"},
+% {"index": "8", "name": "C3"},
+% {"index": "9", "name": "Cz"},
+% {"index": "10", "name": "P8"},
+% {"index": "11", "name": "P7"},
+% {"index": "12", "name": "Pz"},
+% {"index": "13", "name": "P4"},
+% {"index": "14", "name": "T3"},
+% {"index": "15", "name": "P3"},
+% {"index": "16", "name": "O1"},
+% {"index": "17", "name": "O2"},
+% {"index": "18", "name": "C4"},
+% {"index": "19", "name": "T4"},
+% {"index": "20", "name": "A2"}
+
+IN.PLOT_ORDER = [2 1 4 3];
+
 % don't think this ever worked (data.channels.channels_spectra field DNE; this was probably an adapataiton of view_neuroscale_datastructure.m)
-%IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\flanker_v2\Select Individual Flanker Reports-20181224T225312Z-001\';
-%IN.IN_FILENAME = 'tpi_fuj_flanker_indiv_multisession_report__32950518.mat'
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\DANA individual reports 2019.02.04\dana_indiv_2session_reports_2-4\'
+IN.IN_FILEZ = ["31950218_tpi_fuj_dana_CSS_indiv_2session_analysis.mat"];
 
 IN.SAVE_PATH = './data/';
 IN.SAVE_FILENAME = './data/flanker.csv';
@@ -57,11 +85,16 @@ NEUROSCALE_BEFORE_TIER2_IDX = 4;
 
 NEUROSCALE_DELTA_IDX = 1;
 NEUROSCALE_THETA_ALPHA_RATIO_IDX = 6;
+NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX = 7; % beta/(theta+alpha)
 
 NEUROSCALE_FP1_IDX = 2;
+NEUROSCALE_C3_IDX = 8;
 
 NEUROSCALE_MEAN_IDX = 1;
 NEUROSCALE_SEM_IDX = 2;
+
+NEUROSCALE_TASK_IDX = 2;
+NEUROSCALE_PRF_IDX = 5;
 
 TIER1_AFTER_CLR = [31 119 180]./255; % blue
 TIER1_BEFORE_CLR = [255 127 14]./255; % orange
@@ -75,51 +108,44 @@ TIER2_BEFORE_CLR = [214 39 40]./255; % red
 %%%{{{ load data
 disp( 'load data' );
 
-fname = [IN.IN_PATH IN.IN_FILENAME];
-mt_check_filename( fname );
-disp( sprintf( 'loading file %s', fname ) );
-data = load( fname );
-data = data.data;
+for f = 1:size(IN.IN_FILEZ,1) % for each task
+  % load
+  fname = strcat( IN.IN_PATH, IN.IN_FILEZ{f} )
+  mt_check_filename( fname );
+  disp( sprintf( 'loading file %s', fname ) );
+  tmp_data = load( fname );
+  data{f} = tmp_data.data;
+end
 
 %%%}}} eo-load data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ calculate
 disp( 'calculate' );
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% extract eeg means
-% 4D matrix (79 frequencies x 19 electrodes x 4 conditions x 2: mean and SEM; frequencies are 1:0.5:40)
-channels_spectra_data = data.channels.channels_spectra.chunks.eeg.block.data;
 
-fp1_eeg_after_tier1_mean = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_TIER1_IDX,1);
+for f = 1:size(IN.IN_FILEZ,1) % for each task
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   % extract band power
+   % 4D matrix (8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM)
+   % bands & ratios, space, instance/condition, statistic
+   
+   channels_band_power_data{f} = data{f}.channels.dB.bands.chunks.eeg.block.data
 
-fp1_eeg_before_tier1_mean = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_BEFORE_TIER1_IDX,1);
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   % extract workload
+   % 19 electrodes x 4 conditions
+   tmp = channels_band_power_data{f};
+   workload_mean{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_MEAN_IDX) );
+   workload_sem{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_SEM_IDX) );
 
-fp1_eeg_tier1_mean = mean( [fp1_eeg_after_tier1_mean, fp1_eeg_before_tier1_mean], 2 );
+end
+keyboard;
 
-fp1_eeg_after_tier2_mean = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_TIER2_IDX,1);
 
-fp1_eeg_before_tier2_mean = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_BEFORE_TIER2_IDX,1);
-
-fp1_eeg_tier2_mean = mean( [fp1_eeg_after_tier2_mean, fp1_eeg_before_tier2_mean], 2 );
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% extract band power
-% 4D matrix (8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM)
-channels_band_power_data = data.channels.channels_bands_power.chunks.eeg.block.data;
-
-% extract delta
-fp1_delta_mean = channels_band_power_data(NEUROSCALE_DELTA_IDX,NEUROSCALE_FP1_IDX,:,NEUROSCALE_MEAN_IDX);
-fp1_delta_mean = squeeze( fp1_delta_mean );
-fp1_delta_sem = channels_band_power_data(NEUROSCALE_DELTA_IDX,NEUROSCALE_FP1_IDX,:,NEUROSCALE_SEM_IDX);
-fp1_delta_sem = squeeze( fp1_delta_sem );
-
-% extract theta/alpha
-fp1_theta_alpha_ratio_mean = channels_band_power_data(NEUROSCALE_THETA_ALPHA_RATIO_IDX,NEUROSCALE_FP1_IDX,:,NEUROSCALE_MEAN_IDX);
-fp1_theta_alpha_ratio_mean = squeeze( fp1_theta_alpha_ratio_mean );
-fp1_theta_alpha_ratio_sem = channels_band_power_data(NEUROSCALE_THETA_ALPHA_RATIO_IDX,NEUROSCALE_FP1_IDX,:,NEUROSCALE_SEM_IDX);
-fp1_theta_alpha_ratio_sem = squeeze( fp1_theta_alpha_ratio_sem );
-
+electrodes = size(workload_mean{1},1);
+for i = 1:electrodes
+   electrode_label{i} = cognionics_index_to_name( i );
+end
 
 %%%}}} eo-calculate
 
@@ -127,33 +153,58 @@ fp1_theta_alpha_ratio_sem = squeeze( fp1_theta_alpha_ratio_sem );
 %%%{{{ display
 disp( 'display' );
 
-figure(fig_num); fig_num = fig_num + 1;
-plot( fp1_eeg_after_tier1_mean, 'Color', [0 0 1] ); hold on;
-plot( fp1_eeg_after_tier2_mean, 'Color', [.75 .5 0] ); hold on;
-plot( fp1_eeg_before_tier1_mean, 'LineStyle', '--', 'Color', [0 0 1] ); hold on;
-plot( fp1_eeg_before_tier2_mean, 'LineStyle', '--', 'Color', [.75 .5 0] ); hold on;
-title( 'Fp1 mean EEG (blue: after tier 1, orange: after tier 2; dashes are before)' );
+disp( 'for excel: sum of workload across all 4 conditions, all electrodes)' );
+for f = 1:size(IN.IN_FILEZ,1) % for each task
+  x = sum( workload_mean{f}, 2 )';
+  sprintf( '%.3g\t', x )
+  disp( 'sum across all electrodes' );
+  sum_x(f) = sum( x )
+end
+
+figure; plot( sum_x );
+
+disp( sprintf( 'for excel: workload, %s, mean',...
+               cognionics_index_to_name( IN.ELECTRODE_OF_INTEREST ) ) );
+x = workload_mean{1}(IN.ELECTRODE_OF_INTEREST,:);
+sprintf( '%.3g\t', x )
+
+%disp( 'for plotting' );
+%x( [IN.PLOT_ORDER] )'
+
+disp( sprintf( 'for excel: workload, %s, sem',...
+               cognionics_index_to_name( IN.ELECTRODE_OF_INTEREST ) ) );
+x = workload_sem{1}(IN.ELECTRODE_OF_INTEREST,:);
+sprintf( '%.3g\t', x )
+
+%disp( 'for plotting' );
+%x( [IN.PLOT_ORDER] )'
 
 figure(fig_num); fig_num = fig_num + 1;
-plot( fp1_eeg_tier1_mean, 'Color', [0 0 1] ); hold on;
-plot( fp1_eeg_tier2_mean, 'Color', [.75 .5 0] ); hold on;
-title( 'Fp1 mean EEG (blue: tier 1, orange: tier 2)' );
+conds = size(workload_mean{1},2);
+for i = 1:conds
+   subplot(conds,1,i);
+   bar( workload_mean{1}(:,i) );
+   set( gca, 'XTick', 1:electrodes );
+   set( gca, 'XTickLabel', electrode_label );   
+   
+   if ( i == NEUROSCALE_AFTER_TIER1_IDX )
+      title( 'Workload{1}: after tier 1' );
+   elseif ( i == NEUROSCALE_BEFORE_TIER1_IDX )
+      title( 'Workload{1}: before tier 1' );
+   elseif ( i == NEUROSCALE_AFTER_TIER2_IDX )
+      title( 'Workload{1}: after tier 2' );
+   else
+      title( 'Workload{1}: abefore tier 2' );
+   end
+end
 
 figure(fig_num); fig_num = fig_num + 1;
-h = barweb( fp1_delta_mean, fp1_delta_sem ); hold on;
-set(h.bars(1), 'FaceColor', TIER1_AFTER_CLR );
-set(h.bars(2), 'FaceColor', TIER1_BEFORE_CLR );
-set(h.bars(3), 'FaceColor', TIER2_AFTER_CLR );
-set(h.bars(4), 'FaceColor', TIER2_BEFORE_CLR );
-title( 'Fp1 delta (left to right: tier 1 after, tier 1 before, tier 2 after, tier 2 before)' );
+bar( sum( workload_mean{1}, 2 ) );
+set( gca, 'XTick', 1:electrodes );
+set( gca, 'XTickLabel', electrode_label );   
+title( 'Workload{1}: sum over 4 cond''s' );
 
-figure(fig_num); fig_num = fig_num + 1;
-h = barweb( fp1_theta_alpha_ratio_mean, fp1_theta_alpha_ratio_sem ); hold on;
-set(h.bars(1), 'FaceColor', TIER1_AFTER_CLR );
-set(h.bars(2), 'FaceColor', TIER1_BEFORE_CLR );
-set(h.bars(3), 'FaceColor', TIER2_AFTER_CLR );
-set(h.bars(4), 'FaceColor', TIER2_BEFORE_CLR );
-title( 'Fp1 theta/alpha (left to right: tier 1 after, tier 1 before, tier 2 after, tier 2 before)' );
+
 %%%}}} eo-dispaly
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
