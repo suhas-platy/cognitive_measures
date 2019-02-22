@@ -1,3 +1,5 @@
+% @brief test of intheon_to_xlsx
+
 mat = reshape( 1:8*19*4, 8,19,4 );
 col_hdr = {'Tier_1_After', 'Tier_1_Before', 'Tier_2_After', 'Tier_2_Before'};
 col_hdr2 = {'_delta', '_theta', '_alpha', '_beta', '_gamma',...
