@@ -1,9 +1,9 @@
-function idx = cognionics_name_to_index( name, varargin )
+function idx = neuroscale_name_to_index( name, varargin )
 % @brief given a name (e.g., FP1) return its index
-   lut_fname = '../conf/cognionics_q20.json';
+   lut_fname = '../conf/sources_v1.json';
    % assumes q20.json file is in ../conf
    curr_fname = mfilename( 'fullpath' );
-   lut_fname = strrep( curr_fname, 'support\cognionics_name_to_index', 'conf\cognionics_q20.json' );
+   lut_fname = strrep( curr_fname, 'support\neuroscale_name_to_index', 'conf\sources_v1.json' );
    
    persistent lut;
    if ( isempty( lut ) )

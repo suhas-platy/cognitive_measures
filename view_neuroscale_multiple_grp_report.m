@@ -82,7 +82,7 @@ IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
+ALGO.SAVE = 0;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
 %%%}}}
 
@@ -112,6 +112,10 @@ NEUROSCALE_THETA_BETA_RATIO_IDX = 8;
 
 NEUROSCALE_FP1_IDX = 2;
 NEUROSCALE_C3_IDX = 8;
+NEUROSCALE_FIRST_ELECTRODE_IDX = cognionics_name_to_index( 'Fz' ); % what's displayed first
+NEUROSCALE_LAST_ELECTRODE_IDX = cognionics_name_to_index( 'P4' ); % what's dispayed last
+NEUROSCALE_FIRST_SOURCE_IDX = 1;
+NEUROSCALE_LAST_SOURCE_IDX = 12;
 
 NEUROSCALE_MEAN_IDX = 1;
 NEUROSCALE_SEM_IDX = 2;
@@ -239,10 +243,10 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    conn{f} = data{f}.connectivity.values.chunks.eeg_dDTF08.block.data;
    
    % 12 posn x 12 posn x 5 x 2 (t value and PR(>F))
-   tier1_conn_stats = data{f}.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data;
-   tier2_conn_stats = data{f}.connectivity.tier2.stats.chunks.eeg_dDTF08.block.data;
-   Before_conn_stats = data{f}.connectivity.Before.stats.chunks.eeg_dDTF08.block.data;
-   After_conn_stats = data{f}.connectivity.After.stats.chunks.eeg_dDTF08.block.data;
+   tier1_conn_stats{f} = data{f}.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data;
+   tier2_conn_stats{f} = data{f}.connectivity.tier2.stats.chunks.eeg_dDTF08.block.data;
+   Before_conn_stats{f} = data{f}.connectivity.Before.stats.chunks.eeg_dDTF08.block.data;
+   After_conn_stats{f} = data{f}.connectivity.After.stats.chunks.eeg_dDTF08.block.data;
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % display is below   
@@ -268,7 +272,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
       % T = intheon_to_xlsx( save_fname, mat, bands_and_ratios_combined_col_hdr, anat_label );
       
       % connectivity, mean -and- connectivity stats, tvals
-      save_connectivity_reports
+      save_connectivity_reports;
    end % fi ALGO.SAVE
    
 end % rof f
@@ -278,6 +282,7 @@ end % rof f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ display
+check_report_plots;
 view_neuroscale_multiple_grp_report__display
 %%%}}} eo-dispaly
 

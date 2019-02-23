@@ -4,20 +4,6 @@
 
 disp( 'display' );
 
-fig_num = 1;
-
-%%%%
-% for 1st task, bands on FP1 (for checking)
-% 
-% this is 5 bands x 1 elec x 4 cond's
-disp( 'for 1st task, bands on FP1 (for checking)' )
-figure(fig_num); fig_num = fig_num + 1;
-tmp = channels_band_power_data{1};
-tmp_mean = squeeze( tmp(1:5,NEUROSCALE_FP1_IDX,:,NEUROSCALE_MEAN_IDX) ); %delta, theta, etc.; 5x1x4x1
-tmp_sem = squeeze( tmp(1:5,NEUROSCALE_FP1_IDX,:,NEUROSCALE_SEM_IDX) );
-h = barweb( tmp_mean, tmp_sem );
-title( mt_escape_underscores( sprintf( 'BandPower on FP1 for %s (for checking)', IN.IN_FILEZ{1} ) ) );
-
 %%%%
 % for each task, sum of workload across all electrodes, all conditions (for excel)
 %
