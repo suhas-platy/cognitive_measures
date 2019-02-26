@@ -1,4 +1,4 @@
-% @brief view data in neuroscale .mat files
+% @brief view connectivity on flanker task
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths

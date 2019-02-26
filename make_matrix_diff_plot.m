@@ -1,6 +1,8 @@
 function make_matrix_diff_plot( foo1, foo2, foo3, foo4,...
                                 title_str1, title_str2, ...
                                 varargin )
+% @brief show matrix plot and diff's for flanker task
+   
 subplot(3,3,1);
 imagesc( foo1 );
 mt_jetbar;
