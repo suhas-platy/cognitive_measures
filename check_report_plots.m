@@ -156,4 +156,4 @@ end
 
 % no one using them for now
 
-mt_continue_prompt;
+%mt_continue_prompt;

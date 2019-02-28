@@ -1,4 +1,4 @@
-% @brief view data in neuroscale .mat files; group DANA files
+% @brief view data in neuroscale .mat files; individual DANA files
 
 % @todo topoplots - these are just intropolations
 
@@ -20,34 +20,42 @@ disp( 'params' );
 
 %%%%%%%%%%%%%%%%%%%%
 % shared
-IN.ELECTRODE_OF_INTEREST = 17; % O2; @todo tie to NEUROSCALE constants
+IN.ELECTRODE_OF_INTEREST = 17; % 02; @todo tie to NEUROSCALE constants
 
 IN.PLOT_ORDER = [2 1 4 3];
 IN.NUM_ELECTRODES = 19;
 
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v10\';
-IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_PRT_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_GNG_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_CSS_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_SP_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_MTS_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_MS_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_SRT2_group_analysis_ttest_db_conn_2-15.mat"];
-
-IN.IN_PATH = 'C:\Data\v11\';
-IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_PRT_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_GNG_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_CSS_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_SP_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_MTS_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_MS_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_SRT2_group_analysis_ttest_db_conn_2-20.mat"];
+IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\dana_indiv_2-4_fixed_mat\';
+IN.IN_SUBJECTZ = [310910318;
+                  319100118;    
+                  319100418;    
+                  31950218;     
+                  31950418;     
+                  31960118;     
+                  31970118;     
+                  31970318;     
+                  3209110318;   
+                  3209120218;   
+                  32950318;     
+                  32950518;     
+                  32960218;     
+                  32960318;     
+                  32960418;     
+                  32970418];
+IN.IN_TASKZ = ["CSS";"GNG";"MS";"MTS";"PRT";"SP";"SRT1";"SRT2"]; 
+ctr = 1;
+for i = 1:size( IN.IN_SUBJECTZ,1 )
+   for j = 1:size( IN.IN_TASKZ,1 )
+      str = sprintf( '%d_tpi_fuj_dana_%s_indiv_2session_analysis.mat',...
+                     IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
+      IN.IN_FILEZ{ctr,1} = str;
+      ctr = ctr+1;
+   end
+end
 
 IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
 
-IN.TIER_BY_TIME_COL_HDR = {'Tier 1 After', 'Tier 1 Before', 'Tier 2 After', 'Tier 2 Before'};
+IN.TIER_BY_TIME_COL_HDR = {'After', 'Before'}; % get rid of After-Before
 IN.TIER_BY_TIME_COL_HDR = strrep( IN.TIER_BY_TIME_COL_HDR, ' ', '_' );
 
 % for bands
@@ -55,13 +63,14 @@ IN.BANDS_AND_RATIOS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma',.
                '_attention', '_workload', '_memory'};
 
 % for connections
+IN.TIER_BY_TIME_COL_HDR2 = {'After', 'Before'};
 IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 0;% whether or not to save results (sometimes can take a long
+ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
 %%%}}}
 
@@ -150,9 +159,9 @@ end
 tier_bands_combined_col_hdr = {};
 ctr = 1;
 for j = 1:size( IN.BANDS_COL_HDR, 2 )
-   for i = 1:size( IN.TIER_BY_TIME_COL_HDR, 2 )
+   for i = 1:size( IN.TIER_BY_TIME_COL_HDR2, 2 )
       tier_bands_combined_col_hdr{ctr} =...
-          strcat( IN.TIER_BY_TIME_COL_HDR{i}, IN.BANDS_COL_HDR{j} );
+          strcat( IN.TIER_BY_TIME_COL_HDR2{i}, IN.BANDS_COL_HDR{j} );
       ctr = ctr+1;
    end
 end
@@ -185,8 +194,8 @@ end
 for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    % uncomment this when the file format changes
    % if ( f == 1 )
-   %    disp( 'updating ./doc/group_reports2.txt; diff with group_reports.txt to see changes' );
-   %    structree( data{f}, './doc/group_reports2.txt' );
+   %    disp( 'updating ./doc/individual_reports2.txt; diff with individual_reports.txt to see changes' );
+   %    structree( data{f}, './doc/individual_reports2.txt' );
    %    keyboard;
    % end
    
@@ -195,37 +204,29 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract band power
-   % 4D matrix (8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM)
+   % 4D matrix (8 bands & ratios, 19 electrodes, 3 conditions--After, Before, After-Before, 2: mean and SEM)
    % bands & ratios, space, instance/condition, statistic
    % mean is in (:,:,:,1)
    % sem in s in (:,:,:2)
-   channels_band_power_data{f} = data{f}.channels.bands.values.dB.chunks.eeg.block.data;
-   sources_band_power_data{f} = data{f}.sources.bands.values.dB.chunks.eeg.block.data;
+   channels_band_power_data{f} = data{f}.channels.dB.bands.chunks.eeg.block.data;
+   tmp = channels_band_power_data{f};
+   channels_band_power_data{f} = tmp(:,:,1:2,:);
    
    %%%%%%%%%%%%%%%%%%%%
    % extract workload
    % 19 electrodes x 4 conditions
-   tmp = channels_band_power_data{f};
-   workload_mean{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_MEAN_IDX) );
-   workload_sem{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_SEM_IDX) );
 
    %%%%%%%%%%%%%%%%%%%%
    % extract attention
    % 19 electrodes x 4 conditions
-   tmp = channels_band_power_data{f};
-   attn_mean{f} = squeeze( tmp(NEUROSCALE_THETA_BETA_RATIO_IDX,:,:,NEUROSCALE_MEAN_IDX) );
-   attn_sem{f} = squeeze( tmp(NEUROSCALE_THETA_BETA_RATIO_IDX,:,:,NEUROSCALE_SEM_IDX) );   
 
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract connectivity
-   % 12 posn x 12 posn x 5 freq's x 4 cond's x 2: mean and SEM
+   % 12 posn x 12 posn x 5 freq's -- 2 cond's and 2 stat's (mean and SEM)??
    conn{f} = data{f}.connectivity.values.chunks.eeg_dDTF08.block.data;
    
    % 12 posn x 12 posn x 5 x 2 (t value and PR(>F))
-   tier1_conn_stats{f} = data{f}.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data;
-   tier2_conn_stats{f} = data{f}.connectivity.tier2.stats.chunks.eeg_dDTF08.block.data;
-   Before_conn_stats{f} = data{f}.connectivity.Before.stats.chunks.eeg_dDTF08.block.data;
-   After_conn_stats{f} = data{f}.connectivity.After.stats.chunks.eeg_dDTF08.block.data;
+   conn_stats{f} = data{f}.connectivity.stats.chunks.eeg_dDTF08.block.data;
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % display is below   
@@ -235,7 +236,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    if ( ALGO.SAVE )
       % channels, bands and ratios, mean
       fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );   
-      save_fname = strrep( fname, 'v11\', 'v11\excel\' );
+      save_fname = strrep( fname, 'dana_indiv_2-4_fixed_mat\', 'dana_indiv_2-4_fixed_mat\excel\' );
       save_fname = strrep( fname, '.mat', '_channels_bandsAndRatios_mean.xlsx' );
       disp( sprintf( 'writing %s', save_fname ) );
       mat = channels_band_power_data{f};
@@ -250,8 +251,8 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
       % mat = squeeze( mat(:,:,:,1) );
       % T = intheon_to_xlsx( save_fname, mat, bands_and_ratios_combined_col_hdr, anat_label );
       
-      % connectivity, mean -and- connectivity stats, tvals
-      save_connectivity_reports;
+      % connectivity, mean -and- connectivity stats, pvals
+      %save_connectivity_reports_individual;
    end % fi ALGO.SAVE
    
 end % rof f
@@ -263,7 +264,6 @@ end % rof f
 %%%{{{ display
 %check_report_plots;
 %view_neuroscale_multiple_grp_report__display
-view_neuroscale_multiple_grp_report__cxn_display
 %%%}}} eo-dispaly
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

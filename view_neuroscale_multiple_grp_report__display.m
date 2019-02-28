@@ -10,6 +10,11 @@ disp( 'display' );
 % this is 8 tasks x 4 cond's, then 8 tasks x 1 summed cond
 %
 % see if workload varies by task; to get workload curve
+%%
+% 
+% <<FILENAME.PNG>>
+% 
+
 disp( 'for each task, sum of workload across all electrodes, all conditions (for excel)' );
 for f = 1:size(IN.IN_FILEZ,1) % for each task
   x = sum( workload_mean{f}, 2 )'; % sum over cond's, so you get by electrode
@@ -119,7 +124,7 @@ set( gca, 'XTickLabel', {'delta', 'theta', 'alpha', 'beta', 'gamma'} );
 %%%%
 % sum over tasks, bands, and electrodes
 %
-% thi is 1 plot, 4 cond's
+% this is 1 plot, 4 cond's
 channels_band_power_data_mean_sumT_sum_B_sumE = sum( channels_band_power_data_mean_sumT_sumE, 1 ); % 4 conditions
 figure(fig_num); fig_num = fig_num + 1;
 bar( squeeze( channels_band_power_data_mean_sumT_sum_B_sumE ) );

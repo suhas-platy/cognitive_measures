@@ -8,10 +8,10 @@
 
 	|	|	|	|---props
 	|	|	|	|	|---is_streaming
-	|	|	|	|	|---is_event_stream
+	|	|	|	|	|---has_markers
 	|	|	|	|	|---source_id
 	|	|	|	|	|---is_conn
-	|	|	|	|	|---has_markers
+	|	|	|	|	|---is_event_stream
 
 	|---values
 	|	|---chunks
@@ -22,10 +22,10 @@
 
 	|	|	|	|---props
 	|	|	|	|	|---is_streaming
-	|	|	|	|	|---has_markers
+	|	|	|	|	|---is_event_stream
 	|	|	|	|	|---source_id
 	|	|	|	|	|---is_conn
-	|	|	|	|	|---is_event_stream
+	|	|	|	|	|---has_markers
 
 ---channels
 	|---rPSD

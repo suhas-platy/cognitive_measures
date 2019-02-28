@@ -148,8 +148,6 @@ u2 = squeeze( tier2_connectivity_data(1,:,:,1,2) ); % incorrect after
 % tier2 - tier2 subj
 [d2,e2,f2] = make_matrix_diff_calc( foo3, foo4, u1, u2 );
 
-
-
 keyboard;
 
 %%%}}} eo-calculate
