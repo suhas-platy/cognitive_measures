@@ -1,4 +1,5 @@
 % channels_band_power_data is 8 tasks x 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
+%   this is an average over subjects (which is an average trials)
 % workload_mean is 8 tasks x 19 electrodes x 4 conditions
 % workload_sem is the same size as workload_mean
 
@@ -14,7 +15,6 @@ disp( 'display' );
 % 
 % <<FILENAME.PNG>>
 % 
-
 disp( 'for each task, sum of workload across all electrodes, all conditions (for excel)' );
 for f = 1:size(IN.IN_FILEZ,1) % for each task
   x = sum( workload_mean{f}, 2 )'; % sum over cond's, so you get by electrode
@@ -25,7 +25,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
   sum_x(f) = sum( x )
 end
 
-figure(fig_num); fig_num = fig_num + 1;
+figure(fig_num); fig_num = fig_num + 1
 plot( sum_x );
 xticklabels( {'SRT', 'PRT', 'GNG', 'CSL', 'SP', 'MTS', 'MS', 'SRT2'} );
 title( 'sum of workload across all 4 conditions, all electrodes' );
@@ -34,6 +34,7 @@ title( 'sum of workload across all 4 conditions, all electrodes' );
 % for 1st task, workload for one electrode, all conditions (for early plots in powerpoint)
 %
 % this is 1 electrode x 4 conditions
+if ( ~IN.IS_VA )
 disp( 'for 1st task, workload for one electrode, all conditions (for early plots in powerpoint)' );
 disp( sprintf( 'for excel: workload, %s, mean',...
                cognionics_index_to_name( IN.ELECTRODE_OF_INTEREST ) ) );
@@ -50,13 +51,15 @@ sprintf( '%.3g\t', x )
 
 disp( 'for plotting' );
 x( [IN.PLOT_ORDER] )'
+end
 
 %%%%
 % for 1st task, for each cond, workload across all electrodes
 %
 % this is 4 plots; 19 electrodes each
+if ( ~IN.IS_VA )
 disp( 'workload across all electrodes, all cond''s' );
-figure(fig_num); fig_num = fig_num + 1;
+figure(fig_num); fig_num = fig_num + 1
 conds = size(workload_mean{1},2);
 for i = 1:conds
    subplot(conds,1,i);
@@ -74,6 +77,7 @@ for i = 1:conds
       title( 'Workload{1}: abefore tier 2' );
    end
 end
+end
 
 %%%%
 % for first two tasks, workload across all electrodes, all cond's
@@ -90,67 +94,88 @@ end
 % title( 'Workload{2}: sum over 4 cond''s' );
 
 %%%%
-% for each task, sum across electrodes
+% for each task, avg. across electrodes
 %
-% this is 8 plots, 5 bands x 4 cond's each
-figure(fig_num); fig_num = fig_num + 1;
-for t = 1:8
+% this is 8 plots (one for each task), 5 bands x 4 cond's each
+figure(fig_num); fig_num = fig_num + 1
+if ( ~IN.IS_VA )
+   T = 8;
+else
+   T = 2;
+end
+
+for t = 1:T
   for b = 1:5
-   tmp = channels_band_power_data{t};
-   tmp = squeeze( tmp(b,:,:,1) ); % 19x4x1; 1 index = mean
-   channels_band_power_data_mean_sumE(t,b,:) = sum( tmp, 1 ); % 4 cond's
+   tmp = channels_band_power_data{t}; % 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
+   tmp = tmp(:,:,:,1); % get mean
+   tmp = tmp(b,:,:); % get band
+   channels_band_power_data_meanE(t,b,:) = squeeze( mean( tmp, 2 ) ); % mean over electrodes; t: 8 tasks, b: 5 bands, 4 conditions
 
    % pooled sem...
   end
 
-  subplot(8,1,t);
-  foo = channels_band_power_data_mean_sumE(t,:,:); % 5 bands x 4 cond's
+  subplot(T,1,t);
+  foo = channels_band_power_data_meanE(t,:,:); % 5 bands x 4 cond's
   foo = squeeze( foo );
   bar( foo );
   title( sprintf( 'Bands for task %d', t ) );
   set( gca, 'XTickLabel', {'delta', 'theta', 'alpha', 'beta', 'gamma'} );
+  
+   if ( ALGO.SAVE2 )
+      fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{t} );   
+      save_fname = strrep( fname, 'v11\', 'v11\excel\' );
+      save_fname = strrep( fname, '.mat', '_channels_bandsAndRatios_mean_meanE.xlsx' );
+      disp( sprintf( 'writing %s', save_fname ) );
+      mat = squeeze( channels_band_power_data_meanE(t,:,:) );
+      %size( mat )
+      %xlswrite( save_fname, mat );
+      col_hdr = IN.TIER_BY_TIME_COL_HDR;
+      row_hdr = IN.BANDS_COL_HDR;
+      mt_writetable( mat, save_fname, col_hdr, row_hdr );
+   end  
 end
 
 %%%%
-% sum over tasks, sum across electrodes
+% for each task, sum across bands
 %
-% this is 1 plot, 5 bands x 4 cond's
-channels_band_power_data_mean_sumT_sumE = sum( channels_band_power_data_mean_sumE, 1 ); % 5 bands x 4 conditions
+% this is 8 plots (one for each task), 1 sum of bands x 4 cond's
+channels_band_power_data_meanB_meanE = squeeze( mean( channels_band_power_data_meanE, 2 ) ); % 8 tasks, 4 conditions
 
-figure(fig_num); fig_num = fig_num + 1;
-bar( squeeze( channels_band_power_data_mean_sumT_sumE ) );
-set( gca, 'XTickLabel', {'delta', 'theta', 'alpha', 'beta', 'gamma'} );
+figure(fig_num); fig_num = fig_num + 1
+if ( ~IN.IS_VA )
+   T = 8;
+else
+   T = 2;
+end
 
+for t = 1:T
+   subplot(T,1,t);
+   bar( channels_band_power_data_meanB_meanE(t,:) );
+   set( gca, 'XTickLabel', {'Tier 1 after', 'Tier 1 before', 'Tier 2 after', 'Tier 2 before'} );
+   title( sprintf( 'Mean of Bands for task %d', t ) );
+   
+   if ( ALGO.SAVE2 )
+      fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{t} );   
+      save_fname = strrep( fname, 'v11\', 'v11\excel\' );
+      save_fname = strrep( fname, '.mat', '_channels_bandsAndRatios_mean_meanB_meanE.xlsx' );
+      disp( sprintf( 'writing %s', save_fname ) );
+      mat = squeeze( channels_band_power_data_meanB_meanE(t,:) );
+      %size( mat )
+      %xlswrite( save_fname, mat );
+      col_hdr = IN.TIER_BY_TIME_COL_HDR;
+      row_hdr = "_mean_over_bands";
+      mt_writetable( mat, save_fname, col_hdr, row_hdr );
+   end
+end
+   
 %%%%
-% sum over tasks, bands, and electrodes
+% sum over tasks
 %
 % this is 1 plot, 4 cond's
-channels_band_power_data_mean_sumT_sum_B_sumE = sum( channels_band_power_data_mean_sumT_sumE, 1 ); % 4 conditions
-figure(fig_num); fig_num = fig_num + 1;
-bar( squeeze( channels_band_power_data_mean_sumT_sum_B_sumE ) );
+channels_band_power_data_meanT_meanB_meanE = mean( channels_band_power_data_meanB_meanE, 1 ); % 4 conditions
+
+figure(fig_num); fig_num = fig_num + 1
+bar( squeeze( channels_band_power_data_meanT_meanB_meanE ) );
 set( gca, 'XTickLabel', {'Tier 1 after', 'Tier 1 before', 'Tier 2 after', ...
                     'Tier 2 before' } );
-
-
-%channels_band_power_data_mean = channels_band_power_data(:,:,:,1); % could have declared this above
-%channels_band_power_data_sem = channels_band_power_data(:,:,:,2);
-
-%n_t1 = 10
-%a = channels_band_power_data_mean(1,1,:); % 1x1x19
-%b = channels_band_power_data_sem(1,1,:); % "
-%b_stddev = mt_stderr2stdev( b, n_t1 );
-
-%pooledmeanstd( n_t1, a
-
-% beta
-figure(fig_num); fig_num = fig_num + 1;
-for f = 1:8
-   tmp = channels_band_power_data{f};
-   beta_mean = squeeze( tmp(4,:,1,1) );
-   sum_beta_mean(f) = sum( beta_mean(f), 2 );
-
-   subplot(8,1,f);
-   bar( sum_beta_mean );
-   title( sprintf( 'sum of beta across all electrodes for task %d', f ) );
-end
-
+title( 'Mean of Tasks' );

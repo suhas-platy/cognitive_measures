@@ -26,6 +26,10 @@
 1. view_neuroscale_datastructure.m; data/codebeautify*.json files explain how to index into the .MAT files.
 View the JSON files in Notepad++, that will let you fold portions
 
+### view_neuroscale_multiple_grp_report.m
+
+view data in neuroscale .mat files; group DANA files
+
 Misc.
 
 somehow eeglab is owned by s.c@yahoo.com; hence read-oly tag has no effect for him

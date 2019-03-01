@@ -1,5 +1,13 @@
 % @brief view data in neuroscale .mat files; group DANA files
 
+% load: each DANA file
+% calculate: saving them out for Excel
+% display: check_report_plots;
+%  view_neuroscale_multiple_grp_report__display
+%  view_neuroscale_multiple_grp_report__cxn_display
+
+% use the publish functionality to get a record of plots in html
+
 % @todo topoplots - these are just intropolations
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,16 +33,6 @@ IN.ELECTRODE_OF_INTEREST = 17; % O2; @todo tie to NEUROSCALE constants
 IN.PLOT_ORDER = [2 1 4 3];
 IN.NUM_ELECTRODES = 19;
 
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v10\';
-IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_PRT_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_GNG_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_CSS_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_SP_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_MTS_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_MS_group_analysis_ttest_db_conn_2-15.mat";
-    "tpi_fuj_SRT2_group_analysis_ttest_db_conn_2-15.mat"];
-
 IN.IN_PATH = 'C:\Data\v11\';
 IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis_ttest_db_conn_2-20.mat";
     "tpi_fuj_PRT_group_analysis_ttest_db_conn_2-20.mat";
@@ -44,6 +42,11 @@ IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis_ttest_db_conn_2-20.mat";
     "tpi_fuj_MTS_group_analysis_ttest_db_conn_2-20.mat";
     "tpi_fuj_MS_group_analysis_ttest_db_conn_2-20.mat";
     "tpi_fuj_SRT2_group_analysis_ttest_db_conn_2-20.mat"];
+IN.IS_VA = 0;
+
+IN.IN_FILEZ = ["tpi_fuj_ec_group_analysis_ttest_db_conn_2-20.mat";
+    "tpi_fuj_eo_group_analysis_ttest_db_conn_2-20.mat"]; % dont' put ec-eo b/c that'll throw off the means
+IN.IS_VA = 1;
 
 IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
 
@@ -61,8 +64,9 @@ IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 0;% whether or not to save results (sometimes can take a long
+ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
+ALGO.SAVE2 = 1;
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,7 +203,21 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    % bands & ratios, space, instance/condition, statistic
    % mean is in (:,:,:,1)
    % sem in s in (:,:,:2)
+   %
+   % for VA, this is 8 bands    1 time    4 conditions    2    19
+   %  2: conditional mean -- sem?
+   %
+   % examine fields by looking at
+   % data{f}.channels.bands.values.dB.chunks.eeg.block.axes{3}.data.recarray.Task,
+   % etc.
    channels_band_power_data{f} = data{f}.channels.bands.values.dB.chunks.eeg.block.data;
+   if ( IN.IS_VA )
+      mat = squeeze( channels_band_power_data{f} ); % get rid of time axis
+      mat = permute( mat, [1 4 2 3] ); % 8 19  
+      channels_band_power_data{f} = mat;
+   end
+   
+   % @todo check for VA
    sources_band_power_data{f} = data{f}.sources.bands.values.dB.chunks.eeg.block.data;
    
    %%%%%%%%%%%%%%%%%%%%
@@ -219,6 +237,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract connectivity
    % 12 posn x 12 posn x 5 freq's x 4 cond's x 2: mean and SEM
+   % @todo check for VA
    conn{f} = data{f}.connectivity.values.chunks.eeg_dDTF08.block.data;
    
    % 12 posn x 12 posn x 5 x 2 (t value and PR(>F))
@@ -251,7 +270,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
       % T = intheon_to_xlsx( save_fname, mat, bands_and_ratios_combined_col_hdr, anat_label );
       
       % connectivity, mean -and- connectivity stats, tvals
-      save_connectivity_reports;
+      %save_connectivity_reports;
    end % fi ALGO.SAVE
    
 end % rof f
@@ -262,8 +281,8 @@ end % rof f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ display
 %check_report_plots;
-%view_neuroscale_multiple_grp_report__display
-view_neuroscale_multiple_grp_report__cxn_display
+view_neuroscale_multiple_grp_report__display
+%view_neuroscale_multiple_grp_report__cxn_display
 %%%}}} eo-dispaly
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
