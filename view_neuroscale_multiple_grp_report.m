@@ -212,8 +212,8 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    % etc.
    channels_band_power_data{f} = data{f}.channels.bands.values.dB.chunks.eeg.block.data;
    if ( IN.IS_VA )
-      mat = squeeze( channels_band_power_data{f} ); % get rid of time axis
-      mat = permute( mat, [1 4 2 3] ); % 8 19  
+      mat = squeeze( channels_band_power_data{f} ); % 8 4 2 19; get rid of time axis
+      mat = permute( mat, [1 4 2 3] ); % 8 19 4 2 
       channels_band_power_data{f} = mat;
    end
    

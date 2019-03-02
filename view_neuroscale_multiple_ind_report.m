@@ -25,7 +25,16 @@ IN.ELECTRODE_OF_INTEREST = 17; % 02; @todo tie to NEUROSCALE constants
 IN.PLOT_ORDER = [2 1 4 3];
 IN.NUM_ELECTRODES = 19;
 
+IN.IS_INDIVID = 1;
 IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\dana_indiv_2-4_fixed_mat\';
+IN.IN_TASKZ = ["CSS";"GNG";"MS";"MTS";"PRT";"SP";"SRT1";"SRT2"];
+IN.IS_VA = 0;
+
+IN.IS_INDIVID = 1;
+IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\va_indiv_2session_2-4\';
+IN.IN_TASKZ = ["ec"; "eo"];
+IN.IS_VA = 1;
+
 IN.IN_SUBJECTZ = [310910318;
                   319100118;    
                   319100418;    
@@ -42,16 +51,25 @@ IN.IN_SUBJECTZ = [310910318;
                   32960318;     
                   32960418;     
                   32970418];
-IN.IN_TASKZ = ["CSS";"GNG";"MS";"MTS";"PRT";"SP";"SRT1";"SRT2"]; 
+
+% fill up IN.IN_FILEZ
 ctr = 1;
+tmp_arr = [];
 for i = 1:size( IN.IN_SUBJECTZ,1 )
    for j = 1:size( IN.IN_TASKZ,1 )
-      str = sprintf( '%d_tpi_fuj_dana_%s_indiv_2session_analysis.mat',...
-                     IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
-      IN.IN_FILEZ{ctr,1} = str;
+      if ( ~IN.IS_VA )
+         str = sprintf( '%d_tpi_fuj_dana_%s_indiv_2session_analysis.mat',...
+                        IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
+      else
+         str = sprintf( '%d_tpi_fuj_va-%s_indiv_2session_analysis.mat',...
+                        IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
+      end
+      
+      tmp_arr = [tmp_arr; string( str )];
       ctr = ctr+1;
    end
 end
+IN.IN_FILEZ = tmp_arr;
 
 IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
 
@@ -70,8 +88,9 @@ IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
+ALGO.SAVE = 0;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
+ALGO.SAVE2 = 1;
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,7 +219,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    % end
    
    % dbg
-   %keyboard
+   keyboard
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract band power
@@ -209,12 +228,22 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    % mean is in (:,:,:,1)
    % sem in s in (:,:,:2)
    channels_band_power_data{f} = data{f}.channels.dB.bands.chunks.eeg.block.data;
-   tmp = channels_band_power_data{f};
-   channels_band_power_data{f} = tmp(:,:,1:2,:);
+   if ( ~IN.IS_VA )
+      tmp = channels_band_power_data{f};
+      channels_band_power_data{f} = tmp(:,:,1:2,:); % 8x19x2x2; get rid of After-Before
+   else
+      mat = squeeze( channels_band_power_data{f} ); % 8     1     3     2    19; get rid of time axis
+      mat = permute( mat, [1 4 2 3] ); % 8 19 3 2 
+      mat = mat(:,:,1:2,:); % get rid of After-Before
+      channels_band_power_data{f} = mat;
+   end
    
    %%%%%%%%%%%%%%%%%%%%
    % extract workload
-   % 19 electrodes x 4 conditions
+   % 19 electrodes x 2 conditions
+   tmp = channels_band_power_data{f};
+   workload_mean{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_MEAN_IDX) );
+   workload_sem{f} = squeeze( tmp(NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX,:,:,NEUROSCALE_SEM_IDX) );   
 
    %%%%%%%%%%%%%%%%%%%%
    % extract attention
@@ -222,7 +251,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
 
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract connectivity
-   % 12 posn x 12 posn x 5 freq's -- 2 cond's and 2 stat's (mean and SEM)??
+   % 12 posn x 12 posn x 5 freq's x 2 stat's (mean and SEM)??
    conn{f} = data{f}.connectivity.values.chunks.eeg_dDTF08.block.data;
    
    % 12 posn x 12 posn x 5 x 2 (t value and PR(>F))
@@ -235,8 +264,13 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    % save
    if ( ALGO.SAVE )
       % channels, bands and ratios, mean
-      fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );   
-      save_fname = strrep( fname, 'dana_indiv_2-4_fixed_mat\', 'dana_indiv_2-4_fixed_mat\excel\' );
+      fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} ); 
+      [filepath,name,ext] = fileparts(fname);
+      if ( ~IN.IS_VA )
+        save_fname = strrep( fname, 'dana_indiv_2-4_fixed_mat\', 'dana_indiv_2-4_fixed_mat\excel\' );
+      else
+        save_fname = strrep( fname, 'va_indiv_2session_2-4\', 'va_indiv_2session_2-4\excel' );
+      end
       save_fname = strrep( fname, '.mat', '_channels_bandsAndRatios_mean.xlsx' );
       disp( sprintf( 'writing %s', save_fname ) );
       mat = channels_band_power_data{f};
@@ -263,7 +297,7 @@ end % rof f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ display
 %check_report_plots;
-%view_neuroscale_multiple_grp_report__display
+view_neuroscale_multiple_grp_report__display
 %%%}}} eo-dispaly
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
