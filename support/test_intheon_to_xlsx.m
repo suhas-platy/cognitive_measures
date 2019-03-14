@@ -24,7 +24,7 @@ for i = 1:19
 end
 
 % load the data
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v8\';
+IN.IN_PATH = './data/';
 IN.IN_FILEZ = ["tpi_fuj_SRT2_group_analysis__1-30_db_ttest.mat"];
 
 f = 1;
@@ -38,4 +38,11 @@ mat = channels_band_power_data{f};
 mat = mat(:,:,:,1); % get means
 
 % write it out
+disp( 'writing out ./test.xlsx' );
 T = intheon_to_xlsx( './test.xlsx', mat, combined_col_hdr, electrode_label );
+
+% mean and sem
+disp( 'writing out ./test2.xlsx' );
+
+mat_combo = channels_band_power_data{f};
+T2 = intheon_to_xlsx( './test2.xlsx', mat_combo, combined_col_hdr, electrode_label );

@@ -2,6 +2,10 @@
 
 % @todo topoplots - these are just intropolations
 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
 addpath( './support' );
@@ -35,22 +39,28 @@ IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\va_indiv_2session_2-4\'
 IN.IN_TASKZ = ["ec"; "eo"];
 IN.IS_VA = 1;
 
-IN.IN_SUBJECTZ = [310910318;
-                  319100118;    
-                  319100418;    
-                  31950218;     
-                  31950418;     
-                  31960118;     
-                  31970118;     
-                  31970318;     
-                  3209110318;   
-                  3209120218;   
-                  32950318;     
-                  32950518;     
-                  32960218;     
-                  32960318;     
-                  32960418;     
-                  32970418];
+IN.IN_SUBJECTZ = [32960218;
+                  31970318;
+                  32950518;
+                  32950318;
+                  31960118;
+                  31970218;
+                  319100118;
+                  319110218;
+                  32960418;
+                  319110118;
+                  31950418;
+                  310910318;
+                  32960318;
+                  32970418;
+                  3209110318;
+                  3209120218;
+                  319100418;
+                  31970118;
+                  32050118;
+                  31950218;
+                  3109120318];
+%32910218]; % includes 1 previously excluded subject
 
 % fill up IN.IN_FILEZ
 ctr = 1;
@@ -88,9 +98,9 @@ IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 0;% whether or not to save results (sometimes can take a long
+ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
-ALGO.SAVE2 = 1;
+ALGO.SAVE_BANDS_POOLED = 1;
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -210,7 +220,7 @@ for i = 1:12
    end
 end
 
-for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
+for f = 1:size(IN.IN_FILEZ,1) % for each task
    % uncomment this when the file format changes
    % if ( f == 1 )
    %    disp( 'updating ./doc/individual_reports2.txt; diff with individual_reports.txt to see changes' );
@@ -219,7 +229,7 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    % end
    
    % dbg
-   keyboard
+   %keyboard
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract band power

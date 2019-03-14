@@ -99,24 +99,42 @@ end
 %
 % this is 8 plots (one for each task), 5 bands x 4 cond's each
 figure(fig_num); fig_num = fig_num + 1
-% if ( ~IN.IS_VA )
-%    T = 8;
-% else
-%    T = 2;
-% end
 
 for f = 1:size(IN.IN_FILEZ,1)
   for b = 1:5
-   tmp = channels_band_power_data{f}; % 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
-   tmp = tmp(:,:,:,1); % get mean
-   tmp = tmp(b,:,:); % get band
-   channels_band_power_data_meanE(f,b,:) = squeeze( mean( tmp, 2 ) ); % mean over electrodes; f: 8 tasks, b: 5 bands, 4 conditions
+    tmp = channels_band_power_data{f}; % 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
+    tmp_mean = squeeze( tmp(:,:,:,1) ); % get mean; 8x19x4
+    tmp_sem = squeeze( tmp(:,:,:,2) ); % get sem; 8x19x4
+    tmp = tmp_mean(b,:,:); % 19x4
+    channels_band_power_data_meanE(f,b,:) = squeeze( mean( tmp, 2 ) ); % mean over electrodes; f: 8 tasks, b: 5 bands, 4 conditions
 
-   % pooled sem...
-  end
+    % pooled sem
+    if ( ~IN.IS_INDIVID )
+       C = 4;
+    else
+       C = 2;
+    end
+    
+    for c = 1:C
+       if ( c == 1 | c == 2 ) % tier 1 or 2
+          n = 10;
+       else
+          n = 11;
+       end
+       n = 1;
+       
+       foo1 = tmp_mean(b,:,c); % 1x19x1
+       foo2 = tmp_sem(b,:,c); % 1x19x1
+       foo3 = sqrt( n ).*tmp_sem(b,:,c); % 1x19x1
+       
+       [n,m,s] = pooledmeanstd_loop( n, foo1', foo3' );
+       channels_band_power_data_semE(f,b,c) = s/sqrt(n);
+    end
+   
+  end % rof b
 
   if ( ~IN.IS_INDIVID )
-    subplot(size(IN.IN_FILEZ,2),1,t);
+    subplot(size(IN.IN_FILEZ,1),1,f);
     foo = channels_band_power_data_meanE(f,:,:); % 5 bands x 4 cond's
     foo = squeeze( foo );
     bar( foo );
@@ -124,7 +142,7 @@ for f = 1:size(IN.IN_FILEZ,1)
     set( gca, 'XTickLabel', {'delta', 'theta', 'alpha', 'beta', 'gamma'} );
   end
     
-  if ( ALGO.SAVE2 )
+  if ( ALGO.SAVE_BANDS_POOLED )
       fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );   
       if ( ~IN.IS_INDIVID )
          save_fname = strrep( fname, 'v11\', 'v11\excel\' );
@@ -134,11 +152,11 @@ for f = 1:size(IN.IN_FILEZ,1)
       save_fname = strrep( fname, '.mat', '_channels_bandsAndRatios_mean_meanE.xlsx' );
       disp( sprintf( 'writing %s', save_fname ) );
       mat = squeeze( channels_band_power_data_meanE(f,:,:) );
-      %size( mat )
-      %xlswrite( save_fname, mat );
+      mat2 = squeeze( channels_band_power_data_semE(f,:,:) );
+      mat3 = cat(3,mat,mat2);
       col_hdr = IN.TIER_BY_TIME_COL_HDR;
       row_hdr = IN.BANDS_COL_HDR;
-      mt_writetable( mat, save_fname, col_hdr, row_hdr );
+      mt_writetable2( mat3, save_fname, col_hdr, row_hdr );
   end  
 end
 
@@ -148,12 +166,27 @@ end
 % this is 8 plots (one for each task), 1 sum of bands x 4 cond's
 channels_band_power_data_meanB_meanE = squeeze( mean( channels_band_power_data_meanE, 2 ) ); % 8 tasks, 4 conditions
 
+% pooled sem
+for f = 1:size(IN.IN_FILEZ,1)
+    if ( ~IN.IS_INDIVID )
+       C = 4;
+    else
+       C = 2;
+    end
+   
+    for c = 1:C
+       n = 5;
+   
+       foo1 = channels_band_power_data_meanE(f,:,c); % 1x5x1
+       foo2 = channels_band_power_data_semE(f,:,c); % 1x5x1
+       foo3 = sqrt( n ).* foo2;
+       [n,m,s] = pooledmeanstd_loop( n, foo1', foo3' );
+       channels_band_power_data_meanB_meanE_sem(f,c) = s/sqrt(n);
+    end
+end
+
 figure(fig_num); fig_num = fig_num + 1
-% if ( ~IN.IS_VA )
-%    T = 8;
-% else
-%    T = 2;
-% end
+
 
 for f = 1:size(IN.IN_FILEZ,1)
    if ( ~IN.IS_INDIVID )
@@ -163,7 +196,7 @@ for f = 1:size(IN.IN_FILEZ,1)
      title( sprintf( 'Mean of Bands for task %d', f ) );
    end
    
-   if ( ALGO.SAVE2 )
+   if ( ALGO.SAVE_BANDS_POOLED )
       fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );   
       if ( ~IN.IS_INDIVID )
          save_fname = strrep( fname, 'v11\', 'v11\excel\' );
@@ -172,15 +205,12 @@ for f = 1:size(IN.IN_FILEZ,1)
       end
       save_fname = strrep( fname, '.mat', '_channels_bandsAndRatios_mean_meanB_meanE.xlsx' );
       disp( sprintf( 'writing %s', save_fname ) );
-      %if ( ~IN.IS_INDIVID )
       mat = squeeze( channels_band_power_data_meanB_meanE(f,:) );
-      %else
-      %  mat = channels_band_power_data_meanB_meanE;
-      %end
-      
+      mat2 = squeeze( channels_band_power_data_meanB_meanE_sem(f,:) );
+      mat3 = cat(3,mat,mat2);
       col_hdr = IN.TIER_BY_TIME_COL_HDR;
       row_hdr = "_mean_over_bands";
-      mt_writetable( mat, save_fname, col_hdr, row_hdr );
+      mt_writetable2( mat3, save_fname, col_hdr, row_hdr );
    end
 end
    

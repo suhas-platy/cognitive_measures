@@ -32,6 +32,7 @@ IN.ELECTRODE_OF_INTEREST = 17; % O2; @todo tie to NEUROSCALE constants
 
 IN.PLOT_ORDER = [2 1 4 3];
 IN.NUM_ELECTRODES = 19;
+IN.IS_INDIVID = 0;
 
 IN.IN_PATH = 'C:\Data\v11\';
 IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis_ttest_db_conn_2-20.mat";
@@ -64,9 +65,9 @@ IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
+ALGO.SAVE_BANDS = 0;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
-ALGO.SAVE2 = 1;
+ALGO.SAVE_BANDS_POOLED = 1;
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -251,14 +252,14 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % save
-   if ( ALGO.SAVE )
+   if ( ALGO.SAVE_BANDS )
       % channels, bands and ratios, mean
       fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );   
       save_fname = strrep( fname, 'v11\', 'v11\excel\' );
       save_fname = strrep( fname, '.mat', '_channels_bandsAndRatios_mean.xlsx' );
       disp( sprintf( 'writing %s', save_fname ) );
       mat = channels_band_power_data{f};
-      mat = squeeze( mat(:,:,:,1) );
+      % means to sheet 1, sems to sheet 2
       T = intheon_to_xlsx( save_fname, mat, tier_bands_and_ratios_combined_col_hdr, electrode_label );
 
       % sources

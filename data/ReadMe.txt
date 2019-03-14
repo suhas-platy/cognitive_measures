@@ -17,6 +17,8 @@ Theta Divided by Alpha - work for FJ presentation in Dec.
 tpi_fuj_flanker_rt_per_file_totals - reaction time data (used for some
 reason...)
 
+tpi_fuj_SRT2_group... - used in ../support/test_intheon_to_xlsx.m
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 DANA before: Go Platypus Dropbox\Science And Research\Data Aquisition\Fujitsu Study Data\DANA DATA
