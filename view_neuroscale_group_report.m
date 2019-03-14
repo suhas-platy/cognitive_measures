@@ -1,4 +1,4 @@
-% @brief CHECK data in neuroscale .mat files; individual DANA or VA files
+% @brief CHECK data in neuroscale .mat files; group DANA or VA files
 
 % to view the json
 %json_data = jsonencode( data ); % this returns a string
@@ -29,37 +29,47 @@ IN.ELECTRODE_OF_INTEREST = 17; % 02; @todo tie to INTHEON constants
 IN.PLOT_ORDER = [2 1 4 3];
 IN.NUM_ELECTRODES = 19;
 
-IN.IS_INDIVID = 1;
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\DANA individual reports 2019.02.04\dana_indiv_2-4_fixed_mat\';
+IN.IS_INDIVID = 0;
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v11\'
 IN.IN_TASKZ = ["CSS"];
 IN.IS_VA = 0;
-IN.IN_SUBJECTZ = [31950218];
+IN.IN_SUBJECTZ = [-1];
 
-IN.IS_INDIVID = 1;
-IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\va_indiv_2session_2-4\';
+IN.IS_INDIVID = 0;
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v11\'
 IN.IN_TASKZ = ["ec"];
 IN.IS_VA = 1;
-IN.IN_SUBJECTZ = [32960218];
+IN.IN_SUBJECTZ = [-1];
 
 % fill up IN.IN_FILEZ (only for individual reports)
 if ( IN.IS_INDIVID )
-ctr = 1;
-tmp_arr = [];
-for i = 1:size( IN.IN_SUBJECTZ,1 )
-   for j = 1:size( IN.IN_TASKZ,1 )
-      if ( ~IN.IS_VA )
-         str = sprintf( '%d_tpi_fuj_dana_%s_indiv_2session_analysis.mat',...
-                        IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
-      else
-         str = sprintf( '%d_tpi_fuj_va-%s_indiv_2session_analysis.mat',...
-                        IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
-      end
+   ctr = 1;
+   tmp_arr = [];
+   for i = 1:size( IN.IN_SUBJECTZ,1 )
+      for j = 1:size( IN.IN_TASKZ,1 )
+         if ( ~IN.IS_VA )
+            str = sprintf( '%d_tpi_fuj_dana_%s_indiv_2session_analysis.mat',...
+                           IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
+         else
+            str = sprintf( '%d_tpi_fuj_va-%s_indiv_2session_analysis.mat',...
+                           IN.IN_SUBJECTZ(i), IN.IN_TASKZ{j} );
+         end
       
+         tmp_arr = [tmp_arr; string( str )];
+         ctr = ctr+1;
+      end
+   end
+   IN.IN_FILEZ = tmp_arr;
+else
+   ctr = 1;
+   tmp_arr = [];
+   for j = 1:size( IN.IN_TASKZ,1 )
+      str = sprintf( 'tpi_fuj_%s_group_analysis_ttest_db_conn_2-20.mat',...
+                     IN.IN_TASKZ{j} );
       tmp_arr = [tmp_arr; string( str )];
       ctr = ctr+1;
    end
-end
-IN.IN_FILEZ = tmp_arr;
+   IN.IN_FILEZ = tmp_arr;
 end
 
 IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
@@ -215,26 +225,24 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract channel band power and stats
    % for VA
-   %   data: 8 bands & ratios, 19 electrodes, 2 conditions--After, Before (After-Before is removed), 2: mean and SEM
-   %     originally 8     1     3     2    19
+   %   data: 8 bands & ratios, 19 electrodes, 4 conditions--tier 1 after, tier 1 before, tier 2 after, tier 2 before, 2: mean and SEM
+   %     originally 8     1     4     2    19
    %     to get axes, see data{f}.channels.dB.bands.chunks.eeg.block.axes{1}.names, data{f}.channels.dB.bands.chunks.eeg.block.axes{3}.data.recarray.Task, etc.
    %   stats: 8 bands & ratios, 19 electrodes, 2: t-value and PR(>F)
    %     originally 8     1    19     2
    %     to get axes, see data{f}.channels.dB.bands_stats.chunks.eeg.block.axes{4}.names, etc.
    % for DANA
-   %   data: 8 bands & ratios, 19 electrodes, 2 conditions--After, Before (After-Before is removed), 2: mean and SEM
-   %     originally 8    19     3     2
+   %   data: 8 bands & ratios, 19 electrodes, 4 conditions--tier 1 after, tier 1 before, tier 2 after, tier 2 before, 2: mean and SEM
+   %     originally 8    19     4     2
    %   stats: 8 bands & ratios, 19 electrodes, 2: t-value and PR(>F)
    %     originally 8    19     2
-   channels_band_power_data{f} = data{f}.channels.dB.bands.chunks.eeg.block.data;
-   channels_band_power_stats{f} = data{f}.channels.dB.bands_stats.chunks.eeg.block.data;
+   channels_band_power_data{f} = data{f}.channels.bands.values.dB.chunks.eeg.block.data;
+   channels_band_power_stats{f} = data{f}.channels.bands.stats.tier1.chunks.eeg.block.data;
    if ( ~IN.IS_VA )
-      tmp = channels_band_power_data{f};
-      channels_band_power_data{f} = tmp(:,:,1:2,:); % get rid of After-Before
+      ;
    else
       mat = squeeze( channels_band_power_data{f} ); % get rid of time axis
-      mat = permute( mat, [1 4 2 3] ); % 8 19 3 2 
-      mat = mat(:,:,1:2,:); % get rid of After-Before
+      mat = permute( mat, [1 4 2 3] ); % 8 19 4 2
       channels_band_power_data{f} = mat;
       
       mat = squeeze( channels_band_power_stats{f} ); % get rid of time axis
@@ -256,25 +264,23 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    % extract sources band power and stats
    % for VA
    %   data: 8 bands & ratios, 12 areas, 2 conditions--After, Before (After-Before is removed), 2: mean and SEM
-   %     originally 8     1     3     2    12
+   %     originally 8     1     4     2    12
    %     to get axes, see *something like* data{f}.channels.dB.bands.chunks.eeg.block.axes{1}.names, data{f}.channels.dB.bands.chunks.eeg.block.axes{3}.data.recarray.Task, etc.
    %   stats: 8 bands & ratios, 12 areas, 2: t-value and PR(>F)
    %     originally 8     1    12     2
    %     to get axes, see *something like* data{f}.channels.dB.bands_stats.chunks.eeg.block.axes{4}.names, etc.
    % for DANA
-   %   data: 8 bands & ratios, 12 areas, 3 conditions--After, Before, After-Before, 2: mean and SEM
-   %     originally 8    12     3     2
+   %   data: 8 bands & ratios, 12 areas, 4 conditions, 2: mean and SEM
+   %     originally 8    12     4     2
    %   stats: 8 bands & ratios, 12 areas, 2: t-value and PR(>F)
    %     originally 8    12     2
-   sources_band_power_data{f} = data{f}.sources.dB.bands.chunks.eeg.block.data;
-   sources_band_power_stats{f} = data{f}.sources.dB.bands_stats.chunks.eeg.block.data;
+   sources_band_power_data{f} = data{f}.sources.bands.values.dB.chunks.eeg.block.data;
+   sources_band_power_stats{f} = data{f}.sources.bands.stats.tier1.chunks.eeg.block.data;
    if ( ~IN.IS_VA )
-      tmp = sources_band_power_data{f};
-      sources_band_power_data{f} = tmp(:,:,1:2,:); % get rid of After-Before
+      ;
    else
       mat = squeeze( sources_band_power_data{f} ); % get rid of time axis
-      mat = permute( mat, [1 4 2 3] ); % 8 12 3 2 
-      mat = mat(:,:,1:2,:); % get rid of After-Before
+      mat = permute( mat, [1 4 2 3] ); % 8 19 4 2
       sources_band_power_data{f} = mat;
       
       mat = squeeze( sources_band_power_stats{f} ); % get rid of time axis
@@ -284,24 +290,21 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract connectivity and stats
    % for VA
-   %   data: 12 posn x 12 posn x 5 freq's (just the mean, no sem)
-   %     originally 12    12     5     2; see below for fix
+   %   data: 12 posn x 12 posn x 5 freq's x 4 cond's x 2: mean and SEM
+   %     originally 12    12     5     4     2
    %   stats: 12 posn x 12 posn x 5 freq's x 2: t-value and PR(>F)
-   %     originally 12    12     5; see below for fix
+   %     originally 12    12     5     2
    % for DANA
-   %   data: 12 posn x 12 posn x 5 freq's (just the mean, no sem)
-   %     originally 12    12     5
-   %   stats
+   %   data: 12 posn x 12 posn x 5 freq's x 4 cond's x 2: mean and SEM)
+   %     originally 12    12     5     4     2
+   %   stats 12 posn x 12 posn x 5 freq's x 2: t-value and PR(>F)
    %     originally 12    12     5     2
    conn_data{f} = data{f}.connectivity.values.chunks.eeg_dDTF08.block.data;
-   conn_stats{f} = data{f}.connectivity.stats.chunks.eeg_dDTF08.block.data;
+   conn_stats{f} = data{f}.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data;
    if ( ~IN.IS_VA )
      ;
    else
-      % as of 3/11, reports in 2-4 have the fields mixed up :(
-      foo = conn_data{f};
-      conn_data{f} = conn_stats{f};
-      conn_stats{f} = foo;
+     ;
    end
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

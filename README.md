@@ -34,6 +34,15 @@ Misc.
 
 somehow eeglab is owned by s.c@yahoo.com; hence read-oly tag has no effect for him
 
+#### Run first to check if data is being parsed correct (compare Matlab and HTML files)
+view_neuroscale_individual_report.m - checks data
+view_neuroscale_group_report.m - checks data
+
+#### Run second to aggregate over >1 file
+view_neuroscale_multiple_individual_report.m - checks data
+view_neuroscale_multiple_group_report.m - checks data
+
+
 ## File listing
 ````
 doc
