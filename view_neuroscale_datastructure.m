@@ -205,7 +205,7 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% band power
+% band power, channels
 if ( ~IN.IS_INDIVID )
    channels_spectra_statstable = data.channels.None.chunks.eeg.block.data;
    % 4D matrix (79 frequencies x 10 electrodes x 4 names x 5 stats; frequencies are 1:0.5:40)
@@ -268,7 +268,7 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ratios
+% ratios, channels
 if ( ~IN.IS_INDIVID )
 else
    fp1_ratios_before_mean = channels_band_power_data(6:8,NEUROSCALE_FP1_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
@@ -335,6 +335,64 @@ else
       end
    end
    
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% band power, sources
+if ( ~IN.IS_INDIVID )
+else
+   antcinl_band_before_mean = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
+   antcinl_band_before_mean = squeeze( antcinl_band_before_mean );
+   antcinl_band_before_sem = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
+   antcinl_band_before_sem = squeeze( antcinl_band_before_sem );
+
+   antcinl_band_after_mean = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+   antcinl_band_after_mean = squeeze( antcinl_band_after_mean );
+   antcinl_band_after_sem = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+   antcinl_band_after_sem = squeeze( antcinl_band_after_sem );
+   
+   %antcinl_band_plot_mean = interleave( antcinl_band_after_mean, antcinl_band_before_mean ); 
+   %antcinl_band_plot_sem = interleave( antcinl_band_after_sem, antcinl_band_before_sem );
+   antcinl_band_plot_mean = [antcinl_band_after_mean'; antcinl_band_before_mean']';
+   antcinl_band_plot_sem = [antcinl_band_after_sem'; antcinl_band_before_sem']';
+   
+   figure(fig_num); fig_num = fig_num + 1;
+   h = barweb( antcinl_band_plot_mean, antcinl_band_plot_sem );
+   
+   title( 'Band Power, ANT CIN L, task effect (blue: after, orange: before)' );
+   xticklabels( {'delta', 'theta', 'alpha', 'beta', 'gamma' } );
+   set(h.bars(1), 'FaceColor', AFTER_CLR );
+   set(h.bars(2), 'FaceColor', BEFORE_CLR );   
+   ylim( [50 80] );   
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% band power, ratios
+if ( ~IN.IS_INDIVID )
+else
+   antcinl_ratios_before_mean = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
+   antcinl_ratios_before_mean = squeeze( antcinl_ratios_before_mean );
+   antcinl_ratios_before_sem = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
+   antcinl_ratios_before_sem = squeeze( antcinl_ratios_before_sem );
+
+   antcinl_ratios_after_mean = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+   antcinl_ratios_after_mean = squeeze( antcinl_ratios_after_mean );
+   antcinl_ratios_after_sem = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+   antcinl_ratios_after_sem = squeeze( antcinl_ratios_after_sem );
+   
+   %antcinl_ratios_plot_mean = interleave( antcinl_ratios_after_mean, antcinl_ratios_before_mean ); 
+   %antcinl_ratios_plot_sem = interleave( antcinl_ratios_after_sem, antcinl_ratios_before_sem );
+   antcinl_ratios_plot_mean = [antcinl_ratios_after_mean'; antcinl_ratios_before_mean']';
+   antcinl_ratios_plot_sem = [antcinl_ratios_after_sem'; antcinl_ratios_before_sem']';
+   
+   figure(fig_num); fig_num = fig_num + 1;
+   h = barweb( antcinl_ratios_plot_mean, antcinl_ratios_plot_sem );
+   
+   title( 'Ratios, ANT CIN L, task effect (blue: after, orange: before)' );
+   xticklabels( {'theta/alpha', 'beta/(theta+alpha)', 'theta/beta'} );
+   set(h.bars(1), 'FaceColor', AFTER_CLR );
+   set(h.bars(2), 'FaceColor', BEFORE_CLR );   
+   ylim( [0 1.75] );   
 end
 
 
