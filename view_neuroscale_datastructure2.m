@@ -64,7 +64,7 @@ IN.IS_REL = 1
 
 %%%%%%%%%%%%%%%%%%%%
 % absolute
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\v7\absolutePSD\';
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\old reports\v7\absolutePSD\';
 IN.IN_FILENAME = 'tpi_fuj_CSS_group_analysis_01-15_db.mat'
 IN.IN_FILENAME = 'tpi_fuj_GNG_group_analysis_01-15_db.mat'
 % IN.IN_FILENAME = 'tpi_fuj_MS_group_analysis_01-15_db.mat'

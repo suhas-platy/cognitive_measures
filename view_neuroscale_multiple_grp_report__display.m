@@ -1,3 +1,5 @@
+% @brief various plots and calcuations
+
 % channels_band_power_data is 8 tasks x 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
 %   this is an average over subjects (which is an average trials)
 %   for individual reports, it's 8x19x2x2
@@ -8,14 +10,9 @@ disp( 'display' );
 
 %%%%
 % for each task, sum of workload across all electrodes, all conditions (for excel)
-%
-% this is 8 tasks x 4 cond's, then 8 tasks x 1 summed cond
+% x-axis is task, y-axis is workload (sum across all electrodes, all conditions)
 %
 % see if workload varies by task; to get workload curve
-%%
-% 
-% <<FILENAME.PNG>>
-% 
 disp( 'for each task, sum of workload across all electrodes, all conditions (for excel)' );
 for f = 1:size(IN.IN_FILEZ,1) % for each task or subject
   x = sum( workload_mean{f}, 2 )'; % sum over cond's, so you get by electrode
@@ -33,10 +30,11 @@ title( 'sum of workload across all 4 conditions, all electrodes' );
 
 %%%%
 % for 1st task, workload for one electrode, all conditions (for early plots in powerpoint)
+% no plot is made; prints out to C&P for Excel/Powerpoint
 %
-% this is 1 electrode x 4 conditions
+% for early FJ plots in Powerpoint
 if ( ~IN.IS_VA )
-   disp( 'for 1st task, workload for one electrode, all conditions (for early plots in powerpoint)' );
+   disp( 'for 1st task, workload for one electrode, all conditions (for early FJ plots in powerpoint)' );
    disp( sprintf( 'for excel: workload, %s, mean',...
                   cognionics_index_to_name( IN.ELECTRODE_OF_INTEREST ) ) );
    x = workload_mean{1}(IN.ELECTRODE_OF_INTEREST,:);
@@ -56,8 +54,8 @@ end
 
 %%%%
 % for 1st task, for each cond, workload across all electrodes
-%
-% this is 4 plots; 19 electrodes each
+% 
+% x-axis is electrode, y-axis is workload; repeated 4 times (1 for each condition)
 if ( ~IN.IS_VA )
    disp( 'workload across all electrodes, all cond''s' );
    figure(fig_num); fig_num = fig_num + 1
@@ -97,7 +95,8 @@ end
 %%%%
 % for each task, avg. across electrodes
 %
-% this is 8 plots (one for each task), 5 bands x 4 cond's each
+% for DANA, this is 8 plots (one for each task), x-axis is 5 bands, y-axis is channels_band_power_data_meanE (each x-axis set of bars is 4 conditions)
+% for VA, this is 2 plots, x-axis is 5 bands...
 figure(fig_num); fig_num = fig_num + 1
 
 for f = 1:size(IN.IN_FILEZ,1)
@@ -106,7 +105,7 @@ for f = 1:size(IN.IN_FILEZ,1)
     tmp_mean = squeeze( tmp(:,:,:,1) ); % get mean; 8x19x4
     tmp_sem = squeeze( tmp(:,:,:,2) ); % get sem; 8x19x4
     tmp = tmp_mean(b,:,:); % 19x4
-    channels_band_power_data_meanE(f,b,:) = squeeze( mean( tmp, 2 ) ); % mean over electrodes; f: 8 tasks, b: 5 bands, 4 conditions
+    channels_band_power_data_meanE(f,b,:) = squeeze( mean( tmp, 2 ) ); % mean over electrodes (1st dim is bands); on output side, f: 8 tasks, b: 5 bands, 4 conditions
 
     % pooled sem
     if ( ~IN.IS_INDIVID )
@@ -163,7 +162,8 @@ end
 %%%%
 % for each task, sum across bands
 %
-% this is 8 plots (one for each task), 1 sum of bands x 4 cond's
+% for DANA, this is 8 plots (one for each task), x-axis is conds, y-axis is channels_band_power_data_meanB_meanE
+% for VA, this is 2 plots (one for each task), x-axis is conds
 channels_band_power_data_meanB_meanE = squeeze( mean( channels_band_power_data_meanE, 2 ) ); % 8 tasks, 4 conditions
 
 % pooled sem
@@ -175,7 +175,7 @@ for f = 1:size(IN.IN_FILEZ,1)
     end
    
     for c = 1:C
-       n = 5;
+       n = 1; %%% <- is this right?
    
        foo1 = channels_band_power_data_meanE(f,:,c); % 1x5x1
        foo2 = channels_band_power_data_semE(f,:,c); % 1x5x1
@@ -186,8 +186,6 @@ for f = 1:size(IN.IN_FILEZ,1)
 end
 
 figure(fig_num); fig_num = fig_num + 1
-
-
 for f = 1:size(IN.IN_FILEZ,1)
    if ( ~IN.IS_INDIVID )
      subplot(size(IN.IN_FILEZ,1),1,f);
@@ -217,7 +215,7 @@ end
 %%%%
 % sum over tasks
 %
-% this is 1 plot, 4 cond's
+% x-axis is cond's, y-axis is channels_band_power_data_meanT_meanB_meanE
 channels_band_power_data_meanT_meanB_meanE = mean( channels_band_power_data_meanB_meanE, 1 ); % 4 conditions
 
 figure(fig_num); fig_num = fig_num + 1

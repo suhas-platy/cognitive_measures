@@ -1,10 +1,14 @@
-% @brief view data in neuroscale .mat files; individual DANA files
+% @brief view data in >1 neuroscale .mat files and write it out in Excel format; individual DANA files
+
+% load: each DANA file
+% calculate: saving them out for Excel
+% display: 
+%  view_neuroscale_multiple_grp_report__display
+%  view_neuroscale_multiple_grp_report__cxn_display
+
+% use the publish functionality to get a record of plots in html
 
 % @todo topoplots - these are just intropolations
-
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths

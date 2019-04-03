@@ -1,4 +1,4 @@
-% @brief view data in neuroscale .mat files; individual DANA files
+% @brief makes "group average before, you before, group average after, you after" plots for average brain power
 
 % @todo topoplots - these are just intropolations
 

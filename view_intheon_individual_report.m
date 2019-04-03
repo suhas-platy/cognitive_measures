@@ -1,4 +1,4 @@
-% @brief CHECK data in neuroscale .mat files; individual DANA or VA files
+% @brief CHECK data in intheon .mat files; individual DANA or VA files
 
 % to view the json
 %json_data = jsonencode( data ); % this returns a string
@@ -29,17 +29,38 @@ IN.ELECTRODE_OF_INTEREST = 17; % 02; @todo tie to INTHEON constants
 IN.PLOT_ORDER = [2 1 4 3];
 IN.NUM_ELECTRODES = 19;
 
+% 2-4 reports
+% IN.IS_INDIVID = 1;
+% IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\DANA individual reports 2019.02.04\dana_indiv_2-4_fixed_mat\';
+% IN.IN_TASKZ = ["CSS"];
+% IN.IS_VA = 0;
+% IN.IN_SUBJECTZ = [31950218];
+
+% 3-14 reports
 IN.IS_INDIVID = 1;
-IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\DANA individual reports 2019.02.04\dana_indiv_2-4_fixed_mat\';
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\individual reports 2019.03.14\dana_3-14_mat\';
 IN.IN_TASKZ = ["CSS"];
 IN.IS_VA = 0;
 IN.IN_SUBJECTZ = [31950218];
 
+% 128 files/8 files per subject = 16 subjects (those with valid DANA data)
+% same count as before
+
+% 2-4 reports
+% IN.IS_INDIVID = 1;
+% IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\va_indiv_2session_2-4\';
+% IN.IN_TASKZ = ["ec"];
+% IN.IS_VA = 1;
+% IN.IN_SUBJECTZ = [32960218];
+
 IN.IS_INDIVID = 1;
-IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\va_indiv_2session_2-4\';
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\individual reports 2019.03.14\va_3-14_mat\';
 IN.IN_TASKZ = ["ec"];
 IN.IS_VA = 1;
 IN.IN_SUBJECTZ = [32960218];
+
+% 42 files/2 files per subject = 21 subjects
+% previoulsy had 86 files with 4 files per subjects = 21.5 subjects (some extra files)
 
 % fill up IN.IN_FILEZ (only for individual reports)
 if ( IN.IS_INDIVID )
@@ -284,13 +305,13 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % extract connectivity and stats
    % for VA
-   %   data: 12 posn x 12 posn x 5 freq's (just the mean, no sem)
-   %     originally 12    12     5     2; see below for fix
+   %   data: 12 posn x 12 posn x 5 freq's x 3 cond's x 2 stat's
+   %     originally 12    12     5     3     2
    %   stats: 12 posn x 12 posn x 5 freq's x 2: t-value and PR(>F)
-   %     originally 12    12     5; see below for fix
+   %     originally 12    12     5     2
    % for DANA
-   %   data: 12 posn x 12 posn x 5 freq's (just the mean, no sem)
-   %     originally 12    12     5
+   %   data: 12 posn x 12 posn x 5 freq's x 3 cond's x 2 stat's
+   %     originally 12    12     5     3     2
    %   stats
    %     originally 12    12     5     2
    conn_data{f} = data{f}.connectivity.values.chunks.eeg_dDTF08.block.data;
@@ -299,9 +320,11 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
      ;
    else
       % as of 3/11, reports in 2-4 have the fields mixed up :(
-      foo = conn_data{f};
-      conn_data{f} = conn_stats{f};
-      conn_stats{f} = foo;
+      %foo = conn_data{f};
+      %conn_data{f} = conn_stats{f};
+      %conn_stats{f} = foo;
+      
+      % as of 3/14 things have been fixed
    end
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

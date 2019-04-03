@@ -9,8 +9,9 @@ FujitsuTiers - who's in what tier (also in Go Platypus Dropbox\Science And Resea
 FujitsuTiersFileUploadCheck - used to check which files Intheon was using when
 making reports
 
-individ_report_with_NL, indivi_report2, individ_report.json - ??; JSON exports
-but why...
+OLD: individ_report_with_NL, indivi_report2, individ_report.json - These were JSON
+exports of reports to examine their datastructure; obviated by ../support/
+structree.m 
 
 Theta Divided by Alpha - work for FJ presentation in Dec.
 

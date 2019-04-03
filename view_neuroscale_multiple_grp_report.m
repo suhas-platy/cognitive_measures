@@ -1,12 +1,12 @@
-% @brief view data in neuroscale .mat files; group DANA files
+% @brief view data in >1 neuroscale .mat files and write it out in Excel; group DANA files
 
 % load: each DANA file
 % calculate: saving them out for Excel
-% display: check_report_plots;
+% display: 
 %  view_neuroscale_multiple_grp_report__display
 %  view_neuroscale_multiple_grp_report__cxn_display
 
-% use the publish functionality to get a record of plots in html
+% use the publish functionality to get a record of plots in ./html directory (open the editor, Publish tab, Publish button on far right)
 
 % @todo topoplots - these are just intropolations
 
@@ -45,9 +45,9 @@ IN.IN_FILEZ = ["tpi_fuj_SRT1_group_analysis_ttest_db_conn_2-20.mat";
     "tpi_fuj_SRT2_group_analysis_ttest_db_conn_2-20.mat"];
 IN.IS_VA = 0;
 
-IN.IN_FILEZ = ["tpi_fuj_ec_group_analysis_ttest_db_conn_2-20.mat";
-    "tpi_fuj_eo_group_analysis_ttest_db_conn_2-20.mat"]; % dont' put ec-eo b/c that'll throw off the means
-IN.IS_VA = 1;
+% IN.IN_FILEZ = ["tpi_fuj_ec_group_analysis_ttest_db_conn_2-20.mat";
+%     "tpi_fuj_eo_group_analysis_ttest_db_conn_2-20.mat"]; % dont' put ec-eo b/c that'll throw off the means
+% IN.IS_VA = 1;
 
 IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
 
@@ -217,9 +217,13 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task, save out to Excel
       mat = permute( mat, [1 4 2 3] ); % 8 19 4 2 
       channels_band_power_data{f} = mat;
    end
-   
-   % @todo check for VA
+
    sources_band_power_data{f} = data{f}.sources.bands.values.dB.chunks.eeg.block.data;
+   if ( IN.IS_VA )
+      mat = squeeze( sources_band_power_data{f} ); % get rid of time axis
+      mat = permute( mat, [1 4 2 3] ); % 8 19 4 2
+      sources_band_power_data{f} = mat;
+   end
    
    %%%%%%%%%%%%%%%%%%%%
    % extract workload
@@ -281,7 +285,6 @@ end % rof f
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ display
-%check_report_plots;
 view_neuroscale_multiple_grp_report__display
 %view_neuroscale_multiple_grp_report__cxn_display
 %%%}}} eo-dispaly

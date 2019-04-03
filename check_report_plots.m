@@ -1,3 +1,5 @@
+% @brief check info in channel bands and stats, source bands and stats and connection stats; this checks the HTML files wrt the MAT files on the command line; plots are not made
+
 % no checks of spectra - not easy to spot check
 
 % @todo trim to 1st and last val in the group of 4 only
