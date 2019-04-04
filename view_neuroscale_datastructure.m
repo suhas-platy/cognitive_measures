@@ -63,6 +63,7 @@ NEUROSCALE_AFTER_IDX = 1;
 NEUROSCALE_BEFORE_IDX = 2;
 
 NEUROSCALE_DELTA_IDX = 1;
+NEUROSCALE_GAMMA_IDX = 5;
 NEUROSCALE_THETA_ALPHA_RATIO_IDX = 6;
 NEUROSCALE_BETA_THETA_ALPHA_RATIO_IDX = 7; % beta/(theta+alpha)
 
@@ -114,7 +115,7 @@ else
    channels_spectra_data = data.channels.dB.spectra.chunks.eeg.block.data; % 79    19     3     2
    channels_spectra_stats = data.channels.dB.spectra_stats.chunks.eeg.block.data;  % 79    19     2 
    
-   % band power, channels
+   % band power and ratios, channels
    channels_band_power_data = data.channels.dB.bands.chunks.eeg.block.data; % 8    19     2     2
    channels_band_power_stats = data.channels.dB.bands_stats.chunks.eeg.block.data; % 8    19     2
    if ( ~IN.IS_VA )
@@ -131,16 +132,18 @@ else
    end
    
    % topoplots
+   % same as band power and ratios
    
    % spectra, sources
    sources_spectra_data = data.sources.dB.spectra.chunks.eeg.block.data; % 79    12     3     2
    sources_spectra_stats = data.sources.dB.spectra_stats.chunks.eeg.block.data;  % 79    12     2 
 
-   % band power, sources
+   % band power and ratios, sources
    sources_band_power_data = data.sources.dB.bands.chunks.eeg.block.data; % 8    12     3     2
-   sources_band_power_stats = data.sources.dB.spectra_stats.chunks.eeg.block.data; % 79    12     2 
+   sources_band_power_stats = data.sources.dB.bands_stats.chunks.eeg.block.data; % 8    12     2
    
-   
+   % connectivity
+   connectivity_data = data.connectivity.stats.chunks.eeg_dDTF08.block.data; % 12    12     5     2
 end
 
 %%%}}} eo-load data
@@ -252,8 +255,6 @@ else
    fp1_band_after_sem = channels_band_power_data(1:5,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
    fp1_band_after_sem = squeeze( fp1_band_after_sem );
    
-   %fp1_band_plot_mean = interleave( fp1_band_after_mean, fp1_band_before_mean ); 
-   %fp1_band_plot_sem = interleave( fp1_band_after_sem, fp1_band_before_sem );
    fp1_band_plot_mean = [fp1_band_after_mean'; fp1_band_before_mean']';
    fp1_band_plot_sem = [fp1_band_after_sem'; fp1_band_before_sem']';
    
@@ -281,8 +282,6 @@ else
    fp1_ratios_after_sem = channels_band_power_data(6:8,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
    fp1_ratios_after_sem = squeeze( fp1_ratios_after_sem );
    
-   %fp1_ratios_plot_mean = interleave( fp1_ratios_after_mean, fp1_ratios_before_mean ); 
-   %fp1_ratios_plot_sem = interleave( fp1_ratios_after_sem, fp1_ratios_before_sem );
    fp1_ratios_plot_mean = [fp1_ratios_after_mean'; fp1_ratios_before_mean']';
    fp1_ratios_plot_sem = [fp1_ratios_after_sem'; fp1_ratios_before_sem']';
    
@@ -395,6 +394,106 @@ else
    ylim( [0 1.75] );   
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% connectivity
+if ( ~IN.IS_INDIVID )
+else
+   gamma_cxn_tval = connectivity_data(:,:,NEUROSCALE_GAMMA_IDX,1);
+   gamma_cxn_pval = connectivity_data(:,:,NEUROSCALE_GAMMA_IDX,2);
+   
+   gamma_cxn_sigdiff_idx = find( gamma_cxn_pval < .05 );
+   gamma_cxn_inc_idx = find( gamma_cxn_tval > 0 );
+   gamma_cxn_dec_idx = find( gamma_cxn_tval < 0 );
+   
+   gamma_cxn_siginc_idx = intersect( gamma_cxn_sigdiff_idx, gamma_cxn_inc_idx );
+   gamma_cxn_siginc_img = zeros(12,12);
+   gamma_cxn_siginc_img( gamma_cxn_siginc_idx ) = gamma_cxn_tval( gamma_cxn_siginc_idx );
+
+   gamma_cxn_sigdec_idx = intersect( gamma_cxn_sigdiff_idx, gamma_cxn_dec_idx );
+   gamma_cxn_sigdec_img = zeros(12,12);
+   gamma_cxn_sigdec_img( gamma_cxn_sigdec_idx ) = gamma_cxn_tval( gamma_cxn_sigdec_idx );
+   
+   figure(fig_num); fig_num = fig_num + 1;
+   imagesc( gamma_cxn_siginc_img' );
+   
+   title( 'Gamma connectivity, Increases after training (rows are FROM, columns are TO)' );
+   xticks(1:12);
+   xticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+   xtickangle( 270 );
+   yticks(1:12);
+   yticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+   mt_jetbar;
+   
+   figure(fig_num); fig_num = fig_num + 1;
+   imagesc( gamma_cxn_sigdec_img' );
+   
+   title( 'Gamma connectivity, Decreases after training (rows are FROM, columns are TO)' );
+   xticks(1:12);
+   xticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+   xtickangle( 270 );
+   yticks(1:12);
+   yticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+   mt_jetbar;
+   
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% statistics, bands, channels
+if ( ~IN.IS_INDIVID )
+else
+   val1 = channels_band_power_stats(1,1,1);
+   val2 = channels_band_power_stats(1,1,2);
+   val3 = channels_band_power_stats(1,2,1);
+   val4 = channels_band_power_stats(1,2,2);
+   
+   disp( sprintf('Feature\tSpatial\tFactor\tt-value\tp-value') );
+   disp( sprintf( 'Delta\tF7\tTask\t%.3f\t%.3f', val1, val2 ) );
+   disp( sprintf( 'Delta\tFp1\tTask\t%.3f\t%.3f', val3, val4 ) );
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% statistics, spectra, channels
+if ( ~IN.IS_INDIVID )
+else
+   val1 = channels_spectra_stats(1,1,1);
+   val2 = channels_spectra_stats(1,1,2);
+   val3 = channels_spectra_stats(1,2,1);
+   val4 = channels_spectra_stats(1,2,2);
+   
+   disp( sprintf('Frequency (Hz)\tSpatial\tFactor\tt-value\tp-value') );
+   disp( sprintf( '1.0\tF7\tTask\t%.3f\t%.3f', val1, val2 ) );
+   disp( sprintf( '1.0\tFp1\tTask\t%.3f\t%.3f', val3, val4 ) );
+   
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% statistics, bands, sources
+if ( ~IN.IS_INDIVID )
+else
+   val1 = sources_band_power_stats(1,1,1);
+   val2 = sources_band_power_stats(1,1,2);
+   val3 = sources_band_power_stats(1,2,1);
+   val4 = sources_band_power_stats(1,2,2);
+   
+   disp( sprintf('Feature\tSpatial\tFactor\tt-value\tp-value') );
+   disp( sprintf( 'Delta\tANT_CIN_L\tTask\t%.3f\t%.3f', val1, val2 ) );
+   disp( sprintf( 'Delta\tANT_CIN_R\tTask\t%.3f\t%.3f', val3, val4 ) );
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% statistics, spectra, sources
+if ( ~IN.IS_INDIVID )
+else
+   val1 = sources_spectra_stats(1,1,1);
+   val2 = sources_spectra_stats(1,1,2);
+   val3 = sources_spectra_stats(1,2,1);
+   val4 = sources_spectra_stats(1,2,2);
+   
+   disp( sprintf('Frequency (Hz)\tSpatial\tFactor\tt-value\tp-value') );
+   disp( sprintf( '1.0\tANT_CIN_L\tTask\t%.3f\t%.3f', val1, val2 ) );
+   disp( sprintf( '1.0\tANT_CIN_R\tTask\t%.3f\t%.3f', val3, val4 ) );
+   
+end
 
 electrodes = size(workload_mean,1);
 for i = 1:electrodes
