@@ -54,4 +54,10 @@ figure; pop_newtimef( EEG, 1, 1, [-10000   0], [3         0.5] , 'topovec', 1, '
 
 % topoplot
 %EEG = eeg_checkset( EEG );
-%figure; pop_topoplot(EEG, 1, [-10000:1000:0] ,'XDF file epochs',[2 3] ,0,'electrodes','on');
+%figure;pop_topoplot(EEG, 1, -10000,'',[1 1] ,0,'electrodes','on'); % this will work; says the valid indices are -10000 to -2
+%figure; pop_topoplot(EEG, 1, [-10000:1000:0] ,'XDF file epochs',[2 3] ,0,'electrodes','on'); % won't work b/c of indices
+
+chimera_EEG = EEG;
+chimera_EEG.data = rand(20,1);
+chimera_EEG.times = [1];
+chimera_EEG = eeg_checkset( chimera_EEG );

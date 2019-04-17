@@ -43,6 +43,11 @@ IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\va_indiv_2session_2-4\'
 IN.IN_TASKZ = ["ec"; "eo"];
 IN.IS_VA = 1;
 
+IN.IS_INDIVID = 1;
+IN.IN_PATH = 'C:\Data\DANA individual reports 2019.02.04\dana_indiv_2-4_fixed_mat\';
+IN.IN_TASKZ = ["MS"];
+IN.IS_VA = 1;
+
 IN.IN_SUBJECTZ = [32960218;
                   31970318;
                   32950518;
@@ -65,6 +70,7 @@ IN.IN_SUBJECTZ = [32960218;
                   31950218;
                   3109120318];
 %32910218]; % includes 1 previously excluded subject
+% Nx1
 
 % fill up IN.IN_FILEZ
 ctr = 1;
@@ -83,12 +89,12 @@ for i = 1:size( IN.IN_SUBJECTZ,1 )
       ctr = ctr+1;
    end
 end
-IN.IN_FILEZ = tmp_arr;
+IN.IN_FILEZ = tmp_arr; %(N*T)x1
 
 IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
 
-IN.TIER_BY_TIME_COL_HDR = {'After', 'Before'}; % get rid of After-Before
-IN.TIER_BY_TIME_COL_HDR = strrep( IN.TIER_BY_TIME_COL_HDR, ' ', '_' );
+IN.TIER_BY_TIME_COL_HDR = {'After', 'Before'}; % get rid of "After-Before"
+IN.TIER_BY_TIME_COL_HDR = strrep( IN.TIER_BY_TIME_COL_HDR, ' ', '_' ); % 1x4
 
 % for bands
 IN.BANDS_AND_RATIOS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma',...
@@ -96,7 +102,7 @@ IN.BANDS_AND_RATIOS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma',.
 
 % for connections
 IN.TIER_BY_TIME_COL_HDR2 = {'After', 'Before'};
-IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
+IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'}; % 1x5
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -125,6 +131,8 @@ NEUROSCALE_AFTER_TIER1_IDX = 1;
 NEUROSCALE_BEFORE_TIER1_IDX = 2;
 NEUROSCALE_AFTER_TIER2_IDX = 3;
 NEUROSCALE_BEFORE_TIER2_IDX = 4;
+NEUROSCALE_INDIVID_AFTER_IDX = 1;
+NEUROSCALE_INDIVID_BEFORE_IDX = 2;
 
 NEUROSCALE_DELTA_IDX = 1;
 NEUROSCALE_THETA_ALPHA_RATIO_IDX = 6;

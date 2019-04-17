@@ -155,7 +155,7 @@ for f = 1:size(IN.IN_FILEZ,1)
       mat3 = cat(3,mat,mat2);
       col_hdr = IN.TIER_BY_TIME_COL_HDR;
       row_hdr = IN.BANDS_COL_HDR;
-      mt_writetable2( mat3, save_fname, col_hdr, row_hdr );
+      mt_writetable_tensor( mat3, save_fname, col_hdr, row_hdr );
   end  
 end
 
@@ -208,7 +208,7 @@ for f = 1:size(IN.IN_FILEZ,1)
       mat3 = cat(3,mat,mat2);
       col_hdr = IN.TIER_BY_TIME_COL_HDR;
       row_hdr = "_mean_over_bands";
-      mt_writetable2( mat3, save_fname, col_hdr, row_hdr );
+      mt_writetable_tensor( mat3, save_fname, col_hdr, row_hdr );
    end
 end
    
@@ -223,3 +223,45 @@ bar( squeeze( channels_band_power_data_meanT_meanB_meanE ) );
 set( gca, 'XTickLabel', {'Tier 1 after', 'Tier 1 before', 'Tier 2 after', ...
                     'Tier 2 before' } );
 title( 'Mean of Tasks' );
+
+%%%%
+% for MS, write out memory on PZ
+%
+
+% make sure it's an invidiual MS report
+if ( IN.IS_INDIVID )
+   for f = 1:size(IN.IN_FILEZ,1)
+      fname = IN.IN_FILEZ{f};
+      if ( ~isempty( strfind( fname, 'MS' ) )
+         tmp = channels_band_power_data{f}; % 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
+         subj_id(f) = IN.IN_SUBJECTZ(f);
+         memory_score(f) = tmp(NEUROSCALE_THETA_ALPHA_RATIO_IDX,cognionics_name_to_index( 'PZ' ),NEUROSCALE_INDIVID_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
+      end
+      
+      % sort & write out
+      [sorted_memory_score,idx] = sort( memory_score, 'descend' );
+      sorted_subj_id = subj_id( idx );
+      mat = [sorted_subj_id'; sorted_memory_score'];
+      
+      fname = strcat( IN.SAVE_PATH, IN.IN_FILEZ{f} );   
+      save_fname = strrep( fname, 'v11\', 'v11\excel2\' );
+      save_fname = strrep( fname, '2session_analysis', 'memory' );
+      disp( sprintf( 'writing %s', save_fname ) );
+      col_hdr = 'Before';
+      mt_writetable( mat, save_fname, col_hdr );
+   end
+   
+end
+
+% figure(fig_num); fig_num = fig_num + 1
+% for f = 1:size(IN.IN_FILEZ,1)
+%    if ( ALGO.SAVE_BANDS_POOLED )
+%       disp( sprintf( 'writing %s', save_fname ) );
+%       mat = squeeze( channels_band_power_data_meanB_meanE(f,:) );
+%       mat2 = squeeze( channels_band_power_data_meanB_meanE_sem(f,:) );
+%       mat3 = cat(3,mat,mat2);
+%       col_hdr = IN.TIER_BY_TIME_COL_HDR;
+%       row_hdr = "_mean_over_bands";
+%       mt_writetable_tensor( mat3, save_fname, col_hdr, row_hdr );
+%    end
+% end

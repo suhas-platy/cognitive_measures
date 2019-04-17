@@ -295,7 +295,65 @@ else
    ylim( [0 1.75] );   
 end
 
-% topoplots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% topoplots, bands
+if ( ~IN.IS_INDIVID )
+else
+   EEGstruct = load( './support/EEG_sample.mat' ); % EEG struct after running one_subj2.m
+   EEGstruct = EEGstruct.EEG;
+   EEGstruct_data_sz = size( EEGstruct.data );
+   
+   band_before_mean = channels_band_power_data(1,:,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
+   % copy T4 (Cognionics T8) and put it in A2
+   t4 = channels_band_power_data(1,19,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
+   band_before_mean = [band_before_mean t4];
+   band_before_mean = band_before_mean';
+   EEGstruct.data = repmat( band_before_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
+   figure(fig_num); fig_num = fig_num + 1;
+   pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
+   title( 'Delta Before' );
+   
+   band_after_mean = channels_band_power_data(1,:,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+   % copy T4 (Cognionics T8) and put it in A2
+   t4 = channels_band_power_data(1,19,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+   band_after_mean = [band_after_mean t4];
+   band_after_mean = band_after_mean';
+   EEGstruct.data = repmat( band_after_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
+   figure(fig_num); fig_num = fig_num + 1;
+   pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
+   title( 'Delta After' );
+   
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% topoplots, ratios
+if ( ~IN.IS_INDIVID )
+else
+   EEGstruct = load( './support/EEG_sample.mat' ); % EEG struct after running one_subj2.m
+   EEGstruct = EEGstruct.EEG;
+   EEGstruct_data_sz = size( EEGstruct.data );
+   
+   ratios_before_mean = channels_band_power_data(6,:,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
+   % copy T4 (Cognionics T8) and put it in A2
+   t4 = channels_band_power_data(6,19,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
+   ratios_before_mean = [ratios_before_mean t4];
+   ratios_before_mean = ratios_before_mean';
+   EEGstruct.data = repmat( ratios_before_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
+   figure(fig_num); fig_num = fig_num + 1;
+   pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
+   title( 'theta/alpha Before' );
+   
+   ratios_after_mean = channels_band_power_data(6,:,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+   % copy T4 (Cognionics T8) and put it in A2
+   t4 = channels_band_power_data(6,19,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+   ratios_after_mean = [ratios_after_mean t4];
+   ratios_after_mean = ratios_after_mean';
+   EEGstruct.data = repmat( ratios_after_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
+   figure(fig_num); fig_num = fig_num + 1;
+   pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
+   title( 'theta/alpha After' );
+   
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % spectra, sources
