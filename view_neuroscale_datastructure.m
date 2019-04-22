@@ -1,6 +1,14 @@
 % @brief plot data in neuroscale .mat files
 
-% @todo topoplots - these are just intropolations
+% spectra, channels
+% band power, channels
+% ratios, channels
+% topoplots, bands
+% topoplots, ratios
+%
+% spectra, sources
+% band power, sources
+% ratios, sources
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
@@ -26,6 +34,7 @@ IN.IS_VA = 0;
 IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Science And Research\Fujitsu\Dec. 2018 Reports\old reports\DANA individual reports 2019.02.04\dana_indiv_2-4_fixed_mat\';
 IN.IN_FILENAME = '31950218_tpi_fuj_dana_CSS_indiv_2session_analysis.mat';
 IN.IS_INDIVID = 1;
+IN.HAS_AFTER = 0;
 IN.IS_VA = 0;
 
 IN.SAVE_PATH = './data/';
@@ -174,33 +183,41 @@ else
    fp1_spectra_before_mean = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
    fp1_spectra_before_sem = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
 
-   fp1_spectra_after_mean = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   fp1_spectra_after_sem = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+   if ( IN.HAS_AFTER )
+      fp1_spectra_after_mean = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      fp1_spectra_after_sem = channels_spectra_data(:,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+   end
    
-   fp1_spectra_stats = channels_spectra_stats(:,NEUROSCALE_FP1_IDX,NEUROSCALE_PVAL_IDX);
+   if ( IN.HAS_AFTER )
+      fp1_spectra_stats = channels_spectra_stats(:,NEUROSCALE_FP1_IDX,NEUROSCALE_PVAL_IDX);
+   end
    
    figure(fig_num); fig_num = fig_num + 1;
    plot( fp1_spectra_before_mean, 'Color', BEFORE_CLR ); hold on;
    ciplot_wrapper( fp1_spectra_before_mean, fp1_spectra_before_sem, BEFORE_CLR, .125 ); hold on;
    
-   plot( fp1_spectra_after_mean, 'Color', AFTER_CLR ); hold on;
-   ciplot_wrapper( fp1_spectra_after_mean, fp1_spectra_after_sem, AFTER_CLR, .125 ); hold on;
-   % % @todo make this function higher level
-   % @note Intheon says the CI's are 95% but they if you zoom in closely, they seem like only 1 sem (68%)
+   if ( IN.HAS_AFTER )
+      plot( fp1_spectra_after_mean, 'Color', AFTER_CLR ); hold on;
+      ciplot_wrapper( fp1_spectra_after_mean, fp1_spectra_after_sem, AFTER_CLR, .125 ); hold on;
+      % % @todo make this function higher level
+      % @note Intheon says the CI's are 95% but they if you zoom in closely, they seem like only 1 sem (68%)
+   end
    
-   title( 'Power Spectra, Fp1, task effect (blue: after, orange: before)' );
+   title( 'Power Spectra, Fp1, task effect (blue: after (if present), orange: before)' );
    ylim( [-5 25] );
    xticklabels( 0:5:40 );
    
    % add overlap bars
-   % have to do vline here b/c it will only draw in ylim (if it was smaller before the lines won't fill the whole thing)
-   my_ylim = ylim;
-   for i = 1:size(fp1_spectra_stats,1)
-      if ( fp1_spectra_stats(i) < .05 )
-         %h = vline( i, 'g' );
-         h = plot( [i i], my_ylim );
-         h.Color(1:3) = SIGDIFF_CLR;
-         h.Color(4) = 0.5; % set as transparent (https://undocumentedmatlab.com/blog/plot-line-transparency-and-color-gradient)
+   if ( IN.HAS_AFTER )
+      % have to do vline here b/c it will only draw in ylim (if it was smaller before the lines won't fill the whole thing)
+      my_ylim = ylim;
+      for i = 1:size(fp1_spectra_stats,1)
+         if ( fp1_spectra_stats(i) < .05 )
+            %h = vline( i, 'g' );
+            h = plot( [i i], my_ylim );
+            h.Color(1:3) = SIGDIFF_CLR;
+            h.Color(4) = 0.5; % set as transparent (https://undocumentedmatlab.com/blog/plot-line-transparency-and-color-gradient)
+         end
       end
    end
 
@@ -249,21 +266,36 @@ else
    fp1_band_before_sem = channels_band_power_data(1:5,NEUROSCALE_FP1_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
    fp1_band_before_sem = squeeze( fp1_band_before_sem );
 
-   fp1_band_after_mean = channels_band_power_data(1:5,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   fp1_band_after_mean = squeeze( fp1_band_after_mean );
-   fp1_band_after_sem = channels_band_power_data(1:5,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
-   fp1_band_after_sem = squeeze( fp1_band_after_sem );
+   if ( IN.HAS_AFTER )
+      fp1_band_after_mean = channels_band_power_data(1:5,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      fp1_band_after_mean = squeeze( fp1_band_after_mean );
+      fp1_band_after_sem = channels_band_power_data(1:5,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+      fp1_band_after_sem = squeeze( fp1_band_after_sem );
+   end
    
-   fp1_band_plot_mean = [fp1_band_after_mean'; fp1_band_before_mean']';
-   fp1_band_plot_sem = [fp1_band_after_sem'; fp1_band_before_sem']';
+   if ( IN.HAS_AFTER )
+      fp1_band_plot_mean = [fp1_band_after_mean'; fp1_band_before_mean']';
+      fp1_band_plot_sem = [fp1_band_after_sem'; fp1_band_before_sem']';
+   else
+      fp1_band_plot_mean = [fp1_band_before_mean'];
+      fp1_band_plot_sem = [fp1_band_before_sem'];
+   end
    
    figure(fig_num); fig_num = fig_num + 1;
    h = barweb( fp1_band_plot_mean, fp1_band_plot_sem );
    
-   title( 'Band Power, Fp1, task effect (blue: after, orange: before)' );
-   xticklabels( {'delta', 'theta', 'alpha', 'beta', 'gamma' } );
-   set(h.bars(1), 'FaceColor', AFTER_CLR );
-   set(h.bars(2), 'FaceColor', BEFORE_CLR );   
+   title( 'Band Power, Fp1, task effect (blue: after (if present), orange: before)' );
+   if ( IN.HAS_AFTER )
+      xticklabels( {'delta', 'theta', 'alpha', 'beta', 'gamma' } );
+      set(h.bars(1), 'FaceColor', AFTER_CLR );
+      set(h.bars(2), 'FaceColor', BEFORE_CLR );
+   else
+      xticklabels( 'delta | theta | alpha | beta | gamma' );
+      for i = 1:size(h.bars,2)
+         set(h.bars(i), 'FaceColor', BEFORE_CLR );
+      end
+   end
+   
    ylim( [0 25] );
 end
 
@@ -276,21 +308,35 @@ else
    fp1_ratios_before_sem = channels_band_power_data(6:8,NEUROSCALE_FP1_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
    fp1_ratios_before_sem = squeeze( fp1_ratios_before_sem );
 
-   fp1_ratios_after_mean = channels_band_power_data(6:8,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   fp1_ratios_after_mean = squeeze( fp1_ratios_after_mean );
-   fp1_ratios_after_sem = channels_band_power_data(6:8,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
-   fp1_ratios_after_sem = squeeze( fp1_ratios_after_sem );
+   if ( IN.HAS_AFTER )
+      fp1_ratios_after_mean = channels_band_power_data(6:8,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      fp1_ratios_after_mean = squeeze( fp1_ratios_after_mean );
+      fp1_ratios_after_sem = channels_band_power_data(6:8,NEUROSCALE_FP1_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+      fp1_ratios_after_sem = squeeze( fp1_ratios_after_sem );
+   end
    
-   fp1_ratios_plot_mean = [fp1_ratios_after_mean'; fp1_ratios_before_mean']';
-   fp1_ratios_plot_sem = [fp1_ratios_after_sem'; fp1_ratios_before_sem']';
+   if ( IN.HAS_AFTER )
+      fp1_ratios_plot_mean = [fp1_ratios_after_mean'; fp1_ratios_before_mean']';
+      fp1_ratios_plot_sem = [fp1_ratios_after_sem'; fp1_ratios_before_sem']';
+   else
+      fp1_ratios_plot_mean = [fp1_ratios_before_mean'];
+      fp1_ratios_plot_sem = [fp1_ratios_before_sem'];
+   end
    
    figure(fig_num); fig_num = fig_num + 1;
    h = barweb( fp1_ratios_plot_mean, fp1_ratios_plot_sem );
    
-   title( 'Ratios, Fp1, task effect (blue: after, orange: before)' );
-   xticklabels( {'theta/alpha', 'beta/(theta+alpha)', 'theta/beta'} );
-   set(h.bars(1), 'FaceColor', AFTER_CLR );
-   set(h.bars(2), 'FaceColor', BEFORE_CLR );   
+   title( 'Ratios, Fp1, task effect (blue: after (if present), orange: before)' );
+   if ( IN.HAS_AFTER )
+      xticklabels( {'theta/alpha', 'beta/(theta+alpha)', 'theta/beta'} );
+      set(h.bars(1), 'FaceColor', AFTER_CLR );
+      set(h.bars(2), 'FaceColor', BEFORE_CLR );
+   else
+      xticklabels('theta/alpha | beta/(theta+alpha) | theta/beta');
+      for i = 1:size(h.bars,2)
+         set(h.bars(i), 'FaceColor', BEFORE_CLR );
+      end
+   end   
    ylim( [0 1.75] );   
 end
 
@@ -312,16 +358,17 @@ else
    pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
    title( 'Delta Before' );
    
-   band_after_mean = channels_band_power_data(1,:,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   % copy T4 (Cognionics T8) and put it in A2
-   t4 = channels_band_power_data(1,19,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   band_after_mean = [band_after_mean t4];
-   band_after_mean = band_after_mean';
-   EEGstruct.data = repmat( band_after_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
-   figure(fig_num); fig_num = fig_num + 1;
-   pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
-   title( 'Delta After' );
-   
+   if ( IN.HAS_AFTER )
+      band_after_mean = channels_band_power_data(1,:,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      % copy T4 (Cognionics T8) and put it in A2
+      t4 = channels_band_power_data(1,19,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      band_after_mean = [band_after_mean t4];
+      band_after_mean = band_after_mean';
+      EEGstruct.data = repmat( band_after_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
+      figure(fig_num); fig_num = fig_num + 1;
+      pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
+      title( 'Delta After' );
+   end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -342,16 +389,17 @@ else
    pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
    title( 'theta/alpha Before' );
    
-   ratios_after_mean = channels_band_power_data(6,:,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   % copy T4 (Cognionics T8) and put it in A2
-   t4 = channels_band_power_data(6,19,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   ratios_after_mean = [ratios_after_mean t4];
-   ratios_after_mean = ratios_after_mean';
-   EEGstruct.data = repmat( ratios_after_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
-   figure(fig_num); fig_num = fig_num + 1;
-   pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
-   title( 'theta/alpha After' );
-   
+   if ( IN.HAS_AFTER )
+      ratios_after_mean = channels_band_power_data(6,:,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      % copy T4 (Cognionics T8) and put it in A2
+      t4 = channels_band_power_data(6,19,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      ratios_after_mean = [ratios_after_mean t4];
+      ratios_after_mean = ratios_after_mean';
+      EEGstruct.data = repmat( ratios_after_mean, 1, EEGstruct_data_sz(2), EEGstruct_data_sz(3) );
+      figure(fig_num); fig_num = fig_num + 1;
+      pop_topoplot(EEGstruct, 1, -10000,'',[1 1] ,0,'electrodes','on');
+      title( 'theta/alpha After' );
+   end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -361,33 +409,41 @@ else
    antcinl_spectra_before_mean = sources_spectra_data(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
    antcinl_spectra_before_sem = sources_spectra_data(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
 
-   antcinl_spectra_after_mean = sources_spectra_data(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   antcinl_spectra_after_sem = sources_spectra_data(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+   if ( IN.HAS_AFTER )
+      antcinl_spectra_after_mean = sources_spectra_data(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+      antcinl_spectra_after_sem = sources_spectra_data(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+   end
    
-   antcinl_spectra_stats = sources_spectra_stats(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_PVAL_IDX);
+   if ( IN.HAS_AFTER )
+      antcinl_spectra_stats = sources_spectra_stats(:,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_PVAL_IDX);
+   end
    
    figure(fig_num); fig_num = fig_num + 1;
    plot( antcinl_spectra_before_mean, 'Color', BEFORE_CLR ); hold on;
    ciplot_wrapper( antcinl_spectra_before_mean, antcinl_spectra_before_sem, BEFORE_CLR, .125 ); hold on;
    
-   plot( antcinl_spectra_after_mean, 'Color', AFTER_CLR ); hold on;
-   ciplot_wrapper( antcinl_spectra_after_mean, antcinl_spectra_after_sem, AFTER_CLR, .125 ); hold on;
-   % % @todo make this function higher level
-   % @note Intheon says the CI's are 95% but they if you zoom in closely, they seem like only 1 sem (68%)
+   if ( IN.HAS_AFTER )
+      plot( antcinl_spectra_after_mean, 'Color', AFTER_CLR ); hold on;
+      ciplot_wrapper( antcinl_spectra_after_mean, antcinl_spectra_after_sem, AFTER_CLR, .125 ); hold on;
+      % % @todo make this function higher level
+      % @note Intheon says the CI's are 95% but they if you zoom in closely, they seem like only 1 sem (68%)
+   end
    
-   title( 'Power Spectra, ANT CIN L, task effect (blue: after, orange: before)' );
+   title( 'Power Spectra, ANT CIN L, task effect (blue: after (if present), orange: before)' );
    ylim( [45 85] );
    xticklabels( 0:5:40 );
    
    % add overlap bars
-   % have to do vline here b/c it will only draw in ylim (if it was smaller before the lines won't fill the whole thing)
-   my_ylim = ylim;
-   for i = 1:size(antcinl_spectra_stats,1)
-      if ( antcinl_spectra_stats(i) < .05 )
-         %h = vline( i, 'g' );
-         h = plot( [i i], my_ylim );
-         h.Color(1:3) = SIGDIFF_CLR;
-         h.Color(4) = 0.5; % set as transparent (https://undocumentedmatlab.com/blog/plot-line-transparency-and-color-gradient)
+   if ( IN.HAS_AFTER )
+     % have to do vline here b/c it will only draw in ylim (if it was smaller before the lines won't fill the whole thing)
+      my_ylim = ylim;
+      for i = 1:size(antcinl_spectra_stats,1)
+         if ( antcinl_spectra_stats(i) < .05 )
+            %h = vline( i, 'g' );
+            h = plot( [i i], my_ylim );
+            h.Color(1:3) = SIGDIFF_CLR;
+            h.Color(4) = 0.5; % set as transparent (https://undocumentedmatlab.com/blog/plot-line-transparency-and-color-gradient)
+         end
       end
    end
    
@@ -402,23 +458,35 @@ else
    antcinl_band_before_sem = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
    antcinl_band_before_sem = squeeze( antcinl_band_before_sem );
 
-   antcinl_band_after_mean = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   antcinl_band_after_mean = squeeze( antcinl_band_after_mean );
-   antcinl_band_after_sem = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
-   antcinl_band_after_sem = squeeze( antcinl_band_after_sem );
-   
-   %antcinl_band_plot_mean = interleave( antcinl_band_after_mean, antcinl_band_before_mean ); 
-   %antcinl_band_plot_sem = interleave( antcinl_band_after_sem, antcinl_band_before_sem );
-   antcinl_band_plot_mean = [antcinl_band_after_mean'; antcinl_band_before_mean']';
-   antcinl_band_plot_sem = [antcinl_band_after_sem'; antcinl_band_before_sem']';
+   if ( IN.HAS_AFTER )
+       antcinl_band_after_mean = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+       antcinl_band_after_mean = squeeze( antcinl_band_after_mean );
+       antcinl_band_after_sem = sources_band_power_data(1:5,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+       antcinl_band_after_sem = squeeze( antcinl_band_after_sem );
+   end
+
+   if ( IN.HAS_AFTER )   
+      antcinl_band_plot_mean = [antcinl_band_after_mean'; antcinl_band_before_mean']';
+      antcinl_band_plot_sem = [antcinl_band_after_sem'; antcinl_band_before_sem']';
+   else
+      antcinl_band_plot_mean = [antcinl_band_before_mean'];
+      antcinl_band_plot_sem = [antcinl_band_before_sem'];
+   end
    
    figure(fig_num); fig_num = fig_num + 1;
    h = barweb( antcinl_band_plot_mean, antcinl_band_plot_sem );
    
-   title( 'Band Power, ANT CIN L, task effect (blue: after, orange: before)' );
-   xticklabels( {'delta', 'theta', 'alpha', 'beta', 'gamma' } );
-   set(h.bars(1), 'FaceColor', AFTER_CLR );
-   set(h.bars(2), 'FaceColor', BEFORE_CLR );   
+   title( 'Band Power, ANT CIN L, task effect (blue: after (if present), orange: before)' );
+   if ( IN.HAS_AFTER )
+      xticklabels( {'delta', 'theta', 'alpha', 'beta', 'gamma' } );
+      set(h.bars(1), 'FaceColor', AFTER_CLR );
+      set(h.bars(2), 'FaceColor', BEFORE_CLR );
+   else
+      xticklabels('delta | theta | alpha | beta | gamma');
+      for i = 1:size(h.bars,2)
+         set(h.bars(i), 'FaceColor', BEFORE_CLR );
+      end   
+   end   
    ylim( [50 80] );   
 end
 
@@ -431,23 +499,35 @@ else
    antcinl_ratios_before_sem = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_BEFORE_IDX,NEUROSCALE_SEM_IDX);
    antcinl_ratios_before_sem = squeeze( antcinl_ratios_before_sem );
 
-   antcinl_ratios_after_mean = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
-   antcinl_ratios_after_mean = squeeze( antcinl_ratios_after_mean );
-   antcinl_ratios_after_sem = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
-   antcinl_ratios_after_sem = squeeze( antcinl_ratios_after_sem );
-   
-   %antcinl_ratios_plot_mean = interleave( antcinl_ratios_after_mean, antcinl_ratios_before_mean ); 
-   %antcinl_ratios_plot_sem = interleave( antcinl_ratios_after_sem, antcinl_ratios_before_sem );
-   antcinl_ratios_plot_mean = [antcinl_ratios_after_mean'; antcinl_ratios_before_mean']';
-   antcinl_ratios_plot_sem = [antcinl_ratios_after_sem'; antcinl_ratios_before_sem']';
+   if ( IN.HAS_AFTER )
+	   antcinl_ratios_after_mean = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_MEAN_IDX);
+	   antcinl_ratios_after_mean = squeeze( antcinl_ratios_after_mean );
+	   antcinl_ratios_after_sem = sources_band_power_data(6:8,NEUROSCALE_ANT_CIN_L_IDX,NEUROSCALE_AFTER_IDX,NEUROSCALE_SEM_IDX);
+	   antcinl_ratios_after_sem = squeeze( antcinl_ratios_after_sem );
+   end
+
+   if ( IN.HAS_AFTER ) 
+	   antcinl_ratios_plot_mean = [antcinl_ratios_after_mean'; antcinl_ratios_before_mean']';
+	   antcinl_ratios_plot_sem = [antcinl_ratios_after_sem'; antcinl_ratios_before_sem']';
+   else
+	   antcinl_ratios_plot_mean = [antcinl_ratios_before_mean'];
+	   antcinl_ratios_plot_sem = [antcinl_ratios_before_sem'];
+   end
    
    figure(fig_num); fig_num = fig_num + 1;
    h = barweb( antcinl_ratios_plot_mean, antcinl_ratios_plot_sem );
    
-   title( 'Ratios, ANT CIN L, task effect (blue: after, orange: before)' );
-   xticklabels( {'theta/alpha', 'beta/(theta+alpha)', 'theta/beta'} );
-   set(h.bars(1), 'FaceColor', AFTER_CLR );
-   set(h.bars(2), 'FaceColor', BEFORE_CLR );   
+   title( 'Ratios, ANT CIN L, task effect (blue: after (if present), orange: before)' );
+   if ( IN.HAS_AFTER )
+	   xticklabels( {'theta/alpha', 'beta/(theta+alpha)', 'theta/beta'} );
+	   set(h.bars(1), 'FaceColor', AFTER_CLR );
+	   set(h.bars(2), 'FaceColor', BEFORE_CLR );
+   else
+      xticklabels('theta/alpha | beta/(theta+alpha) | theta/beta');
+      for i = 1:size(h.bars,2)
+         set(h.bars(i), 'FaceColor', BEFORE_CLR );
+      end    
+   end   
    ylim( [0 1.75] );   
 end
 
@@ -455,101 +535,118 @@ end
 % connectivity
 if ( ~IN.IS_INDIVID )
 else
-   gamma_cxn_tval = connectivity_data(:,:,NEUROSCALE_GAMMA_IDX,1);
-   gamma_cxn_pval = connectivity_data(:,:,NEUROSCALE_GAMMA_IDX,2);
-   
-   gamma_cxn_sigdiff_idx = find( gamma_cxn_pval < .05 );
-   gamma_cxn_inc_idx = find( gamma_cxn_tval > 0 );
-   gamma_cxn_dec_idx = find( gamma_cxn_tval < 0 );
-   
-   gamma_cxn_siginc_idx = intersect( gamma_cxn_sigdiff_idx, gamma_cxn_inc_idx );
-   gamma_cxn_siginc_img = zeros(12,12);
-   gamma_cxn_siginc_img( gamma_cxn_siginc_idx ) = gamma_cxn_tval( gamma_cxn_siginc_idx );
+   if ( IN.HAS_AFTER )
+	   gamma_cxn_tval = connectivity_data(:,:,NEUROSCALE_GAMMA_IDX,1);
+	   gamma_cxn_pval = connectivity_data(:,:,NEUROSCALE_GAMMA_IDX,2);
+	   
+	   gamma_cxn_sigdiff_idx = find( gamma_cxn_pval < .05 );
+	   gamma_cxn_inc_idx = find( gamma_cxn_tval > 0 );
+	   gamma_cxn_dec_idx = find( gamma_cxn_tval < 0 );
+	   
+	   gamma_cxn_siginc_idx = intersect( gamma_cxn_sigdiff_idx, gamma_cxn_inc_idx );
+	   gamma_cxn_siginc_img = zeros(12,12);
+	   gamma_cxn_siginc_img( gamma_cxn_siginc_idx ) = gamma_cxn_tval( gamma_cxn_siginc_idx );
 
-   gamma_cxn_sigdec_idx = intersect( gamma_cxn_sigdiff_idx, gamma_cxn_dec_idx );
-   gamma_cxn_sigdec_img = zeros(12,12);
-   gamma_cxn_sigdec_img( gamma_cxn_sigdec_idx ) = gamma_cxn_tval( gamma_cxn_sigdec_idx );
-   
-   figure(fig_num); fig_num = fig_num + 1;
-   imagesc( gamma_cxn_siginc_img' );
-   
-   title( 'Gamma connectivity, Increases after training (rows are FROM, columns are TO)' );
-   xticks(1:12);
-   xticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
-   xtickangle( 270 );
-   yticks(1:12);
-   yticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
-   mt_jetbar;
-   
-   figure(fig_num); fig_num = fig_num + 1;
-   imagesc( gamma_cxn_sigdec_img' );
-   
-   title( 'Gamma connectivity, Decreases after training (rows are FROM, columns are TO)' );
-   xticks(1:12);
-   xticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
-   xtickangle( 270 );
-   yticks(1:12);
-   yticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
-   mt_jetbar;
-   
+	   gamma_cxn_sigdec_idx = intersect( gamma_cxn_sigdiff_idx, gamma_cxn_dec_idx );
+	   gamma_cxn_sigdec_img = zeros(12,12);
+	   gamma_cxn_sigdec_img( gamma_cxn_sigdec_idx ) = gamma_cxn_tval( gamma_cxn_sigdec_idx );
+	   
+	   figure(fig_num); fig_num = fig_num + 1;
+	   imagesc( gamma_cxn_siginc_img' );
+	   
+	   title( 'Gamma connectivity, Increases after training (rows are FROM, columns are TO)' );
+	   xticks(1:12);
+	   xticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+	   xtickangle( 270 );
+	   yticks(1:12);
+	   yticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+	   mt_jetbar;
+	   
+	   figure(fig_num); fig_num = fig_num + 1;
+	   imagesc( gamma_cxn_sigdec_img' );
+	   
+	   title( 'Gamma connectivity, Decreases after training (rows are FROM, columns are TO)' );
+	   xticks(1:12);
+	   xticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+	   xtickangle( 270 );
+	   yticks(1:12);
+	   yticklabels( {'ACC L', '        R', 'DLPFC L', '             R', 'INF. PAR. L', '                 R', 'LAT. OCP. L', '                  R', 'OFPFC L', '             R', 'PRE. CENT. L.', '                     R'} );
+	   mt_jetbar;
+   else
+       disp( 'no after, so no stats' );
+   end   
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % statistics, bands, channels
 if ( ~IN.IS_INDIVID )
 else
-   val1 = channels_band_power_stats(1,1,1);
-   val2 = channels_band_power_stats(1,1,2);
-   val3 = channels_band_power_stats(1,2,1);
-   val4 = channels_band_power_stats(1,2,2);
-   
-   disp( sprintf('Feature\tSpatial\tFactor\tt-value\tp-value') );
-   disp( sprintf( 'Delta\tF7\tTask\t%.3f\t%.3f', val1, val2 ) );
-   disp( sprintf( 'Delta\tFp1\tTask\t%.3f\t%.3f', val3, val4 ) );
+   if (IN.HAS_AFTER)
+	   val1 = channels_band_power_stats(1,1,1);
+	   val2 = channels_band_power_stats(1,1,2);
+	   val3 = channels_band_power_stats(1,2,1);
+	   val4 = channels_band_power_stats(1,2,2);
+	   
+	   disp( sprintf('Feature\tSpatial\tFactor\tt-value\tp-value') );
+	   disp( sprintf( 'Delta\tF7\tTask\t%.3f\t%.3f', val1, val2 ) );
+	   disp( sprintf( 'Delta\tFp1\tTask\t%.3f\t%.3f', val3, val4 ) );
+   else
+       disp( 'no after, so no stats' );
+   end
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % statistics, spectra, channels
 if ( ~IN.IS_INDIVID )
 else
-   val1 = channels_spectra_stats(1,1,1);
-   val2 = channels_spectra_stats(1,1,2);
-   val3 = channels_spectra_stats(1,2,1);
-   val4 = channels_spectra_stats(1,2,2);
-   
-   disp( sprintf('Frequency (Hz)\tSpatial\tFactor\tt-value\tp-value') );
-   disp( sprintf( '1.0\tF7\tTask\t%.3f\t%.3f', val1, val2 ) );
-   disp( sprintf( '1.0\tFp1\tTask\t%.3f\t%.3f', val3, val4 ) );
-   
+   if (IN.HAS_AFTER)
+	   val1 = channels_spectra_stats(1,1,1);
+	   val2 = channels_spectra_stats(1,1,2);
+	   val3 = channels_spectra_stats(1,2,1);
+	   val4 = channels_spectra_stats(1,2,2);
+	   
+	   disp( sprintf('Frequency (Hz)\tSpatial\tFactor\tt-value\tp-value') );
+	   disp( sprintf( '1.0\tF7\tTask\t%.3f\t%.3f', val1, val2 ) );
+	   disp( sprintf( '1.0\tFp1\tTask\t%.3f\t%.3f', val3, val4 ) );
+   else
+       disp( 'no after, so no stats' );
+   end   
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % statistics, bands, sources
 if ( ~IN.IS_INDIVID )
 else
-   val1 = sources_band_power_stats(1,1,1);
-   val2 = sources_band_power_stats(1,1,2);
-   val3 = sources_band_power_stats(1,2,1);
-   val4 = sources_band_power_stats(1,2,2);
-   
-   disp( sprintf('Feature\tSpatial\tFactor\tt-value\tp-value') );
-   disp( sprintf( 'Delta\tANT_CIN_L\tTask\t%.3f\t%.3f', val1, val2 ) );
-   disp( sprintf( 'Delta\tANT_CIN_R\tTask\t%.3f\t%.3f', val3, val4 ) );
+   if (IN.HAS_AFTER)
+	   val1 = sources_band_power_stats(1,1,1);
+	   val2 = sources_band_power_stats(1,1,2);
+	   val3 = sources_band_power_stats(1,2,1);
+	   val4 = sources_band_power_stats(1,2,2);
+	   
+	   disp( sprintf('Feature\tSpatial\tFactor\tt-value\tp-value') );
+	   disp( sprintf( 'Delta\tANT_CIN_L\tTask\t%.3f\t%.3f', val1, val2 ) );
+	   disp( sprintf( 'Delta\tANT_CIN_R\tTask\t%.3f\t%.3f', val3, val4 ) );
+   else
+	   disp( 'no after, so no stats' );
+   end   
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % statistics, spectra, sources
 if ( ~IN.IS_INDIVID )
 else
-   val1 = sources_spectra_stats(1,1,1);
-   val2 = sources_spectra_stats(1,1,2);
-   val3 = sources_spectra_stats(1,2,1);
-   val4 = sources_spectra_stats(1,2,2);
-   
-   disp( sprintf('Frequency (Hz)\tSpatial\tFactor\tt-value\tp-value') );
-   disp( sprintf( '1.0\tANT_CIN_L\tTask\t%.3f\t%.3f', val1, val2 ) );
-   disp( sprintf( '1.0\tANT_CIN_R\tTask\t%.3f\t%.3f', val3, val4 ) );
-   
+   if (IN.HAS_AFTER)
+	   val1 = sources_spectra_stats(1,1,1);
+	   val2 = sources_spectra_stats(1,1,2);
+	   val3 = sources_spectra_stats(1,2,1);
+	   val4 = sources_spectra_stats(1,2,2);
+	   
+	   disp( sprintf('Frequency (Hz)\tSpatial\tFactor\tt-value\tp-value') );
+	   disp( sprintf( '1.0\tANT_CIN_L\tTask\t%.3f\t%.3f', val1, val2 ) );
+	   disp( sprintf( '1.0\tANT_CIN_R\tTask\t%.3f\t%.3f', val3, val4 ) );
+   else
+	   disp( 'no after, so no stats' );
+   end   
 end
 
 electrodes = size(channels_band_power_data,2);
@@ -564,67 +661,67 @@ end
 disp( 'display' );
 
 if ( ~IN.IS_INDIVID )
-figure(fig_num); fig_num = fig_num + 1;
-plot( fp1_eeg_tier1_mean, 'Color', [0 0 1] ); hold on;
-plot( fp1_eeg_tier2_mean, 'Color', [.75 .5 0] ); hold on;
-title( 'Fp1 mean EEG, group effect (blue: tier 1, orange: tier 2)' );
-% @todo add sem; see https://stats.stackexchange.com/a/231287
+	figure(fig_num); fig_num = fig_num + 1;
+	plot( fp1_eeg_tier1_mean, 'Color', [0 0 1] ); hold on;
+	plot( fp1_eeg_tier2_mean, 'Color', [.75 .5 0] ); hold on;
+	title( 'Fp1 mean EEG, group effect (blue: tier 1, orange: tier 2)' );
+	% @todo add sem; see https://stats.stackexchange.com/a/231287
 
-figure(fig_num); fig_num = fig_num + 1;
-plot( fp1_eeg_after_mean, 'Color', [0 0 1] ); hold on;
-plot( fp1_eeg_before_mean, 'Color', [.75 .5 0] ); hold on;
-stem( fp1_stats < .05 ); hold on;
-title( 'Fp1 mean EEG, task effect (blue: after, orange: before)' );
-% @todo add sem; see https://stats.stackexchange.com/a/231287
+	figure(fig_num); fig_num = fig_num + 1;
+	plot( fp1_eeg_after_mean, 'Color', [0 0 1] ); hold on;
+	plot( fp1_eeg_before_mean, 'Color', [.75 .5 0] ); hold on;
+	stem( fp1_stats < .05 ); hold on;
+	title( 'Fp1 mean EEG, task effect (blue: after, orange: before)' );
+	% @todo add sem; see https://stats.stackexchange.com/a/231287
 
-figure(fig_num); fig_num = fig_num + 1;
-plot( fp1_eeg_after_tier1_mean, 'Color', [0 0 1] ); hold on;
-ciplot_wrapper( fp1_eeg_after_tier1_mean, fp1_eeg_after_tier1_sem, [0 0 1], .125 ); hold on;
-plot( fp1_eeg_after_tier2_mean, 'Color', [.75 .5 0] ); hold on;
-ciplot_wrapper( fp1_eeg_after_tier2_mean, fp1_eeg_after_tier2_sem, [.75 .5 0], .125 ); hold on;
-title( 'Fp1 mean EEG, group effect after (blue: tier 1, orange: tier 2)' );
+	figure(fig_num); fig_num = fig_num + 1;
+	plot( fp1_eeg_after_tier1_mean, 'Color', [0 0 1] ); hold on;
+	ciplot_wrapper( fp1_eeg_after_tier1_mean, fp1_eeg_after_tier1_sem, [0 0 1], .125 ); hold on;
+	plot( fp1_eeg_after_tier2_mean, 'Color', [.75 .5 0] ); hold on;
+	ciplot_wrapper( fp1_eeg_after_tier2_mean, fp1_eeg_after_tier2_sem, [.75 .5 0], .125 ); hold on;
+	title( 'Fp1 mean EEG, group effect after (blue: tier 1, orange: tier 2)' );
 
-figure(fig_num); fig_num = fig_num + 1;
-plot( fp1_eeg_before_tier1_mean, 'LineStyle', '--', 'Color', [0 0 1] ); hold on;
-ciplot_wrapper( fp1_eeg_before_tier1_mean, fp1_eeg_before_tier1_sem, [0 0 1], .125 ); hold on;
-plot( fp1_eeg_before_tier2_mean, 'LineStyle', '--', 'Color', [.75 .5 0] ); hold on;
-ciplot_wrapper( fp1_eeg_before_tier2_mean, fp1_eeg_before_tier2_sem, [.75 .5 0], .125 ); hold on;
-title( 'Fp1 mean EEG, group effect before (blue: tier 1, orange: tier 2)' );
+	figure(fig_num); fig_num = fig_num + 1;
+	plot( fp1_eeg_before_tier1_mean, 'LineStyle', '--', 'Color', [0 0 1] ); hold on;
+	ciplot_wrapper( fp1_eeg_before_tier1_mean, fp1_eeg_before_tier1_sem, [0 0 1], .125 ); hold on;
+	plot( fp1_eeg_before_tier2_mean, 'LineStyle', '--', 'Color', [.75 .5 0] ); hold on;
+	ciplot_wrapper( fp1_eeg_before_tier2_mean, fp1_eeg_before_tier2_sem, [.75 .5 0], .125 ); hold on;
+	title( 'Fp1 mean EEG, group effect before (blue: tier 1, orange: tier 2)' );
 
-figure(fig_num); fig_num = fig_num + 1;
-h = barweb( fp1_delta_mean, fp1_delta_sem ); hold on;
-set(h.bars(1), 'FaceColor', TIER1_AFTER_CLR );
-set(h.bars(2), 'FaceColor', TIER1_BEFORE_CLR );
-set(h.bars(3), 'FaceColor', TIER2_AFTER_CLR );
-set(h.bars(4), 'FaceColor', TIER2_BEFORE_CLR );
-title( 'Fp1 delta (left to right: tier 1 after, tier 1 before, tier 2 after, tier 2 before)' );
+	figure(fig_num); fig_num = fig_num + 1;
+	h = barweb( fp1_delta_mean, fp1_delta_sem ); hold on;
+	set(h.bars(1), 'FaceColor', TIER1_AFTER_CLR );
+	set(h.bars(2), 'FaceColor', TIER1_BEFORE_CLR );
+	set(h.bars(3), 'FaceColor', TIER2_AFTER_CLR );
+	set(h.bars(4), 'FaceColor', TIER2_BEFORE_CLR );
+	title( 'Fp1 delta (left to right: tier 1 after, tier 1 before, tier 2 after, tier 2 before)' );
 
-figure(fig_num); fig_num = fig_num + 1;
-h = barweb( fp1_theta_alpha_ratio_mean, fp1_theta_alpha_ratio_sem ); hold on;
-set(h.bars(1), 'FaceColor', TIER1_AFTER_CLR );
-set(h.bars(2), 'FaceColor', TIER1_BEFORE_CLR );
-set(h.bars(3), 'FaceColor', TIER2_AFTER_CLR );
-set(h.bars(4), 'FaceColor', TIER2_BEFORE_CLR );
-title( 'Fp1 theta/alpha (left to right: tier 1 after, tier 1 before, tier 2 after, tier 2 before)' );
+	figure(fig_num); fig_num = fig_num + 1;
+	h = barweb( fp1_theta_alpha_ratio_mean, fp1_theta_alpha_ratio_sem ); hold on;
+	set(h.bars(1), 'FaceColor', TIER1_AFTER_CLR );
+	set(h.bars(2), 'FaceColor', TIER1_BEFORE_CLR );
+	set(h.bars(3), 'FaceColor', TIER2_AFTER_CLR );
+	set(h.bars(4), 'FaceColor', TIER2_BEFORE_CLR );
+	title( 'Fp1 theta/alpha (left to right: tier 1 after, tier 1 before, tier 2 after, tier 2 before)' );
 
-figure(fig_num); fig_num = fig_num + 1;
-conds = size(workload_mean,2)
-for i = 1:conds
-   subplot(conds,1,i);
-   bar( workload_mean(:,i) );
-   set( gca, 'XTick', 1:electrodes );
-   set( gca, 'XTickLabel', electrode_label );   
-   
-   if ( i == NEUROSCALE_AFTER_TIER1_IDX )
-      title( 'Workload: after tier 1' );
-   elseif ( i == NEUROSCALE_BEFORE_TIER1_IDX )
-      title( 'Workload: before tier 1' );
-   elseif ( i == NEUROSCALE_AFTER_TIER2_IDX )
-      title( 'Workload: after tier 2' );
-   else
-      title( 'Workload: abefore tier 2' );
-   end
-end
+	figure(fig_num); fig_num = fig_num + 1;
+	conds = size(workload_mean,2)
+	for i = 1:conds
+	   subplot(conds,1,i);
+	   bar( workload_mean(:,i) );
+	   set( gca, 'XTick', 1:electrodes );
+	   set( gca, 'XTickLabel', electrode_label );   
+	   
+	   if ( i == NEUROSCALE_AFTER_TIER1_IDX )
+		  title( 'Workload: after tier 1' );
+	   elseif ( i == NEUROSCALE_BEFORE_TIER1_IDX )
+		  title( 'Workload: before tier 1' );
+	   elseif ( i == NEUROSCALE_AFTER_TIER2_IDX )
+		  title( 'Workload: after tier 2' );
+	   else
+		  title( 'Workload: abefore tier 2' );
+	   end
+	end
 end
 
 %%%}}} eo-dispaly
