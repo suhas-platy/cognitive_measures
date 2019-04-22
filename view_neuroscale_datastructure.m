@@ -109,7 +109,6 @@ data = data.data;
 if ( ~IN.IS_INDIVID )
    % 4D matrix (79 frequencies x 19 electrodes x 4 conditions x 2: mean and SEM; frequencies are 1:0.5:40)
    channels_spectra_data = data.channels.channels_spectra.chunks.eeg.block.data;
-   
 else
    % spectra, channels
    channels_spectra_data = data.channels.dB.spectra.chunks.eeg.block.data; % 79    19     3     2
@@ -553,7 +552,7 @@ else
    
 end
 
-electrodes = size(workload_mean,1);
+electrodes = size(channels_band_power_data,2);
 for i = 1:electrodes
    electrode_label{i} = cognionics_index_to_name( i );
 end
@@ -564,6 +563,7 @@ end
 %%%{{{ display
 disp( 'display' );
 
+if ( ~IN.IS_INDIVID )
 figure(fig_num); fig_num = fig_num + 1;
 plot( fp1_eeg_tier1_mean, 'Color', [0 0 1] ); hold on;
 plot( fp1_eeg_tier2_mean, 'Color', [.75 .5 0] ); hold on;
@@ -624,6 +624,7 @@ for i = 1:conds
    else
       title( 'Workload: abefore tier 2' );
    end
+end
 end
 
 %%%}}} eo-dispaly

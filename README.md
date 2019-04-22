@@ -25,17 +25,19 @@
 
 1. view_neuroscale_datastructure.m - plots data; check_report_plots is more checking HTML v MAT files for correct values on the command line
 
+This works for individual and group reports.
+
 ### view_neuroscale_multiple_grp_report.m
 
 view data in neuroscale .mat files; group DANA files
 
 #### Run first to check if data is being parsed correct (compare Matlab and HTML files)
-view_intheon_individual_report.m - checks data; calls check_report_plots (text display)
+view_neuroscale_individual_report.m - checks data; calls check_report_plots (text display)
 view_neuroscale_group_report.m - checks data; calls check_report_plots (text display)
 
-#### Run second to aggregate over >1 file
-view_neuroscale_multiple_individual_report.m - 
-view_neuroscale_multiple_group_report.m - 
+#### Run second to aggregate over >1 file; this is more & custom analysis of Intheon 
+view_neuroscale_multiple_ind_report.m - ; calls view_neuroscale_multiple_grp_report__display.m
+view_neuroscale_multiple_grp_report.m - ; calls view_neuroscale_multiple_grp_report__display.m
 
 ## Viewing Intheon EEG
 

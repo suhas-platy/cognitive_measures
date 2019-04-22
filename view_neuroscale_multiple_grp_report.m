@@ -67,7 +67,7 @@ IN.BANDS_COL_HDR = {'_delta', '_theta', '_alpha', '_beta', '_gamma'};
 ALGO.TRACE_LEVEL = 1; % level of verbosity
 ALGO.SAVE_BANDS = 0;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
-ALGO.SAVE_BANDS_POOLED = 1;
+ALGO.SAVE_BANDS_POOLED = 0;
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -194,12 +194,11 @@ for f = 1:size(IN.IN_FILEZ,1)
      conn_stats_tval{f} = tmp(:,:,:,1);
      conn_stats_pval{f} = tmp(:,:,:,2);
    else
-     conn_stats_testval{f} = tmp(:,:,1);
+     conn_stats_tval{f} = tmp(:,:,1);
      conn_stats_pval{f} = tmp(:,:,2);
    end
    
    if ( ~IN.IS_INDIVID )
-     tmp = After_conn_stats{f};
      %tier1_source12_to_source11_gamma_tval{f} = squeeze( tmp(12,11,5,1) ); % 12 posn x 12 posn x 5 x 2 (t value and PR(>F))
      % 12,12 would be the last but typically that's 0 
      After_conn_stats_tval{f} = tmp(:,:,:,1);
