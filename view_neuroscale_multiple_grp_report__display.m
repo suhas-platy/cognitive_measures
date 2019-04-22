@@ -41,7 +41,11 @@ if ( ~IN.IS_VA )
    sprintf( '%.3g\t', x )
    
    disp( 'for plotting' );
-   x( [IN.PLOT_ORDER] )'
+   if ( ~IN.IS_INDIVID )
+      x( [IN.PLOT_ORDER] )'
+   else
+      x( [IN.INDIVID_PLOT_ORDER] )'
+   end
 
    disp( sprintf( 'for excel: workload, %s, sem',...
                   cognionics_index_to_name( IN.ELECTRODE_OF_INTEREST ) ) );
@@ -49,7 +53,11 @@ if ( ~IN.IS_VA )
    sprintf( '%.3g\t', x )
    
    disp( 'for plotting' );
-   x( [IN.PLOT_ORDER] )'
+   if ( ~IN.IS_INDIVID )
+      x( [IN.PLOT_ORDER] )'
+   else
+      x( [IN.INDIVID_PLOT_ORDER] )'
+   end
 end
 
 %%%%
@@ -229,10 +237,10 @@ title( 'Mean of Tasks' );
 %
 
 % make sure it's an invidiual MS report
-if ( IN.IS_INDIVID )
+if ( IN.IS_INDIVID & ALGO.SAVE_MS_SCORES )
    for f = 1:size(IN.IN_FILEZ,1)
       fname = IN.IN_FILEZ{f};
-      if ( ~isempty( strfind( fname, 'MS' ) )
+      if ( ~isempty( strfind( fname, 'MS' ) ) )
          tmp = channels_band_power_data{f}; % 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
          subj_id(f) = IN.IN_SUBJECTZ(f);
          memory_score(f) = tmp(NEUROSCALE_THETA_ALPHA_RATIO_IDX,cognionics_name_to_index( 'PZ' ),NEUROSCALE_INDIVID_BEFORE_IDX,NEUROSCALE_MEAN_IDX);
