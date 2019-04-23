@@ -13,6 +13,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
 addpath( './support' );
+addpath( genpath( 'C:\Program Files\eeglab_current\eeglab15rc1\functions\' ) );
 %%%}}} eo-handle include paths
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,6 +44,14 @@ IN.IS_INDIVID = 1;
 IN.FILE_FORMAT_2019_04_22 = 1;
 IN.HAS_AFTER = 0;
 IN.IS_VA = 0;
+
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Projects\EPS Assesment\Dry Run 2019.04.22\';
+IN.IN_FILENAME = 'hang_dana_tasks_2019-04-22_12-30-33_1.CSS.h5.4.22.mat';
+IN.IS_INDIVID = 1;
+IN.FILE_FORMAT_2019_04_22 = 1;
+IN.HAS_AFTER = 0;
+IN.IS_VA = 0;
+
 
 IN.SAVE_PATH = './data/';
 IN.SAVE_FILENAME = './data/vnd.csv';
