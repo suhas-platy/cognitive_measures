@@ -37,6 +37,13 @@ IN.IS_INDIVID = 1;
 IN.HAS_AFTER = 0;
 IN.IS_VA = 0;
 
+IN.IN_PATH = 'C:\Users\suhas\Go Platypus Dropbox\Projects\EPS Assesment\Dry Run 2019.04.22\';
+IN.IN_FILENAME = 'will_dana_tasks_2019-04-22_11-16-45_1.CSS.h5.4.22.mat';
+IN.IS_INDIVID = 1;
+IN.FILE_FORMAT_2019_04_22 = 1;
+IN.HAS_AFTER = 0;
+IN.IS_VA = 0;
+
 IN.SAVE_PATH = './data/';
 IN.SAVE_FILENAME = './data/vnd.csv';
 %%%}}}
@@ -70,6 +77,9 @@ NEUROSCALE_BEFORE_TIER2_IDX = 4;
 % individual 
 NEUROSCALE_AFTER_IDX = 1;
 NEUROSCALE_BEFORE_IDX = 2;
+if (IN.FILE_FORMAT_2019_04_22)
+   NEUROSCALE_BEFORE_IDX = 1;
+end
 
 NEUROSCALE_DELTA_IDX = 1;
 NEUROSCALE_GAMMA_IDX = 5;
@@ -114,25 +124,58 @@ disp( sprintf( 'loading file %s', fname ) );
 data = load( fname );
 data = data.data;
 
+% in case file format changed
+% disp( 'updating ./doc/individual_reports2.txt; diff with individual_reports.txt to see changes' );
+% structree( data, './doc/individual_reports2.txt' );
+% keyboard;
+
 % unpack
 if ( ~IN.IS_INDIVID )
    % 4D matrix (79 frequencies x 19 electrodes x 4 conditions x 2: mean and SEM; frequencies are 1:0.5:40)
    channels_spectra_data = data.channels.channels_spectra.chunks.eeg.block.data;
 else
    % spectra, channels
-   channels_spectra_data = data.channels.dB.spectra.chunks.eeg.block.data; % 79    19     3     2
-   channels_spectra_stats = data.channels.dB.spectra_stats.chunks.eeg.block.data;  % 79    19     2 
+   if ( ~IN.FILE_FORMAT_2019_04_22 )
+      channels_spectra_data = data.channels.dB.spectra.chunks.eeg.block.data; % 79    19     3     2
+      channels_spectra_stats = data.channels.dB.spectra_stats.chunks.eeg.block.data;  % 79    19     2 
+   else
+      channels_spectra_data = data.channels.spectra.values.dB.chunks.eeg.block.data; % 1     2    79    19
+      channels_spectra_data = permute( channels_spectra_data, [3 4 1 2] );
+      if ( IN.HAS_AFTER )
+         % don't have new structure yet
+         %channels_spectra_stats = data.channels.spectra_stats.db.chunks.eeg.block.data;
+      else
+         channels_spectra_stats = nan;
+      end
+   end
    
-   % band power and ratios, channels
-   channels_band_power_data = data.channels.dB.bands.chunks.eeg.block.data; % 8    19     2     2
-   channels_band_power_stats = data.channels.dB.bands_stats.chunks.eeg.block.data; % 8    19     2
+   % band power, channels
+   % ratios, channels
+   if ( ~IN.FILE_FORMAT_2019_04_22 )
+      channels_band_power_data = data.channels.dB.bands.chunks.eeg.block.data; % 8    19     2     2
+      channels_band_power_stats = data.channels.dB.bands_stats.chunks.eeg.block.data; % 8    19     2
+   else
+      channels_band_power_data = data.channels.bands.values.dB.chunks.eeg.block.data; % 1     2     8    19
+      channels_band_power_data = permute( channels_band_power_data, [3 4 1 2] );
+      if ( IN.HAS_AFTER )
+         % don't have new structure yet
+         %channels_band_power_stats = data.channels. ...
+      else
+         channels_band_power_stats = nan;
+      end
+   end
+   
    if ( ~IN.IS_VA )
       tmp = channels_band_power_data;
-      channels_band_power_data = tmp(:,:,1:2,:); % get rid of After-Before
+      if ( IN.HAS_AFTER )
+         channels_band_power_data = tmp(:,:,1:2,:); % get rid of After-Before
+      end
    else
       mat = squeeze( channels_band_power_data ); % get rid of time axis
       mat = permute( mat, [1 4 2 3] ); % 8 19 3 2 
-      mat = mat(:,:,1:2,:); % get rid of After-Before
+      if ( IN.HAS_AFTER )
+         mat = mat(:,:,1:2,:); % get rid of After-Before
+      end
       channels_band_power_data = mat;
       
       mat = squeeze( channels_band_power_stats ); % get rid of time axis
@@ -143,15 +186,42 @@ else
    % same as band power and ratios
    
    % spectra, sources
-   sources_spectra_data = data.sources.dB.spectra.chunks.eeg.block.data; % 79    12     3     2
-   sources_spectra_stats = data.sources.dB.spectra_stats.chunks.eeg.block.data;  % 79    12     2 
-
-   % band power and ratios, sources
-   sources_band_power_data = data.sources.dB.bands.chunks.eeg.block.data; % 8    12     3     2
-   sources_band_power_stats = data.sources.dB.bands_stats.chunks.eeg.block.data; % 8    12     2
+   if ( ~IN.FILE_FORMAT_2019_04_22 )   
+      sources_spectra_data = data.sources.dB.spectra.chunks.eeg.block.data; % 79    12     3     2
+      sources_spectra_stats = data.sources.dB.spectra_stats.chunks.eeg.block.data;  % 79    12     2 
+   else
+      sources_spectra_data = data.sources.spectra.values.dB.chunks.eeg.block.data; % 1     2    79    12
+      sources_spectra_data = permute( sources_spectra_data, [3 4 1 2] );
+      if ( IN.HAS_AFTER )
+         % don't have new structure yet
+         %sources_spectra_stats = data.channels.spectra_stats.db.chunks.eeg.block.data;
+      else
+         sources_spectra_stats = nan;
+      end      
+   end
+   
+      
+   % band power, sources
+   % ratios, sources
+   if ( ~IN.FILE_FORMAT_2019_04_22 )   
+      sources_band_power_data = data.sources.dB.bands.chunks.eeg.block.data; % 8    12     3     2
+      sources_band_power_stats = data.sources.dB.bands_stats.chunks.eeg.block.data; % 8    12     2
+   else
+      sources_band_power_data = data.sources.bands.values.dB.chunks.eeg.block.data; % 1     2     8    12
+      sources_band_power_data = permute( sources_band_power_data, [3 4 1 2] );
+      if ( IN.HAS_AFTER )
+         % don't have new structure yet
+         %sources_band_power_stats = data.channels.spectra_stats.db.chunks.eeg.block.data;
+      else
+         sources_band_power_stats = nan;
+      end      
+   end
    
    % connectivity
-   connectivity_data = data.connectivity.stats.chunks.eeg_dDTF08.block.data; % 12    12     5     2
+   if ( IN.HAS_AFTER )
+      connectivity_data = data.connectivity.stats.chunks.eeg_dDTF08.block.data; % 12    12     5     2
+   end
+   
 end
 
 %%%}}} eo-load data
