@@ -33,7 +33,11 @@ for f = 1:size(IN.IN_FILEZ,1)
     if ( ~IN.IS_INDIVID )
        C = 4;
     else
-       C = 2;
+       if ( IN.HAS_AFTER )
+         C = 2;
+       else
+         C = 1;
+       end
     end
     
     for c = 1:C
@@ -93,7 +97,11 @@ for f = 1:size(IN.IN_FILEZ,1)
     if ( ~IN.IS_INDIVID )
        C = 4;
     else
-       C = 2;
+       if ( IN.HAS_AFTER )
+         C = 2;
+       else
+         C = 1;
+       end
     end
    
     for c = 1:C

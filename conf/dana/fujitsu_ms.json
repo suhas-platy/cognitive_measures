@@ -4,8 +4,11 @@
       "TASKZ": 
         ["MS"          
         ],
+      "NUM_ELECTRODES": 19,
+      "//": "should be in a different file",
       "IS_VA": 0,
       "HAS_AFTER": 0,
+      "IS_INDIVID": 1,
       "SUBJECTZ":
         [
           31970318,
@@ -22,8 +25,8 @@
           3209120218,
           319100418,
           31970118,
-          31950218]
-       ],
+          31950218
+        ],
      "//": "%32960218; % tier 1; for this subj. apparently after file lacks markers but yet there is a report...",
      "//": "%31970218; % missing fr Intheon??",
      "//": "%319110218; % before file was renamed; after file missing; no report generated",
@@ -31,12 +34,14 @@
      "//": "%32050118; % no after",
      "SAVE_PATH": ".\\data\\dana",
      "SAVE_FILENAME": "fujitsu_ms.mat"
+     }
+    },
+    {"ALGO":
+     {
+         "TRACE_LEVEL": 1,
+         "SAVE": 1,
+         "SAVE_BANDS_POOLED": 0,
+         "SAVE_MS_SCORES": 0
+     }
     }
-},
-{"ALGO":
- {
-     "TRACE_LEVEL": 1,
-     "SAVE": 1
- }
-}
 ]

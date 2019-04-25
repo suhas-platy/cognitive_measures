@@ -54,29 +54,11 @@ IN.HAS_AFTER = 1;
 % IN.IS_VA = 0;
 %IN.HAS_AFTER = 1;
 
-IN.SUBJECTZ = [32960218; % tier 1; for this subj. apparently after file lacks markers but yet there is a report...
-                  31970318;
-                  32950518;
-                  32950318;
-                  31960118;
-%31970218; % missing fr Intheon??
-                  319100118;
-%319110218; % before file was renamed; after file missing; no report generated
-                  32960418;
-%319110118; % no before
-                  31950418; % tier 2
-                  310910318;
-                  32960318;
-                  32970418;
-                  3209110318;
-                  3209120218;
-                  319100418;
-                  31970118;
-%32050118; % no after
-                  31950218];
-%3109120318]; % no after
-%32910218]; % includes 1 previously excluded subject (motor control issue)
-% Nx1
+CONF = jsondecode( fileread( './conf/dana/fujitsu_ms.json' ) );
+IN = CONF{1}.IN;
+ALGO = CONF{2}.ALGO;
+
+%IN.SUBJECTZ is Nx1
 
 % fill up IN.IN_FILEZ
 
@@ -102,17 +84,10 @@ for i = 1:size( IN.SUBJECTZ,1 )
 end
 IN.IN_FILEZ = tmp_arr; %(N*T)x1
 
-IN.SAVE_PATH = [IN.IN_PATH 'excel\'];
-
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
-ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
-                     % time or don't want to overwrite existing saved files)
-ALGO.SAVE_BANDS_POOLED = 0;
-ALGO.SAVE_MS_SCORES = 0;
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
