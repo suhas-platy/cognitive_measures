@@ -1,0 +1,1 @@
+Standard-10-20-Cap19.ced from ftp://sccn.ucsd.edu/pub/locfiles/eeglab/

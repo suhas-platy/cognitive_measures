@@ -1,0 +1,42 @@
+[
+    {"IN":
+     {"IN_PATH": "C:\\Users\\suhas\\Go Platypus Dropbox\\Science And Research\\Fujitsu\\Dec. 2018 Reports\\individual reports 2019.03.14\\dana_3-14_mat\\",
+      "TASKZ": 
+        ["MS"          
+        ],
+      "IS_VA": 0,
+      "HAS_AFTER": 0,
+      "SUBJECTZ":
+        [
+          31970318,
+          32950518,
+          32950318,
+          31960118,
+          319100118,
+          32960418,
+          31950418,
+          310910318,
+          32960318,
+          32970418,
+          3209110318,
+          3209120218,
+          319100418,
+          31970118,
+          31950218]
+       ],
+     "//": "%32960218; % tier 1; for this subj. apparently after file lacks markers but yet there is a report...",
+     "//": "%31970218; % missing fr Intheon??",
+     "//": "%319110218; % before file was renamed; after file missing; no report generated",
+     "//": "%319110118; % no before",
+     "//": "%32050118; % no after",
+     "SAVE_PATH": ".\\data\\dana",
+     "SAVE_FILENAME": "fujitsu_ms.mat"
+    }
+},
+{"ALGO":
+ {
+     "TRACE_LEVEL": 1,
+     "SAVE": 1
+ }
+}
+]
