@@ -1,0 +1,270 @@
+---connectivity
+	|---stats
+	|	|---chunks
+	|	|	|---eeg_dDTF08
+	|	|	|	|---props
+	|	|	|	|	|---source_id
+	|	|	|	|	|---is_streaming
+	|	|	|	|	|---has_markers
+	|	|	|	|	|---is_conn
+	|	|	|	|	|---is_event_stream
+
+	|	|	|	|---block
+	|	|	|	|	|---axes
+	|	|	|	|	|---data
+
+	|---values
+	|	|---chunks
+	|	|	|---eeg_dDTF08
+	|	|	|	|---props
+	|	|	|	|	|---source_id
+	|	|	|	|	|---is_streaming
+	|	|	|	|	|---has_markers
+	|	|	|	|	|---is_conn
+	|	|	|	|	|---is_event_stream
+
+	|	|	|	|---block
+	|	|	|	|	|---axes
+	|	|	|	|	|---data
+
+---sources
+	|---dB
+	|	|---bands
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---source_url
+	|	|	|	|	|	|---has_markers
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---bands_stats
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---source_url
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---spectra_stats
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---source_url
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---spectra
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---source_url
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|---rPSD
+	|	|---bands
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---source_url
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---is_sparse
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---bands_stats
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---source_url
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---spectra_stats
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---source_url
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---stream_name
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---spectra
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---source_url
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---headmodel
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_markers
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+---channels
+	|---dB
+	|	|---bands
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---source_url
+	|	|	|	|	|	|---has_markers
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---bands_stats
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---source_url
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---spectra_stats
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---source_url
+	|	|	|	|	|	|---has_markers
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+
+	|	|---spectra
+	|	|	|---chunks
+	|	|	|	|---eeg
+	|	|	|	|	|---props
+	|	|	|	|	|	|---source_id
+	|	|	|	|	|	|---is_streaming
+	|	|	|	|	|	|---is_signal
+	|	|	|	|	|	|---modality
+	|	|	|	|	|	|---is_sparse
+	|	|	|	|	|	|---has_targets
+	|	|	|	|	|	|---is_event_stream
+	|	|	|	|	|	|---stream_name
+	|	|	|	|	|	|---has_markers
+	|	|	|	|	|	|---source_url
+
+	|	|	|	|	|---block
+	|	|	|	|	|	|---axes
+	|	|	|	|	|	|---data
+

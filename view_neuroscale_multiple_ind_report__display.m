@@ -8,11 +8,55 @@
 
 disp( 'display' );
 
+for i = 1:19
+   electrodes{i} = cognionics_index_to_name( i );
+end
+
 %%%
-% for each subject, each task, show diff's in electrodes
-%for f = 1:size(IN.IN_FILEZ,1)
-   
-   
+% for each subject, one task, show diff's in electrodes
+for f = 1:size(IN.IN_FILEZ,1)
+   for b = 1:NEUROSCALE.NUM_BANDS
+      tmp = channels_band_power_data{f};  % 8 bands & ratios, 19 electrodes, 4 conditions, 2: mean and SEM
+      bands_mean{f,b} = squeeze( tmp(b,:,:,1) ); % 1x19 for some reason
+      bands_sem{f,b} = squeeze( tmp(b,:,:,2) );
+   end
+end
+
+figure(fig_num); fig_num = fig_num + 1
+for b = 1:NEUROSCALE.NUM_BANDS
+    % sig bars: https://www.mathworks.com/matlabcentral/fileexchange/39696-raacampbell-sigstar
+    % https://www.mathworks.com/matlabcentral/answers/175193-creating-sigstar-in-bar-graph
+%    diff(b,:) = bands_mean{1,b} - bands{2,b};
+%    for chnls = 1:19
+%        if ( diff(b,chnls) > 0 )
+%          bigger_idx = 1; smaller_idx = 2;
+%        else
+%          bigger_idx = 2; smaller_idx = 1;
+%        end
+%        bigger_mean = bands_mean{bigger_idx,b}; bigger_sem = bands_sem{bigger_idx,b};
+%        bigger_mean = bigger_mean(chnls); bigger_sem = bigger_sem(chnls);
+%        
+%        smaller_mean = smaller_mean{smaller_idx,b}; smaller_sem = bands_sem{smaller_idx,b};
+%        smaller_mean = smaller_mean(chnls); smaller_sem = smaller_sem(chnls);
+% 
+%        if ( bigger_mean-bigger_std > smaller_mean+small_std )
+%            is_sig(b,chnls) = 1;
+%        else
+%            is_sig(b,chnls) = 0;
+%        end
+%    end
+   stack_mean = [bands_mean{1,b}; bands_mean{2,b}]'; % 19x2
+   stack_sem = [bands_sem{1,b}; bands_sem{2,b}]';
+
+   subplot(NEUROSCALE.NUM_BANDS,1,b);
+   hndls = barweb( stack_mean, stack_sem );
+%    for chnls = 1:19
+%        if ( is_sig(b,chnls) 
+%    end
+   xticklabels( electrodes );
+   title( sprintf( 'Will v. Hang, %s band', neuroscale_bands_index_to_name( b ) ) );
+end   
+
 
 %%%%
 % for each task, avg. across electrodes

@@ -1,19 +1,34 @@
 [
-    {"IN":
-      {"IN_PATH": "C:\\Users\\suhas\\Go Platypus Dropbox\\Science And Research\\Fujitsu\\Dec. 2018 Reports\\individual reports 2019.03.14\\dana_3-14_mat\\",
-       "TASKZ": 
-         ["CSS"          
-         ],
-       "IS_VA": 0,
-       "HAS_AFTER": 0,
-       "SAVE_PATH": ".\\data\\dana",
-       "SAVE_FILENAME": "dry_run.mat"
-      }
+    {
+        "IN":
+        {
+            "IN_PATH": "C:\\Users\\suhas\\Go Platypus Dropbox\\Projects\\EPS Assesment\\Dry Run 2019.04.22\\",
+            "TASKZ": 
+            [
+                "CSS"          
+            ],
+            "NUM_ELECTRODES": 19,
+            "//": "should be in a different file",
+            "IS_VA": 0,
+            "HAS_AFTER": 0,
+            "IS_INDIVID": 1,
+            "FILE_FORMAT_2019_04_22": 1,
+            "SUBJECTZ":
+            [
+                  "hang",
+                  "will"
+            ],
+            "SAVE_PATH": ".\\data\\dana",
+            "SAVE_FILENAME": "dry_run.mat"
+        }
     },
-    {"ALGO":
-     {
-       "TRACE_LEVEL": 1,
-       "SAVE": 1
-     }
+    {
+        "ALGO":
+        {
+            "TRACE_LEVEL": 1,
+            "SAVE": 0,
+            "SAVE_BANDS_POOLED": 0,
+            "SAVE_MS_SCORES": 0
+        }
     }
 ]

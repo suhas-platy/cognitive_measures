@@ -55,6 +55,8 @@ IN.HAS_AFTER = 1;
 %IN.HAS_AFTER = 1;
 
 CONF = jsondecode( fileread( './conf/dana/fujitsu_ms.json' ) );
+CONF = jsondecode( fileread( './conf/dana/dry_run.json' ) );
+
 IN = CONF{1}.IN;
 ALGO = CONF{2}.ALGO;
 
@@ -66,23 +68,25 @@ ALGO = CONF{2}.ALGO;
 % @todo put into another script
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ctr = 1;
-tmp_arr = [];
-for i = 1:size( IN.SUBJECTZ,1 )
-   for j = 1:size( IN.TASKZ,1 )
-      if ( ~IN.IS_VA )
-         str = sprintf( '%d_tpi_fuj_dana_%s_indiv_2session_analysis.mat',...
-                        IN.SUBJECTZ(i), IN.TASKZ{j} );
-      else
-         str = sprintf( '%d_tpi_fuj_va-%s_indiv_2session_analysis.mat',...
-                        IN.SUBJECTZ(i), IN.TASKZ{j} );
-      end
+% ctr = 1;
+% tmp_arr = [];
+% for i = 1:size( IN.SUBJECTZ,1 )
+%    for j = 1:size( IN.TASKZ,1 )
+%       if ( ~IN.IS_VA )
+%          str = sprintf( '%d_tpi_fuj_dana_%s_indiv_2session_analysis.mat',...
+%                         IN.SUBJECTZ(i), IN.TASKZ{j} );
+%       else
+%          str = sprintf( '%d_tpi_fuj_va-%s_indiv_2session_analysis.mat',...
+%                         IN.SUBJECTZ(i), IN.TASKZ{j} );
+%       end
       
-      tmp_arr = [tmp_arr; string( str )];
-      ctr = ctr+1;
-   end
-end
-IN.IN_FILEZ = tmp_arr; %(N*T)x1
+%       tmp_arr = [tmp_arr; string( str )];
+%       ctr = ctr+1;
+%    end
+% end
+% IN.IN_FILEZ = tmp_arr; %(N*T)x1
+
+IN.IN_FILEZ = get_files( IN.IN_PATH, IN.SUBJECTZ, IN.TASKZ );
 
 %%%}}}
 
@@ -204,7 +208,15 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    % bands & ratios, space, instance/condition, statistic
    % mean is in (:,:,:,1)
    % sem in s in (:,:,:2)
-   channels_band_power_data{f} = data{f}.channels.dB.bands.chunks.eeg.block.data;
+   
+   % @todo reading each file should be a function so that the details as abstracted out
+   if ( ~IN.FILE_FORMAT_2019_04_22 )
+      channels_band_power_data{f} = data{f}.channels.dB.bands.chunks.eeg.block.data;
+   else
+      channels_band_power_data{f} = data{f}.channels.bands.values.dB.chunks.eeg.block.data; % 1     2     8    19
+      channels_band_power_data{f} = permute( channels_band_power_data{f}, [3 4 1 2] );
+   end
+      
    if ( ~IN.IS_VA )
       tmp = channels_band_power_data{f};
       if ( IN.HAS_AFTER )
@@ -238,9 +250,11 @@ for f = 1:size(IN.IN_FILEZ,1) % for each task
    % extract connectivity
    % 12 posn x 12 posn x 5 freq's x 2 stat's (mean and SEM)??
    conn{f} = data{f}.connectivity.values.chunks.eeg_dDTF08.block.data;
-   
+      
    % 12 posn x 12 posn x 5 x 2 (t value and PR(>F))
-   conn_stats{f} = data{f}.connectivity.stats.chunks.eeg_dDTF08.block.data;
+   if ( IN.HAS_AFTER )
+      conn_stats{f} = data{f}.connectivity.stats.chunks.eeg_dDTF08.block.data;
+   end
    
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    % display is below   
