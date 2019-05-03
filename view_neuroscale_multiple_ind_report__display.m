@@ -23,6 +23,7 @@ for f = 1:size(IN.IN_FILEZ,1)
 end
 
 figure(fig_num); fig_num = fig_num + 1
+if ( isfield(IN,"DO_CC") && IN.DO_CC )
 for b = 1:NEUROSCALE.NUM_BANDS
     % sig bars: https://www.mathworks.com/matlabcentral/fileexchange/39696-raacampbell-sigstar
     % https://www.mathworks.com/matlabcentral/answers/175193-creating-sigstar-in-bar-graph
@@ -47,6 +48,8 @@ for b = 1:NEUROSCALE.NUM_BANDS
 %    end
    stack_mean = [bands_mean{1,b}; bands_mean{2,b}]'; % 19x2
    stack_sem = [bands_sem{1,b}; bands_sem{2,b}]';
+   %stack_mean = [bands_mean{1,b}];
+   %stack_sem = [bands_sem{1,b}];
 
    subplot(NEUROSCALE.NUM_BANDS,1,b);
    hndls = barweb( stack_mean, stack_sem );
@@ -54,9 +57,12 @@ for b = 1:NEUROSCALE.NUM_BANDS
 %        if ( is_sig(b,chnls) 
 %    end
    xticklabels( electrodes );
-   title( sprintf( 'Will v. Hang, %s band', neuroscale_bands_index_to_name( b ) ) );
+   %title( sprintf( 'Will v. Hang, %s band', neuroscale_bands_index_to_name( b ) ) );
+   %title( sprintf( 'Hang day 2 v. Hang day 1, %s band', neuroscale_bands_index_to_name( b ) ) );
+   cc_elec_plot_title = IN.CC_ELECTRODE_PLOT_TITLE;
+   title( sprintf( '%s, %s band', cc_elec_plot_title, neuroscale_bands_index_to_name( b ) ) );
 end   
-
+end
 
 %%%%
 % for each task, avg. across electrodes

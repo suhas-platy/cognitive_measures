@@ -1,0 +1,36 @@
+[
+    {
+        "IN":
+        {
+            "IN_PATH": "C:\\Users\\suhas\\Go Platypus Dropbox\\Projects\\EPS Assesment\\CC Max and Hang\\",
+            "TASKZ": 
+            [
+                "CSS"          
+            ],
+            "NUM_ELECTRODES": 19,
+            "//": "should be in a different file",
+            "IS_VA": 0,
+            "HAS_AFTER": 0,
+            "IS_INDIVID": 1,
+            "FILE_FORMAT_2019_04_22": 1,
+            "SUBJECTZ":
+            [
+                "max",
+                "Hang"
+            ],
+            "DO_CC": 1,
+            "CC_ELECTRODE_PLOT_TITLE": "Max v Hang day 2",
+            "SAVE_PATH": ".\\data\\dana",
+            "SAVE_FILENAME": "dry_run.mat"
+        }
+    },
+    {
+        "ALGO":
+        {
+            "TRACE_LEVEL": 1,
+            "SAVE": 0,
+            "SAVE_BANDS_POOLED": 0,
+            "SAVE_MS_SCORES": 0
+        }
+    }
+]

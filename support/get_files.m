@@ -16,7 +16,7 @@ function files = get_files( path, subjects, tasks, varargin )
          
          curr_files = dir( fname_filter );
          for k = 1:length(curr_files)
-             files_as_char = [files_as_char; curr_files(k).name];
+             files_as_char = [files_as_char; string( curr_files(k).name )];
          end
       end
    end

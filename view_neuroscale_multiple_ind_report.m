@@ -56,6 +56,8 @@ IN.HAS_AFTER = 1;
 
 CONF = jsondecode( fileread( './conf/dana/fujitsu_ms.json' ) );
 CONF = jsondecode( fileread( './conf/dana/dry_run.json' ) );
+CONF = jsondecode( fileread( './conf/dana/dry_run_cc.json' ) );
+CONF = jsondecode( fileread( './conf/dana/max_hang_cc.json' ) );
 
 IN = CONF{1}.IN;
 ALGO = CONF{2}.ALGO;
