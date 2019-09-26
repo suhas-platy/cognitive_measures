@@ -8,7 +8,15 @@ function files = get_files( path, subjects, tasks, varargin )
    
    for i = 1:length(subjects)
       for j = 1:length(tasks)
-         curr_subj = char( subjects(i) );
+         
+         curr_subj = subjects(i);
+         if ( isequal(class(curr_subj),'double') ) % catch when this is just a number
+             foo = num2str( curr_subj );
+         else
+             foo = curr_subj;
+         end
+         
+         curr_subj = char( foo );
          curr_task = char( tasks(j) );
          fname_filter = [path_as_char, '*', curr_subj, '*', curr_task, '*.mat'];
          % @todo what if task comes first

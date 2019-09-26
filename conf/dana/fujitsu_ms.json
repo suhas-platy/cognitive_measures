@@ -9,6 +9,7 @@
       "IS_VA": 0,
       "HAS_AFTER": 0,
       "IS_INDIVID": 1,
+      "FILE_FORMAT_2019_04_22": 0,
       "SUBJECTZ":
         [
           31970318,
@@ -41,7 +42,7 @@
          "TRACE_LEVEL": 1,
          "SAVE": 1,
          "SAVE_BANDS_POOLED": 0,
-         "SAVE_MS_SCORES": 0
+         "SAVE_MS_SCORES": 1
      }
     }
 ]
