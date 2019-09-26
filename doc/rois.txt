@@ -5,14 +5,27 @@ L.3', 'lateralorbitofrontal L.4', 'lateralorbitofrontal L.5',
 'lateralorbitofrontal L.6', 'lateralorbitofrontal L.7', 'medialorbitofrontal
 L.1', 'medialorbitofrontal L.2', 'medialorbitofrontal L.3', 'medialorbitofrontal
 L.4', 'medialorbitofrontal L.5'],
+'ORB_PF_R':
+['lateralorbitofrontal R.1', 'lateralorbitofrontal R.2', 'lateralorbitofrontal
+R.3', 'lateralorbitofrontal R.4', 'lateralorbitofrontal R.5',
+'lateralorbitofrontal R.6', 'lateralorbitofrontal R.7', 'medialorbitofrontal
+R.1', 'medialorbitofrontal R.2', 'medialorbitofrontal R.3', 'medialorbitofrontal
+R.4', 'medialorbitofrontal R.5'],
 'PRE_CENT_L':
 ['precentral L.1', 'precentral L.2', 'precentral L.3', 'precentral L.4',
 'precentral L.5', 'precentral L.6', 'precentral L.7', 'precentral L.8',
 'precentral L.9', 'precentral L.10', 'precentral L.11', 'precentral L.12'],
+'PRE_CENT_R':
+['precentral R.1', 'precentral R.2', 'precentral R.3', 'precentral R.4',
+'precentral R.5', 'precentral R.6', 'precentral R.7', 'precentral R.8',
+'precentral R.9', 'precentral R.10', 'precentral R.11', 'precentral R.12'],
 'ANT_CIN_R':
 ['rostralanteriorcingulate R.1', 'rostralanteriorcingulate R.2',
 'rostralanteriorcingulate R.3', 'caudalanteriorcingulate R.1',
 'caudalanteriorcingulate R.2'],
+'ANT_CIN_L':
+['rostralanteriorcingulate L.1', 'rostralanteriorcingulate L.2',
+'caudalanteriorcingulate L.1', 'caudalanteriorcingulate L.2'],
 'DORLAT_PF_L':
 ['rostralmiddlefrontal L.1', 'rostralmiddlefrontal L.2', 'rostralmiddlefrontal
 L.3', 'rostralmiddlefrontal L.4', 'rostralmiddlefrontal L.5',
@@ -21,12 +34,6 @@ L.8', 'rostralmiddlefrontal L.9', 'rostralmiddlefrontal L.10',
 'rostralmiddlefrontal L.11', 'rostralmiddlefrontal L.12', 'rostralmiddlefrontal
 L.13', 'rostralmiddlefrontal L.14', 'rostralmiddlefrontal L.15',
 'rostralmiddlefrontal L.16'],
-'INF_PAR_R':
-['inferiorparietal R.1', 'inferiorparietal R.2', 'inferiorparietal R.3',
-'inferiorparietal R.4', 'inferiorparietal R.5', 'inferiorparietal R.6',
-'inferiorparietal R.7', 'inferiorparietal R.8', 'inferiorparietal R.9',
-'inferiorparietal R.10', 'inferiorparietal R.11', 'inferiorparietal R.12',
-'inferiorparietal R.13', 'inferiorparietal R.14', 'inferiorparietal R.15'],
 'DORLAT_PF_R':
 ['rostralmiddlefrontal R.1', 'rostralmiddlefrontal R.2', 'rostralmiddlefrontal
 R.3', 'rostralmiddlefrontal R.4', 'rostralmiddlefrontal R.5',
@@ -34,30 +41,23 @@ R.3', 'rostralmiddlefrontal R.4', 'rostralmiddlefrontal R.5',
 R.8', 'rostralmiddlefrontal R.9', 'rostralmiddlefrontal R.10',
 'rostralmiddlefrontal R.11', 'rostralmiddlefrontal R.12', 'rostralmiddlefrontal
 R.13', 'rostralmiddlefrontal R.14', 'rostralmiddlefrontal R.15'],
-'ORB_PF_R':
-['lateralorbitofrontal R.1', 'lateralorbitofrontal R.2', 'lateralorbitofrontal
-R.3', 'lateralorbitofrontal R.4', 'lateralorbitofrontal R.5',
-'lateralorbitofrontal R.6', 'lateralorbitofrontal R.7', 'medialorbitofrontal
-R.1', 'medialorbitofrontal R.2', 'medialorbitofrontal R.3', 'medialorbitofrontal
-R.4', 'medialorbitofrontal R.5'],
-'LAT_OCP_R':
-['lateraloccipital R.1', 'lateraloccipital R.2', 'lateraloccipital R.3',
-'lateraloccipital R.4', 'lateraloccipital R.5', 'lateraloccipital R.6',
-'lateraloccipital R.7', 'lateraloccipital R.8', 'lateraloccipital R.9',
-'lateraloccipital R.10'],
-'ANT_CIN_L':
-['rostralanteriorcingulate L.1', 'rostralanteriorcingulate L.2',
-'caudalanteriorcingulate L.1', 'caudalanteriorcingulate L.2'],
+'INF_PAR_R':
+['inferiorparietal R.1', 'inferiorparietal R.2', 'inferiorparietal R.3',
+'inferiorparietal R.4', 'inferiorparietal R.5', 'inferiorparietal R.6',
+'inferiorparietal R.7', 'inferiorparietal R.8', 'inferiorparietal R.9',
+'inferiorparietal R.10', 'inferiorparietal R.11', 'inferiorparietal R.12',
+'inferiorparietal R.13', 'inferiorparietal R.14', 'inferiorparietal R.15'],
 'INF_PAR_L':
 ['inferiorparietal L.1', 'inferiorparietal L.2', 'inferiorparietal L.3',
 'inferiorparietal L.4', 'inferiorparietal L.5', 'inferiorparietal L.6',
 'inferiorparietal L.7', 'inferiorparietal L.9', 'inferiorparietal L.10',
 'inferiorparietal L.11', 'inferiorparietal L.12', 'inferiorparietal L.13',
 'inferiorparietal L.14'],
-'PRE_CENT_R':
-['precentral R.1', 'precentral R.2', 'precentral R.3', 'precentral R.4',
-'precentral R.5', 'precentral R.6', 'precentral R.7', 'precentral R.8',
-'precentral R.9', 'precentral R.10', 'precentral R.11', 'precentral R.12'],
+'LAT_OCP_R':
+['lateraloccipital R.1', 'lateraloccipital R.2', 'lateraloccipital R.3',
+'lateraloccipital R.4', 'lateraloccipital R.5', 'lateraloccipital R.6',
+'lateraloccipital R.7', 'lateraloccipital R.8', 'lateraloccipital R.9',
+'lateraloccipital R.10'],
 'LAT_OCP_L':
 ['lateraloccipital L.1', 'lateraloccipital L.2', 'lateraloccipital L.3',
 'lateraloccipital L.4', 'lateraloccipital L.5', 'lateraloccipital L.6',
