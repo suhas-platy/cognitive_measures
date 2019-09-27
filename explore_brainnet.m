@@ -20,15 +20,15 @@ IN.BANDS = {'delta', 'theta', 'alpha', 'beta', 'gamma'};
 
 IN.SIG_THOLD = 0.05;
 
-IN.SAVE_PATH = './doc/';
-IN.SAVE_FNAME = [IN.SAVE_PATH, 'CSS_tier1_before_%s.txt']; % before
-IN.SAVE_FNAME2 = [IN.SAVE_PATH 'CSS_tier1_changes_%s.txt']; % changes (t-value when p<.05; this will give inc. or dec.)
+IN.SAVE_PATH = './data_out/';
+IN.SAVE_FNAME = [IN.SAVE_PATH, 'CSS_tier1_before_%s.edge']; % before
+IN.SAVE_FNAME2 = [IN.SAVE_PATH 'CSS_tier1_changes_%s.edge']; % changes (t-value when p<.05; this will give inc. or dec.)
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 0;% whether or not to save results (sometimes can take a long
+ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
 %%%}}}
 
@@ -64,9 +64,9 @@ beta = squeeze( edge_val(:,:,4,1,1) );
 gamma = squeeze( edge_val(:,:,4,1,1) );
 
 % tier 1 changes
-changes_val = data.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data;
-changes_tval = changes_val(:,:,:,1);
-changes_pval = changes_val(:,:,:,2);
+tier1_changes_val = data.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data;
+tier1_changes_tval = tier1_changes_val(:,:,:,1);
+tier1_changes_pval = tier1_changes_val(:,:,:,2);
 
 %%%}}} eo-load data
 
@@ -76,8 +76,8 @@ disp( 'calculate' );
 
 % make a mask of where things are significant and fill it in w/ t-values
 for i = 1:length( IN.BANDS )
-   tmp = changes_tval(:,:,i); % make indexing easier
-   tmp2 = changes_pval(:,:,i);
+   tmp = tier1_changes_tval(:,:,i); % make indexing easier
+   tmp2 = tier1_changes_pval(:,:,i);
    tmp3 = zeros( size( tmp ) );
    
    % block out self connections
@@ -86,17 +86,18 @@ for i = 1:length( IN.BANDS )
    end
    changes_sig_pval_idx = find( tmp2 < IN.SIG_THOLD );
    tmp3( changes_sig_pval_idx ) = tmp( changes_sig_pval_idx );
-   changes_sig_tval(:,:,i) = tmp3;
+   tier1_changes_sig_tval(:,:,i) = tmp3;
    
    % check first "decoding"
    if ( i == 1 )
       [r,c] = ind2sub( [IN.NUM_ROIS, IN.NUM_ROIS], changes_sig_pval_idx );
       for ii = 1:length(r)
-         from_roi = intheon_index_to_name( r(ii) );
-         to_roi = intheon_index_to_name( c(ii) );
-         pval = changes_pval( r(ii), c(ii) );
-         tval = changes_tval( r(ii), c(ii) );
-         disp( sprintf( '%s to %s: %.3g pval, %.3g tval', from_roi, to_roi, pval, tval ) );
+         to_roi = intheon_index_to_name( r(ii) );
+         from_roi = intheon_index_to_name( c(ii) );
+         pval = tier1_changes_pval( r(ii), c(ii) );
+         tval = tier1_changes_tval( r(ii), c(ii) );
+         disp( sprintf( '%s (%d) to %s (%d): %.3g pval, %.3g tval',...
+                        from_roi, c(ii), to_roi, r(ii), pval, tval ) );
       end
    end
    
@@ -125,6 +126,7 @@ if ( ALGO.SAVE )
    % changes
    for i = 1:length( IN.BANDS )
       tmp = changes_sig_tval(:,:,i);
+      tmp = tmp';
       fname = sprintf( IN.SAVE_FNAME2, IN.BANDS{i} );
       disp( sprintf( 'writing out %s', fname ) );
       save( fname, 'tmp', '-ascii' );
