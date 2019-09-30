@@ -1,4 +1,4 @@
-% @brief explore head model file
+% @brief export data for brainnet
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ handle include paths
@@ -22,7 +22,8 @@ IN.SIG_THOLD = 0.05;
 
 IN.SAVE_PATH = './data_out/';
 IN.SAVE_FNAME = [IN.SAVE_PATH, 'CSS_tier1_before_%s.edge']; % before
-IN.SAVE_FNAME2 = [IN.SAVE_PATH 'CSS_tier1_changes_%s.edge']; % changes (t-value when p<.05; this will give inc. or dec.)
+IN.TIER1_CHANGES_SAVE_FNAME = [IN.SAVE_PATH 'CSS_tier1_changes_%s.edge']; % changes (t-value when p<.05; this will give inc. or dec.)
+IN.TIER2_CHANGES_SAVE_FNAME = [IN.SAVE_PATH 'CSS_tier2_changes_%s.edge']; % changes (t-value when p<.05; this will give inc. or dec.)
 %%%}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,17 +57,22 @@ data = load( 'C:\Users\suhas\Go Platypus Dropbox\Projects\EPS Assesment\Subject 
 data = data.data;
 
 % tier 1, before
-edge_val = data.connectivity.values.chunks.eeg_dDTF08.block.data; % 12x12x5x4x2
+edge_val = data.connectivity.values.chunks.eeg_dDTF08.block.data; % 12x12x5x4x2; 5 is bands, 4 is group*time, 2 is the stat
 delta = squeeze( edge_val(:,:,1,1,1) );
 theta = squeeze( edge_val(:,:,2,1,1) );
 alpha = squeeze( edge_val(:,:,3,1,1) );
 beta = squeeze( edge_val(:,:,4,1,1) );
-gamma = squeeze( edge_val(:,:,4,1,1) );
+gamma = squeeze( edge_val(:,:,5,1,1) );
 
 % tier 1 changes
-tier1_changes_val = data.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data;
+tier1_changes_val = data.connectivity.tier1.stats.chunks.eeg_dDTF08.block.data; % 12x12x5x2; 5 is bands, 2 is stat (tval or pval)
 tier1_changes_tval = tier1_changes_val(:,:,:,1);
 tier1_changes_pval = tier1_changes_val(:,:,:,2);
+
+% tier 2 changes
+tier2_changes_val = data.connectivity.tier2.stats.chunks.eeg_dDTF08.block.data;
+tier2_changes_tval = tier2_changes_val(:,:,:,1);
+tier2_changes_pval = tier2_changes_val(:,:,:,2);
 
 %%%}}} eo-load data
 
@@ -74,6 +80,7 @@ tier1_changes_pval = tier1_changes_val(:,:,:,2);
 %%%{{{ calculate
 disp( 'calculate' );
 
+% tier 1 -> tier1_changes_sig_tval
 % make a mask of where things are significant and fill it in w/ t-values
 for i = 1:length( IN.BANDS )
    tmp = tier1_changes_tval(:,:,i); % make indexing easier
@@ -103,6 +110,21 @@ for i = 1:length( IN.BANDS )
    
 end
 
+% tier 2 -> tier2_changes_sig_tval
+for i = 1:length( IN.BANDS )
+   tmp = tier2_changes_tval(:,:,i); % make indexing easier
+   tmp2 = tier2_changes_pval(:,:,i);
+   tmp3 = zeros( size( tmp ) );
+   
+   % block out self connections
+   for j = 1:IN.NUM_ROIS
+       tmp2(j,j) = Inf;
+   end
+   changes_sig_pval_idx = find( tmp2 < IN.SIG_THOLD );
+   tmp3( changes_sig_pval_idx ) = tmp( changes_sig_pval_idx );
+   tier2_changes_sig_tval(:,:,i) = tmp3;   
+end
+
 %%%}}} eo-calculate
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,11 +145,20 @@ if ( ALGO.SAVE )
    save( sprintf( IN.SAVE_FNAME, 'beta' ), 'beta', '-ascii' );
    save( sprintf( IN.SAVE_FNAME, 'gamma' ), 'gamma', '-ascii' );
    
-   % changes
+   % tier 1, changes
    for i = 1:length( IN.BANDS )
-      tmp = changes_sig_tval(:,:,i);
-      tmp = tmp';
-      fname = sprintf( IN.SAVE_FNAME2, IN.BANDS{i} );
+      tmp = tier1_changes_sig_tval(:,:,i);
+      %tmp = tmp'; % transpose needed for some reason
+      fname = sprintf( IN.TIER1_CHANGES_SAVE_FNAME, IN.BANDS{i} );
+      disp( sprintf( 'writing out %s', fname ) );
+      save( fname, 'tmp', '-ascii' );
+   end
+
+   % tier 2, changes
+   for i = 1:length( IN.BANDS )
+      tmp = tier2_changes_sig_tval(:,:,i);
+      %tmp = tmp';  % transpose needed for some reason
+      fname = sprintf( IN.TIER2_CHANGES_SAVE_FNAME, IN.BANDS{i} );
       disp( sprintf( 'writing out %s', fname ) );
       save( fname, 'tmp', '-ascii' );
    end
