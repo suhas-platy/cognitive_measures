@@ -48,13 +48,13 @@ function cxn_mtx = get_connectivity_sept2019( fname, varargin )
     
     if ( ~isempty( group ) && ~isempty( time ) )
        if ( group == 1 && time == 1 )
-          group_time = 1;
+          group_time = 2; % Before is 2nd
        elseif ( group == 1 && time == 2 )
-          group_time = 2;
+          group_time = 1; % After is 1st
        elseif ( group == 2 && time == 1 )
-          group_time = 3;
+          group_time = 4; % Before is 2nd
        elseif ( group == 2 && time == 2 )
-          group_time = 4;
+          group_time = 3; % After is 1st
        elseif ( group == 1 && time == -1 )
           group_time = 5;
        elseif ( group == 2 && time == -1 )
@@ -100,6 +100,8 @@ function cxn_mtx = get_connectivity_sept2019( fname, varargin )
           cxn_mtx = cxn_mtx( :, :, :, :, stat );
           return;
        else
+           % if you get this error: Index in position 4 exceeds array bounds (must not exceed 4).
+           % group_time probably means you want the t-vals and p-vals (stat should be 3 or 4)
           cxn_mtx = cxn_mtx( :, :, band, group_time, stat );
           return;
        end
