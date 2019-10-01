@@ -33,7 +33,7 @@ IN.IN_FILENAME = 'tpi_fuj_%s_group_analysis_ttest_db_conn_2-20.mat'; % pass in t
 % IN.IN_FILENAME = 'tpi_fuj_MS_group_analysis_ttest_db_conn_2-20.mat'
 % IN.IN_FILENAME = 'tpi_fuj_SRT2_group_analysis_ttest_db_conn_2-20.mat'
 
-IN.SAVE_PATH = './data_out/';
+IN.SAVE_PATH = './data_out/Fujitsu/';
 IN.SAVE_FILENAME = 'tpi_fuj_%s_%s_%s_%s_%s_group_analysis_ttest_db_conn_2-20.edge' % pass in task, group, band, stat
 %%%}}}
 
@@ -213,29 +213,81 @@ min( pval_cxn_mtx(:) )
 mean( pval_cxn_mtx(:) )
 max( pval_cxn_mtx(:) )
 
+% pooled mean, std and sem
+for task = 1:length( IN.TASKS )
+      for time = 1:2
+         for band = 1:5
+            if ( time == 1 )
+               n_tier1 = 9; n_tier2 = 11;
+            else
+               n_tier1 = 9; n_tier2 = 9;
+            end
+            
+            pooled_mean_cxn_mtx(task,:,:,time,band) = (n_tier1*mean_cxn_mtx(task,:,:,1,time,band) + n_tier2*mean_cxn_mtx(task,:,:,2,time,band))/(n_tier1+n_tier2);
+            std1 = sem_cxn_mtx(task,:,:,1,time,band)*sqrt( n_tier1 );
+            std2 = sem_cxn_mtx(task,:,:,2,time,band)*sqrt( n_tier2 );
+            pooled_std_cxn_mtx(task,:,:,time,band) = sqrt( (std1.^2+std2.^2)/2 ); % https://www.statisticshowto.datasciencecentral.com/pooled-standard-deviation/
+            pooled_sem_cxn_mtx(task,:,:,time,band) = pooled_std_cxn_mtx(task,:,:,time,band)/sqrt( n_tier1+n_tier2 );
+
+         end
+      end
+end
+
 % summary table
 for task = 1:length( IN.TASKS )
    for group = 1:2
       for i = 1:3
          for j = 1:3
             for band = 1:5
+               % inc and dec.
                tmp_tval = squeeze( tval_cxn_mtx(task,:,:,group,band) );
                tmp_pval = squeeze( pval_cxn_mtx(task,:,:,group,band) );
-               tmp = zeros( size(tmp_tval) );
-               idx = find( tmp_pval < .05 );
-               tmp( idx ) = tmp_tval( idx );
+               tval_masked = get_tval_masked( tmp_tval, tmp_pval );
                
-               inc_tbl(task,group,band,i,j) = get_cxn_tbl( i, j, tmp, '>' );
-               dec_tbl(task,group,band,i,j) = get_cxn_tbl( i, j, tmp, '<' );
-               sum_tbl(task,group,band,i,j) = inc_tbl(task,group,band,i,j) + dec_tbl(task,group,band,i,j);
-               net_tbl(task,group,band,i,j) = inc_tbl(task,group,band,i,j) - dec_tbl(task,group,band,i,j);
+               inc_tbl(task,group,band,i,j) = get_cxn_tbl( i, j, tval_masked, '>' );
+               dec_tbl(task,group,band,i,j) = get_cxn_tbl( i, j, tval_masked, '<' );
+               
+               % wts
+               time = 1;
+               wt_before(task,group,band,:,:) = mean_cxn_mtx(task,:,:,group,time,band);
+               wt_before_tmp = squeeze( wt_before(task,group,band,:,:) );
+               time = 2;
+               wt_after(task,group,band,:,:) = mean_cxn_mtx(task,:,:,group,time,band);
+               wt_after_tmp = squeeze( wt_after(task,group,band,:,:) );
+               
+               sum_wt_before(task,group,band,i,j) = get_cxn_tbl( i, j, wt_before_tmp, 'sum' );
+               sum_wt_after(task,group,band,i,j) = get_cxn_tbl( i, j, wt_after_tmp, 'sum' );
             end
          end
       end
-      net_tbl_over_bands(task,group,:,:) = sum( net_tbl(task,group,:,:,:), 3 );
    end
 end
 
+% tier 1 EC
+disp( 'EC' );
+task = 2;
+for group = 1:2
+   for band = 1:5
+      disp( sprintf( 'group %d, band %d', group, band ) );
+      tmp = squeeze( sum_wt_before(task,group,band,:,:) );
+      tmp2 = squeeze( sum_wt_after(task,group,band,:,:) );
+      diff = tmp2-tmp;
+      disp( diff );
+   end
+end
+
+% tier 1 GNG
+disp( 'GNG' );
+task = 7;
+for group = 1:2
+   for band = 1:5
+      disp( sprintf( 'group %d, band %d', group, band ) );
+      tmp = squeeze( sum_wt_before(task,group,band,:,:) );
+      tmp2 = squeeze( sum_wt_after(task,group,band,:,:) );
+      diff = tmp2-tmp;
+      disp( diff );
+   end
+end
 
 
 disp( 'keyboard stop; dbcont to continue' );
@@ -256,7 +308,7 @@ disp( 'save' );
 
 if ( ALGO.SAVE )
    % values
-   %%% {{{
+   if ( 0 )
    for task = 1:length( IN.TASKS )
       for group = 1:2
          for time = 1:2
@@ -308,9 +360,11 @@ if ( ALGO.SAVE )
          end
       end   
    end
+   end
    % }}}
 
    % stats
+   if ( 0 )
    for task = 1:length( IN.TASKS )
       for group = 1:2
          for band = 1:5
@@ -371,28 +425,79 @@ if ( ALGO.SAVE )
          end
       end
    end   
-
-   % tbl
-   for task = 1:length( IN.TASKS )
-      for group = 1:2
-         if ( group == 1 )
-            group_str = 'tier1';
-         else
-            group_str = 'tier2';
-         end
-         time_str = 'na';
-         band_str = 'na';
-         stat_str = 'net_tbl';
-         
-         fname = sprintf( IN.SAVE_FILENAME, IN.TASKS{task},...
-                          group_str, time_str, band_str, stat_str );
-         fname = [IN.SAVE_PATH fname];
-         tmp = squeeze( net_tbl_over_bands(task,group,:,:) );
-               
-         disp( sprintf( 'writing %s', fname ) );
-         dlmwrite( fname, tmp, 'delimiter', ' ' );
-      end
    end
+
+   % pooled
+   for task = 1:length( IN.TASKS )
+      %for group = 1:2
+         for band = 1:5
+            for stat = 1:3 % mean, std, sem
+               group_str = 'pooled';
+               
+               if ( time == 1 )
+                  time_str = 'before';
+               else
+                  time_str = 'after';
+               end
+
+               switch band
+                  case 1
+                     band_str = 'delta';
+                  case 2
+                     band_str = 'theta';
+                  case 3 
+                     band_str = 'alpha';
+                  case 4
+                     band_str = 'beta';
+                  case 5
+                     band_str = 'gamma';
+                  otherwise
+                     error( ['unknown band'] );
+               end
+               
+               if ( stat == 1 )
+                  stat_str = 'mean';
+                  tmp = squeeze( pooled_mean_cxn_mtx(task,:,:,time,band) );
+               elseif ( stat == 2 )
+                  stat_str = 'std';
+                  tmp = squeeze( pooled_std_cxn_mtx(task,:,:,time,band) );
+               else
+                  stat_str = 'sem';
+                  tmp = squeeze( pooled_sem_cxn_mtx(task,:,:,time,band) );
+               end
+               
+               fname = sprintf( IN.SAVE_FILENAME, IN.TASKS{task},...
+                                group_str, time_str, band_str, stat_str );
+               fname = [IN.SAVE_PATH fname];
+               
+               disp( sprintf( 'writing %s', fname ) );
+               dlmwrite( fname, tmp, 'delimiter', ' ' );
+            end
+         end
+      %end
+   end   
+   
+   % tbl
+   % for task = 1:length( IN.TASKS )
+   %    for group = 1:2
+   %       if ( group == 1 )
+   %          group_str = 'tier1';
+   %       else
+   %          group_str = 'tier2';
+   %       end
+   %       time_str = 'na';
+   %       band_str = 'na';
+   %       stat_str = 'net_tbl';
+         
+   %       fname = sprintf( IN.SAVE_FILENAME, IN.TASKS{task},...
+   %                        group_str, time_str, band_str, stat_str );
+   %       fname = [IN.SAVE_PATH fname];
+   %       tmp = squeeze( net_tbl_over_bands(task,group,:,:) );
+               
+   %       disp( sprintf( 'writing %s', fname ) );
+   %       dlmwrite( fname, tmp, 'delimiter', ' ' );
+   %    end
+   % end
    
 else
    disp( 'ALGO.SAVE off; not saving' );
