@@ -14,12 +14,12 @@ IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_pooled_before_alpha_mean_group_an
 IN.HAVE_PVAL = 0;
 
 % beta
-IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_pooled_before_beta_mean_group_analysis_ttest_db_conn_2-20.edge';
-IN.HAVE_PVAL = 0;
+%IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_pooled_before_beta_mean_group_analysis_ttest_db_conn_2-20.edge';
+%IN.HAVE_PVAL = 0;
 
 % gamma
-IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_pooled_before_gamma_mean_group_analysis_ttest_db_conn_2-20.edge';
-IN.HAVE_PVAL = 0;
+%IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_pooled_before_gamma_mean_group_analysis_ttest_db_conn_2-20.edge';
+%IN.HAVE_PVAL = 0;
 
 
 % after pooled tvals and pvals were exported
@@ -58,9 +58,14 @@ IN.HAVE_PVAL = 0;
 %IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier1_na_theta_tval_group_analysis_ttest_db_conn_2-20.edge';
 %IN.HAVE_PVAL = 1;
 
-% alpha - two changes
+% alpha - two changes; pval & tval
 %IN.PVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier1_na_alpha_pval_group_analysis_ttest_db_conn_2-20.edge';
 %IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier1_na_alpha_tval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.HAVE_PVAL = 1;
+
+% alpha - two changes; pval & mean
+%IN.PVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier1_na_alpha_pval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier1_after_alpha_mean_group_analysis_ttest_db_conn_2-20.edge';
 %IN.HAVE_PVAL = 1;
 
 % beta - no changes in ctrl net
@@ -81,16 +86,16 @@ IN.HAVE_PVAL = 0;
 % for this section, these are not tvals but means but the code below refers to IN.TVAL_FILE
 
 % alpha
-IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier2_before_alpha_mean_group_analysis_ttest_db_conn_2-20.edge';
-IN.HAVE_PVAL = 0;
+%IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier2_before_alpha_mean_group_analysis_ttest_db_conn_2-20.edge';
+%IN.HAVE_PVAL = 0;
 
 % beta
-IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier2_before_beta_mean_group_analysis_ttest_db_conn_2-20.edge';
-IN.HAVE_PVAL = 0;
+%IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier2_before_beta_mean_group_analysis_ttest_db_conn_2-20.edge';
+%IN.HAVE_PVAL = 0;
 
 % gamma
-IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier2_before_gamma_mean_group_analysis_ttest_db_conn_2-20.edge';
-IN.HAVE_PVAL = 0;
+%IN.TVAL_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_tier2_before_gamma_mean_group_analysis_ttest_db_conn_2-20.edge';
+%IN.HAVE_PVAL = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tier 2 - changes
@@ -123,6 +128,7 @@ IN.HAVE_PVAL = 0;
 IN.CONFIG_FILE = '.\conf\BrainNet_FullView.mat';
 IN.CONFIG_FILE = '.\conf\BrainNet_RotView.mat';
 IN.CONFIG_FILE = '.\conf\BrainNet_TopView_ForNet.mat';
+IN.CONFIG_FILE = '.\conf\BrainNet_TopView_ForNet_CmapForCxns.mat';
 
 
 %IN.SAVE_PATH = './data_out/';
