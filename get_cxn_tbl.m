@@ -1,4 +1,6 @@
 function val = get_cxn_tbl( from, to, mtx, thresh )
+% @brief get table of cxn's b/t 2 grouped brain areas
+
 % from prefrontal to motor, eg.
    if ( from == 1 )
       from2 = [1 2 3 4 9 10];

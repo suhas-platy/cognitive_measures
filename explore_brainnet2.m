@@ -35,11 +35,15 @@ IN.EDGE_FILE = '.\data_out\tpi_fuj_GNG_tier2_na_delta_sig_tval_group_analysis_tt
 %IN.PVAL_FILE = '.\data_out\tpi_fuj_GNG_tier2_na_gamma_pval_group_analysis_ttest_db_conn_2-20.edge';
 %IN.EDGE_FILE = '.\data_out\tpi_fuj_GNG_tier2_na_gamma_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
 
+IN.EDGE_FILE = '.\data_out\Fujitsu\tpi_fuj_GNG_pooled_after_gamma_mean_group_analysis_ttest_db_conn_2-20.edge';
+ALGO.ONLY_CTRL_NET = 1;
+ALGO.DO_PVAL = 0;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EC
 % EC, delta
-IN.PVAL_FILE = '.\data_out\tpi_fuj_EC_tier1_na_delta_pval_group_analysis_ttest_db_conn_2-20.edge';
-IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier1_na_delta_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.PVAL_FILE = '.\data_out\tpi_fuj_EC_tier1_na_delta_pval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier1_na_delta_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
 
 %IN.PVAL_FILE = '.\data_out\tpi_fuj_EC_tier2_na_delta_pval_group_analysis_ttest_db_conn_2-20.edge';
 %IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier2_na_delta_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
@@ -49,21 +53,22 @@ IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier1_na_delta_sig_tval_group_analysis_tte
 %IN.EDGE_FILE = '.\data_out\tpi_fuj_ec_tier2_na_beta_sig_tval_group_analysis_ttest_db_conn_2-20.edge'
 
 % EC, gamma
-IN.PVAL_FILE = '.\data_out\tpi_fuj_EC_tier1_na_gamma_pval_group_analysis_ttest_db_conn_2-20.edge';
-IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier1_na_gamma_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.PVAL_FILE = '.\data_out\tpi_fuj_EC_tier1_na_gamma_pval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier1_na_gamma_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
 
-IN.PVAL_FILE = '.\data_out\tpi_fuj_EC_tier2_na_gamma_pval_group_analysis_ttest_db_conn_2-20.edge';
-IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier2_na_gamma_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.PVAL_FILE = '.\data_out\tpi_fuj_EC_tier2_na_gamma_pval_group_analysis_ttest_db_conn_2-20.edge';
+%IN.EDGE_FILE = '.\data_out\tpi_fuj_EC_tier2_na_gamma_sig_tval_group_analysis_ttest_db_conn_2-20.edge';
 
 
 IN.CONFIG_FILE = '.\conf\BrainNet_FullView.mat';
 IN.CONFIG_FILE = '.\conf\BrainNet_RotView.mat';
 
 
-%IN.SAVE_PATH = './data_out/';
-IN.SAVE_PATH = ''; % take fro IN.EDGE_FILE
+IN.SAVE_PATH = './data_out/';
+%IN.SAVE_PATH = ''; % take fro IN.EDGE_FILE
 IN.SAVE_FNAME = strrep( IN.EDGE_FILE, '.edge', '.jpg' );
 
+ALGO.DO_PVAL = 0;
 ALGO.SAVE = 1;
 
 IN
@@ -72,8 +77,14 @@ ALGO
 % draw and save
 disp( sprintf( 'loading %s', IN.EDGE_FILE ) );
 tval = load( IN.EDGE_FILE );
-disp( sprintf( 'loading %s', IN.PVAL_FILE ) );
-pval = load( IN.PVAL_FILE );
+if ( ALGO.ONLY_CTRL_NET )
+   tval = get_control_net( tval );
+end
+
+if ( ALGO.DO_PVAL )
+   disp( sprintf( 'loading %s', IN.PVAL_FILE ) );
+   pval = load( IN.PVAL_FILE );
+end
 
 disp( 'close all BrainNet windows to continue' );
 if ( ALGO.SAVE )
@@ -86,6 +97,7 @@ else
 end
 
 % p-vals
+if ( ALGO.DO_PVAL )
 for i = 1:12
    for j = 1:12
       if ( pval(i,j) < .05 )
@@ -94,6 +106,7 @@ for i = 1:12
                      pval(i,j) ) );
       end
    end
+end
 end
 
 % tbl

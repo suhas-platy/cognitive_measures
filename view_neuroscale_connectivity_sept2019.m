@@ -40,7 +40,7 @@ IN.SAVE_FILENAME = 'tpi_fuj_%s_%s_%s_%s_%s_group_analysis_ttest_db_conn_2-20.edg
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%{{{ ALGO: what do w/ IN and model
 ALGO.TRACE_LEVEL = 1; % level of verbosity
-ALGO.SAVE = 1;% whether or not to save results (sometimes can take a long
+ALGO.SAVE = 0;% whether or not to save results (sometimes can take a long
                      % time or don't want to overwrite existing saved files)
 %%%}}}
 
@@ -215,22 +215,32 @@ max( pval_cxn_mtx(:) )
 
 % pooled mean, std and sem
 for task = 1:length( IN.TASKS )
+   for band = 1:5
       for time = 1:2
-         for band = 1:5
-            if ( time == 1 )
-               n_tier1 = 9; n_tier2 = 11;
-            else
-               n_tier1 = 9; n_tier2 = 9;
-            end
-            
-            pooled_mean_cxn_mtx(task,:,:,time,band) = (n_tier1*mean_cxn_mtx(task,:,:,1,time,band) + n_tier2*mean_cxn_mtx(task,:,:,2,time,band))/(n_tier1+n_tier2);
-            std1 = sem_cxn_mtx(task,:,:,1,time,band)*sqrt( n_tier1 );
-            std2 = sem_cxn_mtx(task,:,:,2,time,band)*sqrt( n_tier2 );
-            pooled_std_cxn_mtx(task,:,:,time,band) = sqrt( (std1.^2+std2.^2)/2 ); % https://www.statisticshowto.datasciencecentral.com/pooled-standard-deviation/
-            pooled_sem_cxn_mtx(task,:,:,time,band) = pooled_std_cxn_mtx(task,:,:,time,band)/sqrt( n_tier1+n_tier2 );
-
+         if ( time == 1 )
+            n_tier1 = 9; n_tier2 = 11;
+         else
+            n_tier1 = 9; n_tier2 = 9;
          end
+         
+         pooled_mean_cxn_mtx(task,:,:,time,band) = (n_tier1*mean_cxn_mtx(task,:,:,1,time,band) + n_tier2*mean_cxn_mtx(task,:,:,2,time,band))/(n_tier1+n_tier2);
+         std1 = sem_cxn_mtx(task,:,:,1,time,band)*sqrt( n_tier1 );
+         std2 = sem_cxn_mtx(task,:,:,2,time,band)*sqrt( n_tier2 );
+         pooled_std_cxn_mtx(task,:,:,time,band) = sqrt( (std1.^2+std2.^2)/2 ); % https://www.statisticshowto.datasciencecentral.com/pooled-standard-deviation/
+         pooled_sem_cxn_mtx(task,:,:,time,band) = pooled_std_cxn_mtx(task,:,:,time,band)/sqrt( n_tier1+n_tier2 );
       end
+      mean1 = squeeze( pooled_mean_cxn_mtx(task,:,:,1,band) );
+      std1 = squeeze( pooled_std_cxn_mtx(task,:,:,1,band) );
+      nobs1 = repmat( n_tier1, size( mean1 ) );
+
+      mean2 = squeeze( pooled_mean_cxn_mtx(task,:,:,2,band) );
+      std2 = squeeze( pooled_std_cxn_mtx(task,:,:,2,band) );
+      nobs2 = repmat( n_tier2, size( mean2 ) );
+      
+      [tval,pval] = python_ttest_wrapper( mean1, mean2, std1, std2, nobs1, nobs2 );
+      pooled_tval_cxn_mtx(task,:,:,band) = tval;
+      pooled_pval_cxn_mtx(task,:,:,band) = pval;
+   end
 end
 
 % summary table
@@ -364,7 +374,7 @@ if ( ALGO.SAVE )
    % }}}
 
    % stats
-   if ( 0 )
+   if ( 1 )
    for task = 1:length( IN.TASKS )
       for group = 1:2
          for band = 1:5
@@ -375,11 +385,7 @@ if ( ALGO.SAVE )
                   group_str = 'tier2';
                end
                
-               if ( time == 1 )
-                  time_str = 'before';
-               else
-                  time_str = 'after';
-               end
+               time_str = 'na';
 
                switch band
                   case 1
@@ -395,8 +401,6 @@ if ( ALGO.SAVE )
                   otherwise
                      error( ['unknown band'] );
                end
-               
-               time_str = 'na';
                
                if ( stat == 3 )
                   stat_str = 'pval';
@@ -427,9 +431,10 @@ if ( ALGO.SAVE )
    end   
    end
 
-   % pooled
+   % pooled mean, std, sem
+   if ( 0 )
    for task = 1:length( IN.TASKS )
-      %for group = 1:2
+      for time = 1:2
          for band = 1:5
             for stat = 1:3 % mean, std, sem
                group_str = 'pooled';
@@ -439,7 +444,7 @@ if ( ALGO.SAVE )
                else
                   time_str = 'after';
                end
-
+               
                switch band
                   case 1
                      band_str = 'delta';
@@ -474,8 +479,53 @@ if ( ALGO.SAVE )
                dlmwrite( fname, tmp, 'delimiter', ' ' );
             end
          end
-      %end
-   end   
+      end   
+   end
+   end
+   
+   % pooled tvals, pvals
+   for task = 1:length( IN.TASKS )
+      for band = 1:5
+         for stat = 1:3 % tval, pval
+            group_str = 'pooled';
+            time_str = 'na';
+            
+            switch band
+               case 1
+                  band_str = 'delta';
+               case 2
+                  band_str = 'theta';
+               case 3 
+                  band_str = 'alpha';
+               case 4
+                  band_str = 'beta';
+               case 5
+                  band_str = 'gamma';
+               otherwise
+                  error( ['unknown band'] );
+            end   
+            
+            if ( stat == 1 )
+               stat_str = 'tval';
+               tmp = squeeze( pooled_tval_cxn_mtx(task,:,:,band) );
+            elseif ( stat == 2 )
+               stat_str = 'pval';
+               tmp = squeeze( pooled_pval_cxn_mtx(task,:,:,band) );
+            else
+               %stat_str = 'sig_tval';
+               %tmp = squeeze( pooled_pval_cxn_mtx(task,:,:,band) );
+               
+            end
+               
+            fname = sprintf( IN.SAVE_FILENAME, IN.TASKS{task},...
+                             group_str, time_str, band_str, stat_str );
+            fname = [IN.SAVE_PATH fname];
+               
+            disp( sprintf( 'writing %s', fname ) );
+            dlmwrite( fname, tmp, 'delimiter', ' ' );
+         end   
+      end
+   end
    
    % tbl
    % for task = 1:length( IN.TASKS )
